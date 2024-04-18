@@ -1789,7 +1789,7 @@ GameObject:
   - component: {fileID: 5849115820472543953}
   - component: {fileID: 8833450485715792675}
   m_Layer: 6
-  m_Name: Cylinder
+  m_Name: Radar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
