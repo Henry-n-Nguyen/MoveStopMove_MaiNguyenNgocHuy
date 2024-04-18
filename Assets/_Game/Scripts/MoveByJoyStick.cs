@@ -2,13 +2,33 @@ using HuySpace;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class MovingByJoyStick : Character
+public class MoveByJoyStick : Character
 {
     const string INPUT_ACTION_MOVING = "Moving";
+
+    const string LAYER_ENEMY = "Enemy";
 
     [SerializeField] private PlayerInput playerInput;
 
     [SerializeField] private InputAction moveAction;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(LAYER_ENEMY))
+        {
+            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
+            enemy.IsTargeted(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(LAYER_ENEMY))
+        {
+            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
+            enemy.IsTargeted(false);
+        }
+    }
 
     public override void OnInit()
     {
