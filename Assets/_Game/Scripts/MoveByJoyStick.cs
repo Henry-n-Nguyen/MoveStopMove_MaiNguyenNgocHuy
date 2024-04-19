@@ -4,9 +4,9 @@ using UnityEngine.InputSystem;
 
 public class MoveByJoyStick : Character
 {
-    const string INPUT_ACTION_MOVING = "Moving";
+    const string TAG_ENEMY = "Enemy";
 
-    const string LAYER_ENEMY = "Enemy";
+    const string INPUT_ACTION_MOVING = "Moving";
 
     [SerializeField] private PlayerInput playerInput;
 
@@ -14,7 +14,7 @@ public class MoveByJoyStick : Character
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(LAYER_ENEMY))
+        if (other.gameObject.CompareTag(TAG_ENEMY))
         {
             MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
             enemy.IsTargeted(true);
@@ -23,7 +23,7 @@ public class MoveByJoyStick : Character
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(LAYER_ENEMY))
+        if (other.gameObject.CompareTag(TAG_ENEMY))
         {
             MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
             enemy.IsTargeted(false);
@@ -63,6 +63,11 @@ public class MoveByJoyStick : Character
         if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f) ChangeState(new PatrolState());
     }
 
+    public override void Attack()
+    {
+        base.Attack();
+    }
+
     private void Rotate(Direct dir)
     {
         switch (dir)
@@ -96,7 +101,7 @@ public class MoveByJoyStick : Character
 
     private Direct CheckDirection(Vector2 direction)
     {
-        switch ((int) Mathf.Round(direction.x))
+        switch ((int)Mathf.Round(direction.x))
         {
             case 1:
                 switch ((int)Mathf.Round(direction.y))

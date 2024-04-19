@@ -8,15 +8,31 @@ public abstract class Character : MonoBehaviour
 {
     protected const string TRIGGER_RUN = "run";
     protected const string TRIGGER_IDLE = "idle";
+    protected const string TRIGGER_ATTACK = "attack";
 
     // Editor
     [SerializeField] protected Transform playerTransform;
-    [SerializeField] protected Rigidbody rb;
+    [SerializeField] protected Character chacractedScript;
     [SerializeField] protected NavMeshAgent agent;
+    [SerializeField] protected Rigidbody rb;
+    [SerializeField] protected Weapon weapon;
+    [SerializeField] protected Transform attackPoint;
+    [SerializeField] protected SphereCollider radarObject;
     [SerializeField] private Animator anim;
 
+    public int index;
+
     protected float moveSpeed = 5f;
+    protected float attackRange = 7.5f;
+    protected float scaleRatio = 1f;
+
     protected bool isMoving;
+    protected bool isDead;
+    protected bool isLoadedBullet;
+    
+    [SerializeField] private bool isAttack;
+
+    public bool IsDead => isDead;
 
     // Private
     private IState<Character> currentState;
@@ -32,6 +48,12 @@ public abstract class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (isAttack)
+        {
+            Attack();
+            isAttack = false;
+        }
+
         if (currentState != null)
         {
             currentState.OnExecute(this);
@@ -40,6 +62,10 @@ public abstract class Character : MonoBehaviour
 
     public virtual void OnInit()
     {
+        radarObject.radius = attackRange;
+
+        scaleRatio = 1f;
+
         ChangeState(new IdleState());
     }
 
@@ -68,6 +94,11 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    public bool IsLoadedBullet()
+    {
+        return isLoadedBullet;
+    }
+
     public virtual void Moving()
     {
         ChangeAnim(TRIGGER_RUN);
@@ -78,8 +109,36 @@ public abstract class Character : MonoBehaviour
         ChangeAnim(TRIGGER_IDLE);
     }
 
+    public virtual void Attack()
+    {
+        //ChangeAnim(TRIGGER_ATTACK);
+
+        BulletManager.instance.Spawn(chacractedScript);
+        isLoadedBullet = true;
+    }
+
     public void WarpTo(Vector3 pos)
     {
         agent.Warp(pos);
+    }
+
+    public float GetAttackRange()
+    {
+        return attackRange;
+    }
+
+    public float GetScaleParametters()
+    {
+        return scaleRatio;
+    }
+
+    public int GetWeaponId()
+    {
+        return weapon.id;
+    }
+
+    public Transform GetAttackPoint()
+    {
+        return attackPoint;
     }
 }
