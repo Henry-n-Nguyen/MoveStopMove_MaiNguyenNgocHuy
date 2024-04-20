@@ -8,15 +8,12 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private Transform bulletTransform;
 
-    public Character owner
-    {
-        get { return owner; }
-        set { owner = value; }
-    }
-
     public int id;
 
-    private float speed = 2f;
+    public Character owner;
+
+    [SerializeField] private float speed = 2f;
+
     private float attackRange = 7.5f;
     private float scaleRatio = 1f;
 
@@ -40,19 +37,24 @@ public class Bullet : MonoBehaviour
 
     private void Fly()
     {
-        bulletTransform.position += bulletTransform.forward * speed * Time.deltaTime;
-        attackRange -= speed * Time.deltaTime;
+        float distance = speed * Time.deltaTime;
+
+        bulletTransform.position += bulletTransform.forward * distance;
+        attackRange -= distance;
+
         if (attackRange <= 0) Despawn();
     }
 
     public void Spawn()
     {
+        bulletTransform.position = owner.GetAttackPoint().position;
+        bulletTransform.rotation = owner.transform.rotation;
         gameObject.SetActive(true);
     }
 
     public void Despawn()
     {
-        transform.localPosition = Vector3.zero;
         gameObject.SetActive(false);
+        transform.localPosition = Vector3.zero;
     }
 }

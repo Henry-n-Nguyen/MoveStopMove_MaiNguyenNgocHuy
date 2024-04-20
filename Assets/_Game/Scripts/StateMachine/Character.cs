@@ -28,9 +28,8 @@ public abstract class Character : MonoBehaviour
 
     protected bool isMoving;
     protected bool isDead;
-    protected bool isLoadedBullet;
     
-    [SerializeField] private bool isAttack;
+    [SerializeField] private bool isAttack = true;
 
     public bool IsDead => isDead;
 
@@ -48,12 +47,6 @@ public abstract class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isAttack)
-        {
-            Attack();
-            isAttack = false;
-        }
-
         if (currentState != null)
         {
             currentState.OnExecute(this);
@@ -94,11 +87,6 @@ public abstract class Character : MonoBehaviour
         }
     }
 
-    public bool IsLoadedBullet()
-    {
-        return isLoadedBullet;
-    }
-
     public virtual void Moving()
     {
         ChangeAnim(TRIGGER_RUN);
@@ -114,7 +102,6 @@ public abstract class Character : MonoBehaviour
         //ChangeAnim(TRIGGER_ATTACK);
 
         BulletManager.instance.Spawn(chacractedScript);
-        isLoadedBullet = true;
     }
 
     public void WarpTo(Vector3 pos)

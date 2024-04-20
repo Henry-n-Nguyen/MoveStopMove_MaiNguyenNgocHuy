@@ -46,6 +46,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletTransform: {fileID: 4358721844743104425}
+  id: 0
+  owner: {fileID: 0}
+  speed: 4
 --- !u!1 &5567161981795282398
 GameObject:
   m_ObjectHideFlags: 0

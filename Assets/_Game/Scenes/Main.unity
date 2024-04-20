@@ -619,6 +619,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefabs: []
+  holder: {fileID: 1703364876}
   prefabs:
   - {fileID: 4869225577042067128, guid: 5b3811f24f5f7204f88071c585551a10, type: 3}
 --- !u!1001 &1740722322
