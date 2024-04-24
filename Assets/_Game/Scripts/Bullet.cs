@@ -27,12 +27,18 @@ public class Bullet : MonoBehaviour
         Fly();
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER) && other.gameObject != owner.gameObject)
+        {
+            Despawn();
+        }
+    }
+
     public void OnInit()
     {
-        //attackRange = owner.GetAttackRange();
-        attackRange = 7.5f;
-        //scaleRatio = owner.GetScaleParametters();
-        scaleRatio = 1f;
+        attackRange = owner.GetAttackRange();
+        scaleRatio = owner.GetScaleParametters();
     }
 
     private void Fly()

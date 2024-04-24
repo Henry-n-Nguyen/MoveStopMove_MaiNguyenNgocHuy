@@ -1,34 +1,18 @@
 using HuySpace;
+using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class MoveByJoyStick : Character
 {
-    const string TAG_ENEMY = "Enemy";
-
-    const string INPUT_ACTION_MOVING = "Moving";
-
     [SerializeField] private PlayerInput playerInput;
 
     [SerializeField] private InputAction moveAction;
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag(TAG_ENEMY))
-        {
-            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
-            enemy.IsTargeted(true);
-        }
-    }
 
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.CompareTag(TAG_ENEMY))
-        {
-            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
-            enemy.IsTargeted(false);
-        }
-    }
+    private bool isDetectedTarget;
 
     public override void OnInit()
     {
@@ -36,7 +20,7 @@ public class MoveByJoyStick : Character
 
         Rotate(Direct.Forward);
 
-        moveAction = playerInput.actions.FindAction(INPUT_ACTION_MOVING);
+        moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
     }
 
     public override void Moving()
@@ -49,23 +33,80 @@ public class MoveByJoyStick : Character
 
         Rotate(direction);
 
-        playerTransform.position += (Vector3.right * inputVector.x + Vector3.forward * inputVector.y) * Time.deltaTime * moveSpeed;
+        characterTransform.position += (Vector3.right * inputVector.x + Vector3.forward * inputVector.y) * Time.deltaTime * moveSpeed;
 
-        if (Vector2.Distance(inputVector, Vector2.zero) < 0.1f) ChangeState(new IdleState());
+        if (Vector2.Distance(inputVector, Vector2.zero) < 0.1f)
+        {
+            if (isReadyToAttack)
+            {
+                if (targetsInRange.Count > 0)
+                {
+                    Vector3 rotation = Vector3.up * Vector3.Angle(Vector3.forward, (FindClosestEnemy().transform.position - characterTransform.position).normalized);
+
+                    characterTransform.rotation = Quaternion.Euler(rotation);
+
+                    if (isReadyToAttack)
+                    {
+                        ChangeState(new AttackState());
+                    }
+                }
+                else
+                {
+                    ChangeState(new IdleState());
+                }
+            }
+            else
+            {
+                ChangeState(new IdleState());
+            }
+        }
     }
 
     public override void StopMoving()
     {
         base.StopMoving();
 
+        if (targetsInRange.Count > 0)
+        {
+            Vector3 rotation = Vector3.up * Vector3.Angle(Vector3.forward, (FindClosestEnemy().transform.position - characterTransform.position).normalized);
+
+            characterTransform.rotation = Quaternion.Euler(rotation);
+
+            if (isReadyToAttack && !isDetectedTarget)
+            {
+                isDetectedTarget = true;
+
+                ChangeState(new AttackState());
+            }
+        }
+
         Vector2 inputVector = moveAction.ReadValue<Vector2>();
 
-        if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f) ChangeState(new PatrolState());
+        if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f)
+        {
+            ChangeState(new PatrolState());
+
+            isDetectedTarget = false;
+        }
     }
 
     public override void Attack()
     {
-        base.Attack();
+        if (!isDetectedTarget)
+        {
+            base.Attack();
+
+            isDetectedTarget = true;
+        }
+
+        Vector2 inputVector = moveAction.ReadValue<Vector2>();
+
+        if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f)
+        {
+            ChangeState(new PatrolState());
+
+            isDetectedTarget = false;
+        }
     }
 
     private void Rotate(Direct dir)
@@ -73,28 +114,28 @@ public class MoveByJoyStick : Character
         switch (dir)
         {
             case Direct.Forward:
-                playerTransform.rotation = Quaternion.Euler(Vector3.zero);
+                characterTransform.rotation = Quaternion.Euler(Vector3.zero);
                 break;
             case Direct.ForwardRight:
-                playerTransform.rotation = Quaternion.Euler(Vector3.up * 45f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.up * 45f);
                 break;
             case Direct.Right:
-                playerTransform.rotation = Quaternion.Euler(Vector3.up * 90f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.up * 90f);
                 break;
             case Direct.BackRight:
-                playerTransform.rotation = Quaternion.Euler(Vector3.up * 135f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.up * 135f);
                 break;
             case Direct.Back:
-                playerTransform.rotation = Quaternion.Euler(Vector3.up * 180f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.up * 180f);
                 break;
             case Direct.ForwardLeft:
-                playerTransform.rotation = Quaternion.Euler(Vector3.down * 45f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.down * 45f);
                 break;
             case Direct.Left:
-                playerTransform.rotation = Quaternion.Euler(Vector3.down * 90f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.down * 90f);
                 break;
             case Direct.BackLeft:
-                playerTransform.rotation = Quaternion.Euler(Vector3.down * 135f);
+                characterTransform.rotation = Quaternion.Euler(Vector3.down * 135f);
                 break;
         }
     }
@@ -130,5 +171,25 @@ public class MoveByJoyStick : Character
         }
 
         return Direct.None;
+    }
+
+    private Character FindClosestEnemy()
+    {
+        Character closestEnemy = null;
+
+        float minDistance = 0f;
+
+        foreach (Character character in targetsInRange)
+        {
+            float distance = Vector3.Distance(characterTransform.position, character.transform.position);
+
+            if (minDistance < distance)
+            {
+                minDistance = distance;
+                closestEnemy = character;
+            }
+        }
+
+        return closestEnemy;
     }
 }

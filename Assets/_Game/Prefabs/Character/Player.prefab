@@ -227,8 +227,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.7, y: 1, z: 0.7}
-  m_Center: {x: 0, y: 0.5, z: 0}
+  m_Size: {x: 0.7, y: 2, z: 0.7}
+  m_Center: {x: 0, y: 1, z: 0}
 --- !u!135 &5837723166116977867
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -262,8 +262,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937eeca91914a614bb23b2c81e912f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerTransform: {fileID: 3308923855994619669}
-  chacractedScript: {fileID: 4560287272006892595}
+  characterTransform: {fileID: 3308923855994619669}
+  characterScript: {fileID: 4560287272006892595}
   agent: {fileID: 1882805022055240425}
   rb: {fileID: 4908282860012175601}
   weapon: {fileID: 5327147748203837468}
@@ -271,7 +271,7 @@ MonoBehaviour:
   radarObject: {fileID: 7277379578229232064}
   anim: {fileID: 5855642041673086835}
   index: 0
-  isAttack: 0
+  targetsInRange: []
   playerInput: {fileID: 7033175576109326437}
   moveAction:
     m_Name: Move

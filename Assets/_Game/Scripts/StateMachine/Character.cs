@@ -6,13 +6,9 @@ using UnityEngine.AI;
 
 public abstract class Character : MonoBehaviour
 {
-    protected const string TRIGGER_RUN = "run";
-    protected const string TRIGGER_IDLE = "idle";
-    protected const string TRIGGER_ATTACK = "attack";
-
     // Editor
-    [SerializeField] protected Transform playerTransform;
-    [SerializeField] protected Character chacractedScript;
+    [SerializeField] protected Transform characterTransform;
+    [SerializeField] protected Character characterScript;
     [SerializeField] protected NavMeshAgent agent;
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Weapon weapon;
@@ -28,10 +24,12 @@ public abstract class Character : MonoBehaviour
 
     protected bool isMoving;
     protected bool isDead;
-    
-    [SerializeField] private bool isAttack = true;
+    protected bool isReadyToAttack;
 
     public bool IsDead => isDead;
+
+    // List target
+    [SerializeField] protected List<Character> targetsInRange = new List<Character>();
 
     // Private
     private IState<Character> currentState;
@@ -47,9 +45,40 @@ public abstract class Character : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        isReadyToAttack = IsReadyToAttack();
+
         if (currentState != null)
         {
             currentState.OnExecute(this);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
+        {
+            Character character = other.gameObject.GetComponent<Character>();
+            targetsInRange.Add(character);
+        }
+
+        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
+        {
+            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
+            enemy.IsTargeted(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
+        {
+            targetsInRange.RemoveAt(targetsInRange.IndexOf(other.gameObject.GetComponent<Character>()));
+        }
+
+        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
+        {
+            MoveByNavMeshAgent enemy = other.GetComponent<MoveByNavMeshAgent>();
+            enemy.IsTargeted(false);
         }
     }
 
@@ -87,26 +116,34 @@ public abstract class Character : MonoBehaviour
         }
     }
 
+    public bool IsReadyToAttack()
+    {
+        if (BulletManager.instance.IsBulletActivated(index)) { 
+            weapon.Despawn();
+            return false;
+        }
+        else
+        {
+            weapon.Spawn();
+            return true;
+        }
+    }
+
     public virtual void Moving()
     {
-        ChangeAnim(TRIGGER_RUN);
+        ChangeAnim(Constant.TRIGGER_RUN);
     }
 
     public virtual void StopMoving()
     {
-        ChangeAnim(TRIGGER_IDLE);
+        ChangeAnim(Constant.TRIGGER_IDLE);
     }
 
     public virtual void Attack()
     {
-        //ChangeAnim(TRIGGER_ATTACK);
+        ChangeAnim(Constant.TRIGGER_ATTACK);
 
-        BulletManager.instance.Spawn(chacractedScript);
-    }
-
-    public void WarpTo(Vector3 pos)
-    {
-        agent.Warp(pos);
+        if (isReadyToAttack) BulletManager.instance.Spawn(characterScript);
     }
 
     public float GetAttackRange()
@@ -127,5 +164,10 @@ public abstract class Character : MonoBehaviour
     public Transform GetAttackPoint()
     {
         return attackPoint;
+    }
+
+    public void WarpTo(Vector3 pos)
+    {
+        agent.Warp(pos);
     }
 }

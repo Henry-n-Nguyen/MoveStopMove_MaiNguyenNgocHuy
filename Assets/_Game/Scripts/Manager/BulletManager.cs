@@ -51,6 +51,18 @@ public class BulletManager : MonoBehaviour
         }
     }
 
+    public bool IsBulletActivated(int index)
+    {
+        try
+        {
+            return IsBulletLoaded(index) && activatedBullets[index].gameObject.activeSelf;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
     // Get Activated Bullet
     public Bullet GetBullet(Character character)
     {
