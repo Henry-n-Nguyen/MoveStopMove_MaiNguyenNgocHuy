@@ -4,18 +4,19 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.WSA;
 
-public class Bullet : MonoBehaviour
+public abstract class Bullet : MonoBehaviour
 {
-    [SerializeField] private Transform bulletTransform;
+    [SerializeField] protected Transform bulletTransform;
+    [SerializeField] protected Transform meshTransform;
 
     public int id;
 
     public Character owner;
 
-    [SerializeField] private float speed = 2f;
+    [SerializeField] protected float speed = 2f;
 
-    private float attackRange = 7.5f;
-    private float scaleRatio = 1f;
+    protected float attackRange = 7.5f;
+    protected float scaleRatio = 1f;
 
     private void OnEnable()
     {
@@ -24,7 +25,7 @@ public class Bullet : MonoBehaviour
 
     private void Update()
     {
-        Fly();
+        Launch();
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,20 +36,15 @@ public class Bullet : MonoBehaviour
         }
     }
 
-    public void OnInit()
+    protected virtual void OnInit()
     {
         attackRange = owner.GetAttackRange();
         scaleRatio = owner.GetScaleParametters();
     }
 
-    private void Fly()
+    protected virtual void Launch()
     {
-        float distance = speed * Time.deltaTime;
-
-        bulletTransform.position += bulletTransform.forward * distance;
-        attackRange -= distance;
-
-        if (attackRange <= 0) Despawn();
+        
     }
 
     public void Spawn()
