@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FlyBullet : Bullet
+public class FlyBullet : AbstractBullet
 {
     protected override void OnInit()
     {

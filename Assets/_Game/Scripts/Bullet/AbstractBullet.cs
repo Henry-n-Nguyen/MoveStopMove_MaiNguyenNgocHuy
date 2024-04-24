@@ -4,7 +4,7 @@ using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.WSA;
 
-public abstract class Bullet : MonoBehaviour
+public abstract class AbstractBullet : MonoBehaviour
 {
     [SerializeField] protected Transform bulletTransform;
     [SerializeField] protected Transform meshTransform;

@@ -7,18 +7,18 @@ public class BulletManager : MonoBehaviour
 {
     public static BulletManager instance;
 
-    List<Bullet> activatedBullets = new List<Bullet>();
+    List<AbstractBullet> activatedBullets = new List<AbstractBullet>();
 
-    public List<Bullet> bulletPrefabs = new List<Bullet>();
+    public List<AbstractBullet> bulletPrefabs = new List<AbstractBullet>();
 
     [SerializeField] private Transform holder;
-    [SerializeField] private Bullet[] prefabs;
+    [SerializeField] private AbstractBullet[] prefabs;
 
     private void Awake()
     {
         instance = this;
 
-        foreach (Bullet prefab in prefabs)
+        foreach (AbstractBullet prefab in prefabs)
         {
             bulletPrefabs.Insert(prefab.id, prefab);
         }
@@ -29,7 +29,7 @@ public class BulletManager : MonoBehaviour
     {
         if (!IsBulletLoaded(character.index))
         {
-            Bullet bullet = GetBullet(character);
+            AbstractBullet bullet = GetBullet(character);
             bullet.Spawn();
         }
         else
@@ -64,10 +64,10 @@ public class BulletManager : MonoBehaviour
     }
 
     // Get Activated Bullet
-    public Bullet GetBullet(Character character)
+    public AbstractBullet GetBullet(Character character)
     {
-        Bullet prefab = GetBulletPrefab(character.GetWeaponId());
-        Bullet bullet = Instantiate(prefab, holder);
+        AbstractBullet prefab = GetBulletPrefab(character.GetWeaponId());
+        AbstractBullet bullet = Instantiate(prefab, holder);
 
         bullet.owner = character;
 
@@ -76,7 +76,7 @@ public class BulletManager : MonoBehaviour
         return activatedBullets[character.index];
     }
 
-    public Bullet GetBulletPrefab(int id)
+    public AbstractBullet GetBulletPrefab(int id)
     {
         return bulletPrefabs[id];
     }

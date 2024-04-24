@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpinBullet : Bullet
+public class SpinBullet : AbstractBullet
 {
     protected override void OnInit()
     {
