@@ -18,6 +18,8 @@ public class MoveByJoyStick : Character
     {
         base.OnInit();
 
+        isDetectedTarget = false;
+
         Rotate(Direct.Forward);
 
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
@@ -41,9 +43,7 @@ public class MoveByJoyStick : Character
             {
                 if (targetsInRange.Count > 0)
                 {
-                    Vector3 rotation = Vector3.up * Vector3.Angle(Vector3.forward, (FindClosestEnemy().transform.position - characterTransform.position).normalized);
-
-                    characterTransform.rotation = Quaternion.Euler(rotation);
+                    TurnTowardClosestEnemy();
 
                     if (isReadyToAttack)
                     {
@@ -68,9 +68,7 @@ public class MoveByJoyStick : Character
 
         if (targetsInRange.Count > 0)
         {
-            Vector3 rotation = Vector3.up * Vector3.Angle(Vector3.forward, (FindClosestEnemy().transform.position - characterTransform.position).normalized);
-
-            characterTransform.rotation = Quaternion.Euler(rotation);
+            TurnTowardClosestEnemy();
 
             if (isReadyToAttack && !isDetectedTarget)
             {
@@ -191,5 +189,15 @@ public class MoveByJoyStick : Character
         }
 
         return closestEnemy;
+    }
+
+    private void TurnTowardClosestEnemy()
+    {
+        Vector3 closestEnemyPosition = FindClosestEnemy().transform.position;
+
+        Vector3 rotation = Vector3.up * Vector3.Angle(Vector3.forward, (closestEnemyPosition - characterTransform.position).normalized);
+
+        if (closestEnemyPosition.x > characterTransform.position.x) characterTransform.rotation = Quaternion.Euler(rotation);
+        else characterTransform.rotation = Quaternion.Euler(-rotation);
     }
 }
