@@ -264,12 +264,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 3308923855994619669}
   characterScript: {fileID: 4560287272006892595}
+  radarObject: {fileID: 7277379578229232064}
+  attackPoint: {fileID: 5064853755017719388}
   agent: {fileID: 1882805022055240425}
   rb: {fileID: 4908282860012175601}
-  weapon: {fileID: 5327147748203837468}
-  attackPoint: {fileID: 5064853755017719388}
-  radarObject: {fileID: 7277379578229232064}
   anim: {fileID: 5855642041673086835}
+  weaponHolder: {fileID: 6683198118800813364}
+  weapon: {fileID: 5327147748203837468}
+  hatHolder: {fileID: 5091768158394641889}
+  hat: {fileID: 0}
+  skinMeshRenderer: {fileID: 6007163679756295697}
+  pantMeshRenderer: {fileID: 2903227904142107083}
   index: 0
   targetsInRange: []
   playerInput: {fileID: 7033175576109326437}
@@ -1977,7 +1982,7 @@ Transform:
   m_GameObject: {fileID: 5622328238996701596}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.2, z: 0}
+  m_LocalPosition: {x: 0, y: 0.5, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2023,9 +2028,9 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1000
   m_Sprite: {fileID: 21300000, guid: 366b70539d738ed409ac8c8791282a81, type: 2}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.39215687}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0

@@ -25,7 +25,7 @@ public class BulletManager : MonoBehaviour
     }
 
     // Spawn Bullet
-    public void Spawn(Character character)
+    public void Spawn(AbstractCharacter character)
     {
         if (!IsBulletLoaded(character.index))
         {
@@ -64,7 +64,7 @@ public class BulletManager : MonoBehaviour
     }
 
     // Get Activated Bullet
-    public AbstractBullet GetBullet(Character character)
+    public AbstractBullet GetBullet(AbstractCharacter character)
     {
         AbstractBullet prefab = GetBulletPrefab(character.GetWeaponId());
         AbstractBullet bullet = Instantiate(prefab, holder);

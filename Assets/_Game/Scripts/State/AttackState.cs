@@ -2,16 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class AttackState : IState<Character>
+public class AttackState : IState<AbstractCharacter>
 {
     float timer = 0f;
 
-    public void OnEnter(Character t)
+    public void OnEnter(AbstractCharacter t)
     {
 
     }
 
-    public void OnExecute(Character t)
+    public void OnExecute(AbstractCharacter t)
     {
         t.Attack();
 
@@ -23,7 +23,7 @@ public class AttackState : IState<Character>
         }
     }
 
-    public void OnExit(Character t)
+    public void OnExit(AbstractCharacter t)
     {
 
     }

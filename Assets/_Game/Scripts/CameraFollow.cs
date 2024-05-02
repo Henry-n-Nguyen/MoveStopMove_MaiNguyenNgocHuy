@@ -9,7 +9,6 @@ public class CameraFollow : MonoBehaviour
     public Transform target;
     
     public Vector3 offset;
-
     private void Awake()
     {
         instance = this;
@@ -24,7 +23,7 @@ public class CameraFollow : MonoBehaviour
 
     public void OnInit()
     {
-        offset = Vector3.up * 15 + Vector3.back * 15;
+        offset = Vector3.up * 18 + Vector3.back * 18;
         transform.rotation = Quaternion.Euler(Vector3.right * 45);
     }
 

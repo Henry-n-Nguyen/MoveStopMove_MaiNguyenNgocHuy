@@ -11,7 +11,7 @@ public abstract class AbstractBullet : MonoBehaviour
 
     public int id;
 
-    public Character owner;
+    public AbstractCharacter owner;
 
     [SerializeField] protected float speed = 2f;
 
