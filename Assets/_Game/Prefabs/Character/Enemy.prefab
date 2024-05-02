@@ -225,6 +225,9 @@ MonoBehaviour:
   index: 1
   targetsInRange: []
   targetedMark: {fileID: 5905830706655812610}
+  desPoint: {x: 0, y: 0, z: 0}
+  desPointSet: 0
+  desPointRange: 15
 --- !u!1 &402932976025282692
 GameObject:
   m_ObjectHideFlags: 0
@@ -586,7 +589,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6005777176331403644}
   - component: {fileID: 2033515842948001008}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Ring2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1192,7 +1195,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8756893275179325248}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Bullet Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1557,7 +1560,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8749565020200117649}
   - component: {fileID: 8724809758384156945}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Ring1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2134,7 +2137,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2914885564918575082}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Targeted
   m_TagString: Untagged
   m_Icon: {fileID: 0}

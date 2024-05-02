@@ -54,7 +54,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         OnInit();
     }
 
-    void Update()
+    private void Update()
     {
         isReadyToAttack = IsReadyToAttack();
 
@@ -194,6 +194,33 @@ public abstract class AbstractCharacter : MonoBehaviour
         ChangeAnim(Constant.TRIGGER_ATTACK);
 
         if (isReadyToAttack) BulletManager.instance.Spawn(characterScript);
+    }
+
+    protected AbstractCharacter FindClosestCharacter()
+    {
+        AbstractCharacter closestEnemy = null;
+
+        float minDistance = 0f;
+
+        foreach (AbstractCharacter character in targetsInRange)
+        {
+            float distance = Vector3.Distance(characterTransform.position, character.transform.position);
+
+            if (minDistance < distance)
+            {
+                minDistance = distance;
+                closestEnemy = character;
+            }
+        }
+
+        return closestEnemy;
+    }
+
+    protected void TurnTowardClosestCharacter()
+    {
+        Vector3 closestEnemyPosition = FindClosestCharacter().transform.position;
+
+        characterTransform.forward = (closestEnemyPosition - characterTransform.position).normalized;
     }
 
     public float GetAttackRange()

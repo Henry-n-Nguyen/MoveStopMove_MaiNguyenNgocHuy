@@ -1966,7 +1966,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4672438363901304358}
   - component: {fileID: 5849115820472543953}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Radar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -2723,7 +2723,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5064853755017719388}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Bullet Spawn Point
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -7,9 +7,9 @@ public class BulletManager : MonoBehaviour
 {
     public static BulletManager instance;
 
-    List<AbstractBullet> activatedBullets = new List<AbstractBullet>();
+    public Dictionary<int, AbstractBullet> activatedBullets = new Dictionary<int, AbstractBullet>();
 
-    public List<AbstractBullet> bulletPrefabs = new List<AbstractBullet>();
+    public Dictionary<int, AbstractBullet> bulletPrefabs = new Dictionary<int, AbstractBullet>();
 
     [SerializeField] private Transform holder;
     [SerializeField] private AbstractBullet[] prefabs;
@@ -20,14 +20,14 @@ public class BulletManager : MonoBehaviour
 
         foreach (AbstractBullet prefab in prefabs)
         {
-            bulletPrefabs.Insert(prefab.id, prefab);
+            bulletPrefabs.Add(prefab.id, prefab);
         }
     }
 
     // Spawn Bullet
     public void Spawn(AbstractCharacter character)
     {
-        if (!IsBulletLoaded(character.index))
+        if (!activatedBullets.ContainsKey(character.index))
         {
             AbstractBullet bullet = GetBullet(character);
             bullet.Spawn();
@@ -41,26 +41,12 @@ public class BulletManager : MonoBehaviour
     // Check bullet is loaded yet
     public bool IsBulletLoaded(int index)
     {
-        try
-        {
-            return activatedBullets[index] && activatedBullets[index] != null;
-        }
-        catch
-        {
-            return false;
-        }
+        return activatedBullets.ContainsKey(index) && activatedBullets[index] != null;
     }
 
     public bool IsBulletActivated(int index)
     {
-        try
-        {
-            return IsBulletLoaded(index) && activatedBullets[index].gameObject.activeSelf;
-        }
-        catch
-        {
-            return false;
-        }
+        return IsBulletLoaded(index) && activatedBullets[index].gameObject.activeSelf;
     }
 
     // Get Activated Bullet
@@ -71,7 +57,7 @@ public class BulletManager : MonoBehaviour
 
         bullet.owner = character;
 
-        activatedBullets.Insert(character.index, bullet);
+        activatedBullets.Add(character.index, bullet);
 
         return activatedBullets[character.index];
     }

@@ -97,6 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletTransform: {fileID: 77060026435660143}
   meshTransform: {fileID: 2592123908833607473}
+  collide: {fileID: 2224143525253197916}
   id: 17
   owner: {fileID: 0}
   speed: 4

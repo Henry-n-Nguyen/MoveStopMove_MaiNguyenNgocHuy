@@ -3,14 +3,12 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using UnityEngine.UIElements;
 
 public class Player : AbstractCharacter
 {
     [SerializeField] private PlayerInput playerInput;
 
     [SerializeField] private InputAction moveAction;
-
 
     private bool isDetectedTarget;
 
@@ -43,12 +41,9 @@ public class Player : AbstractCharacter
             {
                 if (targetsInRange.Count > 0)
                 {
-                    TurnTowardClosestEnemy();
+                    TurnTowardClosestCharacter();
 
-                    if (isReadyToAttack)
-                    {
-                        ChangeState(new AttackState());
-                    }
+                    ChangeState(new AttackState());
                 }
                 else
                 {
@@ -68,7 +63,7 @@ public class Player : AbstractCharacter
 
         if (targetsInRange.Count > 0)
         {
-            TurnTowardClosestEnemy();
+            TurnTowardClosestCharacter();
 
             if (isReadyToAttack && !isDetectedTarget)
             {
@@ -169,32 +164,5 @@ public class Player : AbstractCharacter
         }
 
         return Direct.None;
-    }
-
-    private AbstractCharacter FindClosestEnemy()
-    {
-        AbstractCharacter closestEnemy = null;
-
-        float minDistance = 0f;
-
-        foreach (AbstractCharacter character in targetsInRange)
-        {
-            float distance = Vector3.Distance(characterTransform.position, character.transform.position);
-
-            if (minDistance < distance)
-            {
-                minDistance = distance;
-                closestEnemy = character;
-            }
-        }
-
-        return closestEnemy;
-    }
-
-    private void TurnTowardClosestEnemy()
-    {
-        Vector3 closestEnemyPosition = FindClosestEnemy().transform.position;
-
-        characterTransform.forward = (closestEnemyPosition - characterTransform.position).normalized;
     }
 }

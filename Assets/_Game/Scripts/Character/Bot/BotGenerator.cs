@@ -22,7 +22,7 @@ public class BotGenerator : MonoBehaviour
     [SerializeField] private LayerMask spawnPointLayer;
 
     // Private variables
-    private int index = 2;
+    private int index = 1;
 
     private void Awake()
     {
