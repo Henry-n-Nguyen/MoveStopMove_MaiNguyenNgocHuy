@@ -16,14 +16,14 @@ public class EquipmentManager : MonoBehaviour
 
     public Weapon GetWeaponById(int id)
     {
-        try
+        Weapon weaponWithId = weaponList[0];
+        
+        foreach (Weapon weapon in weaponList)
         {
-            return weaponList[id];
+            if (weapon.id == id) weaponWithId = weapon;
         }
-        catch
-        {
-            return weaponList[0];
-        }
+
+        return weaponWithId;
     }
 
     public List<Weapon> GetWeaponList()
@@ -33,14 +33,14 @@ public class EquipmentManager : MonoBehaviour
 
     public Hat GetHatById(int id)
     {
-        try
+        Hat hatWithId = hatList[0];
+
+        foreach (Hat hat in hatList)
         {
-            return hatList[id];
+            if (hat.id == id) hatWithId = hat;
         }
-        catch
-        {
-            return hatList[0];
-        }
+
+        return hatWithId;
     }
 
     public List<Hat> GetHatList()

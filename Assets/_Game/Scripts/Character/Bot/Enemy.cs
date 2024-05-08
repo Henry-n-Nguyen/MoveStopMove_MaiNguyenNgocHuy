@@ -137,6 +137,8 @@ public class Enemy : AbstractCharacter
     {
         if (!isDead)
         {
+            agent.SetDestination(characterTransform.position);
+
             base.Dead();
 
             StartCoroutine(DespawnEnemy(3f));

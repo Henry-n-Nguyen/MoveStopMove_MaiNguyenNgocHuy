@@ -38,6 +38,10 @@ public abstract class AbstractBullet : MonoBehaviour
 
             Despawn();
         }
+        else if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_VEHICLE))
+        {
+            Despawn();
+        }
     }
 
     protected virtual void OnInit()

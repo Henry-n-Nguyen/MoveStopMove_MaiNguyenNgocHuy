@@ -15,6 +15,7 @@ public class Constant : MonoBehaviour
 
     // Layer Constants
     public const string LAYER_CHARACTER = "Character";
+    public const string LAYER_VEHICLE = "Vehicle";
 
     // Tag Constants
     public const string TAG_ENEMY = "Enemy";

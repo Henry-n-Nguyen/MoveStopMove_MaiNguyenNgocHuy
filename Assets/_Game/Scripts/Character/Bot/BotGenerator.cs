@@ -69,10 +69,10 @@ public class BotGenerator : MonoBehaviour
             index++;
 
             randomNumber = Random.Range(0, EquipmentManager.instance.weaponList.Count);
-            character.Equip(EquipmentType.Weapon, EquipmentManager.instance.weaponList[randomNumber]);
+            character.Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(randomNumber));
 
             randomNumber = Random.Range(0, EquipmentManager.instance.hatList.Count);
-            character.Equip(EquipmentType.Hat, EquipmentManager.instance.hatList[randomNumber]);
+            character.Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(randomNumber));
 
             randomNumber = Random.Range(0, MaterialManager.instance.pantMaterialList.Count);
             character.Equip(EquipmentType.Pant, MaterialManager.instance.pantMaterialList[randomNumber]);
