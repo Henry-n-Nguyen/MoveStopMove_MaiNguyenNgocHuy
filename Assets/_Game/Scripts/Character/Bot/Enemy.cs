@@ -22,6 +22,8 @@ public class Enemy : AbstractCharacter
     {
         base.OnInit();
 
+        desPointSet = false;
+
         isDetectedTarget = false;
 
         agent.speed = moveSpeed * 0.67f;

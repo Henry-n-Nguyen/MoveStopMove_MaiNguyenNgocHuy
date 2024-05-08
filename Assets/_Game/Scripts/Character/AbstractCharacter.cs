@@ -33,7 +33,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     protected float scaleRatio = 1f;
 
     // Bool variables
-    protected bool isMoving;
     protected bool isDead;
     [SerializeField] protected bool isReadyToAttack;
 
@@ -47,6 +46,14 @@ public abstract class AbstractCharacter : MonoBehaviour
     private IState<AbstractCharacter> currentState;
 
     private string currentAnimName;
+
+    // Boost Variables
+    protected bool isBoosted;
+
+    protected List<BoostType> boostedType = new List<BoostType>();
+
+    protected float tempScaleRatio;
+    protected float tempSpeed;
 
     // Function
     private void Start()
@@ -71,11 +78,24 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void OnInit()
     {
-        attackRange = 7.5f;
+        isDead = false;
+        isBoosted = false;
+
+        targetsInRange.Clear();
+        boostedType.Clear();
+
         radarObject.radius = attackRange;
-        scaleRatio = 1f;
+
+        OnScaleRatioChanges();
 
         ChangeState(new IdleState());
+    }
+
+    public void OnScaleRatioChanges()
+    {
+        characterTransform.localScale = Vector3.one * scaleRatio;
+        moveSpeed *= scaleRatio;
+        attackRange *= scaleRatio;
     }
 
     public void ChangeState(IState<AbstractCharacter> state)
@@ -169,7 +189,15 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         ChangeAnim(Constant.TRIGGER_ATTACK);
 
-        if (isReadyToAttack) BulletManager.instance.Spawn(characterScript);
+        if (isReadyToAttack)
+        {
+            BulletManager.instance.Spawn(characterScript);
+
+            if (isBoosted)
+            {
+                ClearBoost();
+            }
+        }
     }
 
     public virtual void Dead()
@@ -207,6 +235,46 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
+    // Boost
+    public void SpeedUp(float multiply) 
+    {
+        isBoosted = true;
+
+        boostedType.Add(BoostType.SpeedBoost);
+
+        tempSpeed = moveSpeed;
+        moveSpeed *= multiply;
+        agent.speed = moveSpeed * 0.67f;
+    }
+
+    public void EnormousEnhance()
+    {
+        isBoosted = true;
+
+        boostedType.Add(BoostType.EnormousBoost);
+
+        tempScaleRatio = scaleRatio;
+        scaleRatio *= 1.5f;
+        OnScaleRatioChanges();
+    }
+
+    private void ClearBoost()
+    {
+        foreach (BoostType type in boostedType)
+        {
+            switch (type)
+            {
+                case BoostType.SpeedBoost: moveSpeed = tempSpeed; agent.speed = moveSpeed * 0.67f; break;
+                case BoostType.EnormousBoost: scaleRatio = tempScaleRatio; break;
+            }
+        }
+
+        OnScaleRatioChanges();
+
+        isBoosted = false;
+    }
+
+    // Getter
     public float GetAttackRange()
     {
         return attackRange;
@@ -225,10 +293,5 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform GetAttackPoint()
     {
         return attackPoint;
-    }
-
-    public void WarpTo(Vector3 pos)
-    {
-        agent.Warp(pos);
     }
 }

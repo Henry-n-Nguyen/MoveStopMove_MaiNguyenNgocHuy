@@ -23,4 +23,11 @@ namespace HuySpace
         Pant,
         Skin
     }
+
+    public enum BoostType
+    {
+        CoinBoost,
+        SpeedBoost,
+        EnormousBoost
+    }
 }

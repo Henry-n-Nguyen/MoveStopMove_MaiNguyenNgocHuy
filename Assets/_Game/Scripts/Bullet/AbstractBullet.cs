@@ -48,6 +48,8 @@ public abstract class AbstractBullet : MonoBehaviour
     {
         attackRange = owner.GetAttackRange();
         scaleRatio = owner.GetScaleParametters();
+
+        bulletTransform.localScale = Vector3.one * scaleRatio;
     }
 
     protected virtual void Launch()

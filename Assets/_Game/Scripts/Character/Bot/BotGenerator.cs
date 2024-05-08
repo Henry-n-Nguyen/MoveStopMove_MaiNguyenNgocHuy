@@ -67,6 +67,8 @@ public class BotGenerator : MonoBehaviour
             character.index = index;
             index++;
 
+            character.OnInit();
+
             randomNumber = Random.Range(0, EquipmentManager.instance.weaponList.Count);
             character.Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(randomNumber));
 
