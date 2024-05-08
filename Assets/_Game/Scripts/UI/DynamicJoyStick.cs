@@ -30,7 +30,7 @@ public class DynamicJoyStick : MonoBehaviour
     {
         isPressed = false;
 
-        splittedjoyStick.color = new Color(splittedjoyStick.color.r, splittedjoyStick.color.g, splittedjoyStick.color.b, 0f);
+        splittedjoyStick.enabled = false;
         joyStick.color = new Color(joyStick.color.r, joyStick.color.g, joyStick.color.b, 0f);
     }
 
@@ -51,7 +51,7 @@ public class DynamicJoyStick : MonoBehaviour
         {
             isPressed = true;
 
-            splittedjoyStick.color = new Color(splittedjoyStick.color.r, splittedjoyStick.color.g, splittedjoyStick.color.b, 1f);
+            splittedjoyStick.enabled = true;
             joyStick.color = new Color(joyStick.color.r, joyStick.color.g, joyStick.color.b, 1f);
         }
         else if (Input.GetMouseButtonUp(0))

@@ -11,10 +11,12 @@ public class Constant : MonoBehaviour
     public const string TRIGGER_RUN = "run";
     public const string TRIGGER_IDLE = "idle";
     public const string TRIGGER_ATTACK = "attack";
+    public const string TRIGGER_DEAD = "dead";
 
     // Layer Constants
     public const string LAYER_CHARACTER = "Character";
 
     // Tag Constants
     public const string TAG_ENEMY = "Enemy";
+    public const string TAG_PLAYER = "Player";
 }

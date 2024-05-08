@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 using UnityEngine.WSA;
 
 public abstract class AbstractBullet : MonoBehaviour
@@ -13,8 +14,7 @@ public abstract class AbstractBullet : MonoBehaviour
 
     public AbstractCharacter owner;
 
-    [SerializeField] protected float speed = 2f;
-
+    protected float speed = 6f;
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
 
@@ -32,6 +32,10 @@ public abstract class AbstractBullet : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER) && other.gameObject != owner.gameObject) 
         {
+            AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
+            character.ChangeState(new DeadState());
+            owner.targetsInRange.Remove(character);
+
             Despawn();
         }
     }

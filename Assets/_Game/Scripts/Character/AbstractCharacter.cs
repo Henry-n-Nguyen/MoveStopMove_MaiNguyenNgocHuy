@@ -28,20 +28,20 @@ public abstract class AbstractCharacter : MonoBehaviour
     // Statitics
     public int index;
 
-    protected float moveSpeed = 7.5f;
+    protected float moveSpeed = 5f;
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
 
     // Bool variables
     protected bool isMoving;
     protected bool isDead;
-    protected bool isReadyToAttack;
+    [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
     public bool IsDead => isDead;
 
     // List target
-    [SerializeField] protected List<AbstractCharacter> targetsInRange = new List<AbstractCharacter>();
+    public List<AbstractCharacter> targetsInRange = new List<AbstractCharacter>();
 
     // Private variables
     private IState<AbstractCharacter> currentState;
@@ -66,31 +66,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
-        {
-            AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
-            if (!character.IsDead) targetsInRange.Add(character);
-        }
-
-        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
-        {
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (!enemy.IsDead) enemy.IsTargeted(true);
-        }
-    }
-
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
-        {
-            targetsInRange.RemoveAt(targetsInRange.IndexOf(other.gameObject.GetComponent<AbstractCharacter>()));
-        }
-
-        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
-        {
-            Enemy enemy = other.GetComponent<Enemy>();
-            enemy.IsTargeted(false);
-        }
+        
     }
 
     public virtual void OnInit()
@@ -168,13 +144,13 @@ public abstract class AbstractCharacter : MonoBehaviour
     // Public function
     public bool IsReadyToAttack()
     {
-        if (BulletManager.instance.IsBulletActivated(index)) { 
-            weapon.Despawn();
+        if (BulletManager.instance.IsBulletActivated(this.index)) { 
+            this.weapon.Despawn();
             return false;
         }
         else
         {
-            weapon.Spawn();
+            this.weapon.Spawn();
             return true;
         }
     }
@@ -194,6 +170,11 @@ public abstract class AbstractCharacter : MonoBehaviour
         ChangeAnim(Constant.TRIGGER_ATTACK);
 
         if (isReadyToAttack) BulletManager.instance.Spawn(characterScript);
+    }
+
+    public virtual void Dead()
+    {
+        ChangeAnim(Constant.TRIGGER_DEAD);
     }
 
     protected AbstractCharacter FindClosestCharacter()
@@ -218,9 +199,12 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     protected void TurnTowardClosestCharacter()
     {
-        Vector3 closestEnemyPosition = FindClosestCharacter().transform.position;
+        AbstractCharacter closestEnemy = FindClosestCharacter();
 
-        characterTransform.forward = (closestEnemyPosition - characterTransform.position).normalized;
+        if (closestEnemy != null)
+        {
+            characterTransform.forward = (closestEnemy.transform.position - characterTransform.position).normalized;
+        }
     }
 
     public float GetAttackRange()

@@ -13,18 +13,36 @@ public class Enemy : AbstractCharacter
     [SerializeField] private bool desPointSet;
     [SerializeField] private float desPointRange;
 
-    private bool isDetectedTarget;
+    [SerializeField] private bool isDetectedTarget;
+
+    private float patrolingTimer = 0;
+    private float idlingTimer = 0;
 
     public override void OnInit()
     {
         base.OnInit();
 
         isDetectedTarget = false;
+
+        agent.speed = moveSpeed * 0.67f;
     }
 
     public override void Moving()
     {
         base.Moving();
+
+        if (targetsInRange.Count > 0)
+        {
+            if (isReadyToAttack && !isDetectedTarget)
+            {
+                agent.SetDestination(characterTransform.position);
+
+                desPointSet = false;
+                patrolingTimer = 0;
+
+                ChangeState(new AttackState());
+            }
+        }
 
         if (!desPointSet)
         {
@@ -32,29 +50,40 @@ public class Enemy : AbstractCharacter
         }
         else
         {
-            agent.SetDestination(desPoint);
-        }
+            patrolingTimer += Time.deltaTime;
 
-        if (targetsInRange.Count > 0)
-        {
-            ChangeState(new IdleState());
+            if (patrolingTimer > 5f)
+            {
+                desPointSet = false;
+                patrolingTimer = 0;
+            }
+
+            agent.SetDestination(desPoint);
         }
 
         Vector3 distanceToDesPoint = characterTransform.position - desPoint;
 
         if (distanceToDesPoint.magnitude < 1f) 
-        {   
+        {
+            ChangeState(new IdleState());
+
             desPointSet = false; 
+            patrolingTimer = 0;
+
         }
     }
 
     private void SearchDesPoint()
     {
-        // Calculate random number x, z axis
-        float randomZ = Random.Range(-desPointRange, desPointRange);
-        float randomX = Random.Range(-desPointRange, desPointRange);
+        // create random point in a walkRadius
+        Vector3 randomDirection = Random.insideUnitSphere * desPointRange;
 
-        desPoint = characterTransform.position + Vector3.right * randomX + Vector3.forward * randomZ;
+        // reference point was created to current tranform and find random point with it
+        randomDirection += characterTransform.position;
+        NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, desPointRange, 1);
+        
+        // return result
+        desPoint = hit.position;
 
         desPointSet = true;
     }
@@ -67,19 +96,28 @@ public class Enemy : AbstractCharacter
 
         if (targetsInRange.Count > 0)
         {
-            TurnTowardClosestCharacter();
-
             if (isReadyToAttack && !isDetectedTarget)
             {
+                idlingTimer = 0;
+                desPointSet = false;
+
                 ChangeState(new AttackState());
             }
         }
 
         if (!desPointSet)
         {
-            SearchDesPoint();
+            idlingTimer += Time.deltaTime;
 
-            ChangeState(new PatrolState());
+            if (idlingTimer > 0.5f)
+            {
+                SearchDesPoint();
+
+                isDetectedTarget = false;
+                idlingTimer = 0;
+
+                ChangeState(new PatrolState());
+            }
         }
     }
 
@@ -87,10 +125,31 @@ public class Enemy : AbstractCharacter
     {
         if (!isDetectedTarget)
         {
+            TurnTowardClosestCharacter();
+
             base.Attack();
 
             isDetectedTarget = true;
         }
+    }
+
+    public override void Dead()
+    {
+        if (!isDead)
+        {
+            base.Dead();
+
+            StartCoroutine(DespawnEnemy(3f));
+
+            isDead = true;
+        }
+    }
+
+    private IEnumerator DespawnEnemy(float time)
+    {
+        yield return new WaitForSeconds(time);
+        BotGenerator.instance.SpawnBot(1);
+        BotPool.Despawn(this);
     }
 
     public void IsTargeted(bool isTargeted)

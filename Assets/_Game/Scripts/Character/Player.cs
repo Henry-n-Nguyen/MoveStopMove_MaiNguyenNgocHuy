@@ -35,7 +35,7 @@ public class Player : AbstractCharacter
 
         characterTransform.position += (Vector3.right * inputVector.x + Vector3.forward * inputVector.y) * Time.deltaTime * moveSpeed;
 
-        if (Vector2.Distance(inputVector, Vector2.zero) < 0.1f)
+        if (Vector2.Distance(inputVector, Vector2.zero) < 0.01f)
         {
             if (isReadyToAttack)
             {
@@ -75,7 +75,7 @@ public class Player : AbstractCharacter
 
         Vector2 inputVector = moveAction.ReadValue<Vector2>();
 
-        if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f)
+        if (Vector2.Distance(inputVector, Vector2.zero) > 0.01f)
         {
             ChangeState(new PatrolState());
 
@@ -99,6 +99,16 @@ public class Player : AbstractCharacter
             ChangeState(new PatrolState());
 
             isDetectedTarget = false;
+        }
+    }
+
+    public override void Dead()
+    {
+        if (!isDead)
+        {
+            base.Dead();
+
+            isDead = true;
         }
     }
 
