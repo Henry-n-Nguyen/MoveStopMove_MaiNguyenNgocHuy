@@ -12,14 +12,14 @@ public class BotGenerator : MonoBehaviour
     [SerializeField] private bool isSpawn;
 
     [Header("Pre-Setup")]
-    [SerializeField] private Transform holder;
-
     [SerializeField] private AbstractCharacter prefab;
 
     [Header("References")]
     [SerializeField] private Transform playerTransform;
 
     [SerializeField] private LayerMask spawnPointLayer;
+
+    private List<Transform> activatedTransform = new List<Transform>();
 
     // Private variables
     private int index = 1;
@@ -44,8 +44,6 @@ public class BotGenerator : MonoBehaviour
     {
         List<Transform> spawnPointList = FindNearbySpawnPoints(playerTransform);
 
-        List<Transform> activatedTransform = new List<Transform>();
-
         int randomNumber = 0;
 
         for (int i = 0; i < quantity; i++)
@@ -59,6 +57,7 @@ public class BotGenerator : MonoBehaviour
             }
 
             activatedTransform.Add(spawnPointList[randomNumber]);
+            StartCoroutine(RemoveActivatedTransform(spawnPointList[randomNumber], 5f));
 
             Vector3 randomPosition = spawnPointList[randomNumber].position;
 
@@ -80,6 +79,12 @@ public class BotGenerator : MonoBehaviour
             randomNumber = Random.Range(0, MaterialManager.instance.skinMaterialList.Count);
             character.Equip(EquipmentType.Skin, MaterialManager.instance.skinMaterialList[randomNumber]);
         }
+    }
+
+    private IEnumerator RemoveActivatedTransform(Transform target, float time)
+    {
+        yield return new WaitForSeconds(time);
+        activatedTransform.Remove(target);
     }
 
     public List<Transform> FindNearbySpawnPoints(Transform targetTransform)
