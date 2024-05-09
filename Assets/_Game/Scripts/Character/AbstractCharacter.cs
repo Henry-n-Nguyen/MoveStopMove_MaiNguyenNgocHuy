@@ -28,6 +28,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     // Statitics
     public int index;
 
+    public int point = 0;
+
     protected float moveSpeed = 5f;
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
@@ -71,11 +73,6 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        
-    }
-
     public virtual void OnInit()
     {
         isDead = false;
@@ -96,6 +93,17 @@ public abstract class AbstractCharacter : MonoBehaviour
         characterTransform.localScale = Vector3.one * scaleRatio;
         moveSpeed *= scaleRatio;
         attackRange *= scaleRatio;
+    }
+
+    public void OnPointChange()
+    {
+        switch (point)
+        {
+            case int x when x >= 3 && x <= 7: scaleRatio = 1.1f; OnScaleRatioChanges(); break;
+            case int x when x >= 8 && x <= 14: scaleRatio = 1.25f; OnScaleRatioChanges(); break;
+            case int x when x >= 15 && x <= 23: scaleRatio = 1.5f; OnScaleRatioChanges(); break;
+            case int x when x >= 24: scaleRatio = 1.9f; OnScaleRatioChanges(); break;
+        }
     }
 
     public void ChangeState(IState<AbstractCharacter> state)

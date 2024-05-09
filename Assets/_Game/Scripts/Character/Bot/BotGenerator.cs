@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
-using System.Linq;
 
 public class BotGenerator : MonoBehaviour
 {
@@ -15,7 +14,7 @@ public class BotGenerator : MonoBehaviour
     [SerializeField] private AbstractCharacter prefab;
 
     [Header("References")]
-    [SerializeField] private Transform playerTransform;
+    [SerializeField] private Player player;
 
     [SerializeField] private LayerMask spawnPointLayer;
 
@@ -42,7 +41,7 @@ public class BotGenerator : MonoBehaviour
 
     public void SpawnBot(int quantity)
     {
-        List<Transform> spawnPointList = FindNearbySpawnPoints(playerTransform);
+        List<Transform> spawnPointList = FindNearbySpawnPoints(player.transform);
 
         int randomNumber = 0;
 
@@ -62,10 +61,12 @@ public class BotGenerator : MonoBehaviour
             Vector3 randomPosition = spawnPointList[randomNumber].position;
 
             // Spawn Bot
-            AbstractCharacter character = BotPool.Spawn<Enemy>(randomPosition, Quaternion.identity);
+            Enemy character = BotPool.Spawn<Enemy>(randomPosition, Quaternion.identity);
 
             character.index = index;
             index++;
+
+            character.point = Random.Range(player.point, player.point + 4);
 
             character.OnInit();
 

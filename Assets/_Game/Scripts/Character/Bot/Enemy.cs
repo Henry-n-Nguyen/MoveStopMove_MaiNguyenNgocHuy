@@ -13,8 +13,7 @@ public class Enemy : AbstractCharacter
     [SerializeField] private bool desPointSet;
     [SerializeField] private float desPointRange;
 
-    [SerializeField] private bool isDetectedTarget;
-
+    private bool isDetectedTarget;
     private float patrolingTimer = 0;
     private float idlingTimer = 0;
 

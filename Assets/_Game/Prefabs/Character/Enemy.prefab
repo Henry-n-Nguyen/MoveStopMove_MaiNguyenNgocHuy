@@ -78,6 +78,7 @@ GameObject:
   - component: {fileID: 4908282860012175601}
   - component: {fileID: 8166948947215985618}
   - component: {fileID: 1114765874217409983}
+  - component: {fileID: 7040531013573885074}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Enemy
@@ -223,13 +224,31 @@ MonoBehaviour:
   skinMeshRenderer: {fileID: 6007163679756295697}
   pantMeshRenderer: {fileID: 2903227904142107083}
   index: 1
+  point: 0
   isReadyToAttack: 0
   targetsInRange: []
   targetedMark: {fileID: 5905830706655812610}
   desPoint: {x: 0, y: 0, z: 0}
   desPointSet: 0
   desPointRange: 15
-  isDetectedTarget: 0
+--- !u!114 &7040531013573885074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 273701399471610355}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1688eebeb5b0c2f44b28443090611067, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  targetColor: {r: 0, g: 1, b: 0.1565237, a: 1}
+  target: {fileID: 1114765874217409983}
+  needBoxIndicator: 1
+  needArrowIndicator: 1
+  needPointText: 1
+  indicator: {fileID: 0}
 --- !u!1 &402932976025282692
 GameObject:
   m_ObjectHideFlags: 0

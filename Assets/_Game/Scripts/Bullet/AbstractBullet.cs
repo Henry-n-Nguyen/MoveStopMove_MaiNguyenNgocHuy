@@ -34,6 +34,9 @@ public abstract class AbstractBullet : MonoBehaviour
         {
             AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
             character.ChangeState(new DeadState());
+
+            owner.point++;
+            owner.OnPointChange();
             owner.targetsInRange.Remove(character);
 
             Despawn();
