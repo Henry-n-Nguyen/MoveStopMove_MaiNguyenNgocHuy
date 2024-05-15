@@ -95,6 +95,11 @@ public class Enemy : AbstractCharacter
 
         agent.SetDestination(characterTransform.position);
 
+        if (IsOnPause())
+        {
+            return;
+        }
+
         if (targetsInRange.Count > 0)
         {
             if (isReadyToAttack && !isDetectedTarget)

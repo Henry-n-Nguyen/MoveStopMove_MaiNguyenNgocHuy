@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using HuySpace;
 
-public class DynamicJoyStick : MonoBehaviour
+public class DynamicJoyStick : UICanvas
 {
     public static DynamicJoyStick instance;
 
@@ -21,7 +21,7 @@ public class DynamicJoyStick : MonoBehaviour
         instance = this;
     }
 
-    void Start()
+    void OnEnable()
     {
         OnInit();
     }

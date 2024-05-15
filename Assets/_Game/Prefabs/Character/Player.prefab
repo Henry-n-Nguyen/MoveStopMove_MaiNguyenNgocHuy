@@ -242,6 +242,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterTransform: {fileID: 3308923855994619669}
   characterScript: {fileID: 4560287272006892595}
+  targetScript: {fileID: 5132354933558497253}
   radarObject: {fileID: 7277379578229232064}
   attackPoint: {fileID: 5064853755017719388}
   agent: {fileID: 1882805022055240425}
@@ -274,7 +275,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 273701399471610355}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1688eebeb5b0c2f44b28443090611067, type: 3}
   m_Name: 

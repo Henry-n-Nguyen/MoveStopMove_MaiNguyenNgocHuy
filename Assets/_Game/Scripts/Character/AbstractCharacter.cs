@@ -10,6 +10,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     // Editor
     [SerializeField] protected Transform characterTransform;
     [SerializeField] protected AbstractCharacter characterScript;
+    [SerializeField] protected Target targetScript;
 
     [SerializeField] protected SphereCollider radarObject;
     [SerializeField] protected Transform attackPoint;
@@ -36,6 +37,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Bool variables
     protected bool isDead;
+    protected bool isIngame;
     [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
@@ -181,6 +183,22 @@ public abstract class AbstractCharacter : MonoBehaviour
             this.weapon.Spawn();
             return true;
         }
+    }
+
+    public bool IsOnPause()
+    {
+        bool onPause = GamePlayManager.instance.onPause;
+
+        if (!onPause)
+        {
+            targetScript.enabled = true;
+        }
+        else
+        {
+            targetScript.enabled = false;
+        }
+
+        return onPause;
     }
 
     public virtual void Moving()

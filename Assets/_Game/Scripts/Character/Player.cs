@@ -61,6 +61,11 @@ public class Player : AbstractCharacter
     {
         base.StopMoving();
 
+        if (IsOnPause())
+        {
+            return;
+        }
+
         if (targetsInRange.Count > 0)
         {
             TurnTowardClosestCharacter();

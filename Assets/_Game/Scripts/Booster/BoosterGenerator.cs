@@ -74,6 +74,8 @@ public class BoosterGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
+        yield return new WaitForSeconds(2f);
+        SpawnBooster(2);
     }
 
     public List<Transform> FindNearbySpawnPoints(Transform targetTransform)

@@ -30,4 +30,12 @@ namespace HuySpace
         SpeedBoost,
         EnormousBoost
     }
+
+    public enum CameraState
+    {
+        MainCamera,
+        WeaponShop,
+        CostumeShop,
+        MainMenu
+    }
 }
