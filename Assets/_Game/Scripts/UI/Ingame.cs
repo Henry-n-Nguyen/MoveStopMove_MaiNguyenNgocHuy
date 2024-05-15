@@ -13,14 +13,14 @@ public class Ingame : UICanvas
     private void OnInit()
     {
         CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
-        StartCoroutine(SpawnBoosterAfterTime(15f));
+        //StartCoroutine(SpawnBoosterAfterTime(15f));
     }
 
     private IEnumerator SpawnBoosterAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
-        BoosterGenerator.instance.SpawnBooster(2);
+        BoosterGenerator.instance.SpawnBooster(1);
     }
 
     public void OpenSettings()

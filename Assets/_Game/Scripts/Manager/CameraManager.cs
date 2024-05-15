@@ -8,9 +8,10 @@ public class CameraManager : MonoBehaviour
     public static CameraManager instance;
 
     [Header("References")]
-    [SerializeField] private GameObject weaponShopCamera;
     [SerializeField] private GameObject costumeShopCamera;
     [SerializeField] private GameObject mainMenuCamera;
+
+    private List<Weapon> weaponShopList = new List<Weapon>();
 
     private void Awake()
     {
@@ -24,7 +25,6 @@ public class CameraManager : MonoBehaviour
 
     public void OnInit()
     {
-        weaponShopCamera.SetActive(false);
         costumeShopCamera.SetActive(false);
         mainMenuCamera.SetActive(false);
     }
@@ -34,10 +34,6 @@ public class CameraManager : MonoBehaviour
         switch (state)
         {
             case CameraState.MainCamera: OnInit(); break;
-            case CameraState.WeaponShop: 
-                OnInit();
-                weaponShopCamera.SetActive(true);
-                break;
             case CameraState.CostumeShop:
                 OnInit();
                 costumeShopCamera.SetActive(true);

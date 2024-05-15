@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4486857499878711135}
   - component: {fileID: 290079104172479386}
   - component: {fileID: 1333298477556272462}
+  - component: {fileID: -6640393165476903942}
   m_Layer: 9
   m_Name: Hammer(Texture)
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-6640393165476903942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4741584604346601180}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21246750f7141845ab418412713a26e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 14

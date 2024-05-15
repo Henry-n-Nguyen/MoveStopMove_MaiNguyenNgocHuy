@@ -34,7 +34,6 @@ namespace HuySpace
     public enum CameraState
     {
         MainCamera,
-        WeaponShop,
         CostumeShop,
         MainMenu
     }

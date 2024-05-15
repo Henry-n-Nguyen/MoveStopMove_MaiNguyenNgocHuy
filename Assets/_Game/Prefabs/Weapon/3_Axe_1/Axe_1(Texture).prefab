@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 702682843652398870}
   - component: {fileID: 1012742702128454015}
   - component: {fileID: 4288574686848903869}
+  - component: {fileID: -3979276173640451406}
   m_Layer: 9
   m_Name: Axe_1(Texture)
   m_TagString: Untagged
@@ -85,3 +86,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-3979276173640451406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1858390880140849675}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21246750f7141845ab418412713a26e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 3

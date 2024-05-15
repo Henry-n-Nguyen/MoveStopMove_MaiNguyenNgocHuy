@@ -24,4 +24,11 @@ public class MainMenu : UICanvas
 
         GamePlayManager.instance.ResumeGame();
     }
+
+    public void GoToWeaponShop()
+    {
+        UIManager.instance.CloseDirectly<MainMenu>();
+
+        UIManager.instance.OpenUI<WeaponShop>();
+    }
 }

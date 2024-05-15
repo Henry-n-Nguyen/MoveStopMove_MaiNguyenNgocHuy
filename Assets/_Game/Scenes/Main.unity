@@ -4429,6 +4429,30 @@ MonoBehaviour:
   - {fileID: 3502346409957871423, guid: a2cac108f314c7542b92c5f01102d2dc, type: 3}
   - {fileID: 2307573753165698951, guid: 36d1753855e034f4f80dcef1a5d3885e, type: 3}
   - {fileID: 4478972462742367628, guid: 8ba491fcac25f7e4eaf8b39767cf7322, type: 3}
+  weaponImageList:
+  - {fileID: 4080398623835196490, guid: 2d21cb907f32dda46ba419bf191ecc0e, type: 3}
+  - {fileID: 2645762537730299529, guid: 94347ef01f10ba44b8ec289993b17c13, type: 3}
+  - {fileID: 7381303695159161602, guid: 39e005f6514f7b740b9c9ad6d0280633, type: 3}
+  - {fileID: 1755035807201431486, guid: 0ae917bfd04bac145baa7e32254beef0, type: 3}
+  - {fileID: 2204563687743094210, guid: d3b8c84b2788a254aafdee8e01798f93, type: 3}
+  - {fileID: 7785916744935714100, guid: 337b59c0139c6eb448d4a8a56210a2be, type: 3}
+  - {fileID: 7785916744935714100, guid: 1a1deda5c723b8e43985802d8910ad10, type: 3}
+  - {fileID: 7785916744935714100, guid: 5950687b693460149adf69cdecaa4791, type: 3}
+  - {fileID: 7785916744935714100, guid: b52e6ab2b6626a244b60d39138b4b6ed, type: 3}
+  - {fileID: 7785916744935714100, guid: e39491555fcefbc4db79470b240fff47, type: 3}
+  - {fileID: 7785916744935714100, guid: d52e419ac5b92264f8ce45ddb953ffc7, type: 3}
+  - {fileID: 7785916744935714100, guid: 22f0fe4115fc81e4186cc1e6d701477c, type: 3}
+  - {fileID: 7785916744935714100, guid: 84fde597ab3eeb844a752f01557d7cd6, type: 3}
+  - {fileID: 7785916744935714100, guid: 750644ada1c33464d895984cc23b5e94, type: 3}
+  - {fileID: 7785916744935714100, guid: 2bc67c2f980cf2946a4810a369f9e2d8, type: 3}
+  - {fileID: 7785916744935714100, guid: fc2c0a4382e1ad842ae509768f0a801a, type: 3}
+  - {fileID: 7785916744935714100, guid: bdaaee27e28ec8d45890c389c83d26bc, type: 3}
+  - {fileID: 7785916744935714100, guid: d85bde9a21938c449b93e3a712ccc368, type: 3}
+  - {fileID: 7785916744935714100, guid: 347c3963c376a4946a137df62dd19507, type: 3}
+  - {fileID: 7785916744935714100, guid: 497b071fa9309a54ab088d49a13d8dab, type: 3}
+  - {fileID: 7785916744935714100, guid: 7dde28c38f9cebe42bb1467342373018, type: 3}
+  - {fileID: 7785916744935714100, guid: ba5ea01d68ee8c54fa54d119c1953b2e, type: 3}
+  - {fileID: 7785916744935714100, guid: e34d488c3eed8de49bf46a755ff5e7f6, type: 3}
   hatList:
   - {fileID: -2922490841914570617, guid: 3f6cd09fbc7db6240ae21f5ca43c3943, type: 3}
   - {fileID: -5365949985865233153, guid: 12a5b521e81637244b32983d2821dcaa, type: 3}
@@ -13485,89 +13509,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 9259eab84dce4ac4e83229cc066a20a7, type: 3}
   m_PrefabInstance: {fileID: 1174896071}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1189728796
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1189728797}
-  - component: {fileID: 1189728799}
-  m_Layer: 0
-  m_Name: WeaponShopCamera
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &1189728797
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1189728796}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1255318702}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!20 &1189728799
-Camera:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1189728796}
-  m_Enabled: 1
-  serializedVersion: 2
-  m_ClearFlags: 2
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
-  m_projectionMatrixMode: 1
-  m_GateFitMode: 2
-  m_FOVAxisMode: 0
-  m_Iso: 200
-  m_ShutterSpeed: 0.005
-  m_Aperture: 16
-  m_FocusDistance: 10
-  m_FocalLength: 50
-  m_BladeCount: 5
-  m_Curvature: {x: 2, y: 11}
-  m_BarrelClipping: 0.25
-  m_Anamorphism: 0
-  m_SensorSize: {x: 36, y: 24}
-  m_LensShift: {x: 0, y: 0}
-  m_NormalizedViewPortRect:
-    serializedVersion: 2
-    x: 0
-    y: 0
-    width: 1
-    height: 1
-  near clip plane: 0.3
-  far clip plane: 1000
-  field of view: 60
-  orthographic: 0
-  orthographic size: 5
-  m_Depth: 0
-  m_CullingMask:
-    serializedVersion: 2
-    m_Bits: 512
-  m_RenderingPath: -1
-  m_TargetTexture: {fileID: 8400000, guid: b6616e031b849c045b425539edf46321, type: 2}
-  m_TargetDisplay: 0
-  m_TargetEye: 3
-  m_HDR: 1
-  m_AllowMSAA: 1
-  m_AllowDynamicResolution: 0
-  m_ForceIntoRT: 0
-  m_OcclusionCulling: 1
-  m_StereoConvergence: 10
-  m_StereoSeparation: 0.022
 --- !u!1001 &1191191449
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -14526,7 +14467,6 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1189728797}
   - {fileID: 1533002789}
   - {fileID: 2033262542}
   m_Father: {fileID: 1213344112}
@@ -14543,7 +14483,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fda18327dd66a824eaac11e90c8eebff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponShopCamera: {fileID: 1189728796}
   costumeShopCamera: {fileID: 1533002788}
   mainMenuCamera: {fileID: 2033262541}
 --- !u!1001 &1262189761

@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 2027951651627659627}
   - component: {fileID: 6432577616781858836}
   - component: {fileID: 7434957457130292813}
+  - component: {fileID: -5696564576367033291}
   m_Layer: 9
   m_Name: Knife(Texture)
   m_TagString: Untagged
@@ -84,3 +85,16 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &-5696564576367033291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2933307905294932749}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a21246750f7141845ab418412713a26e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 17
