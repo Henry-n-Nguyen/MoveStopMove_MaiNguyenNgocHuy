@@ -37,4 +37,23 @@ namespace HuySpace
         CostumeShop,
         MainMenu
     }
+
+    public enum GamePlayState
+    {
+        None = -1,
+        Loading,
+        MainMenu,
+        Shop,
+        Ingame,
+        Win,
+        Lose
+    }
+
+    public enum CostumeShopState
+    {
+        SkinShop,
+        HatShop,
+        PantShop,
+        SpecialShop
+    }
 }

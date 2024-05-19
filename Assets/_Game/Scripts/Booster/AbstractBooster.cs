@@ -22,7 +22,7 @@ public abstract class AbstractBooster : MonoBehaviour
         if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
         {
             AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
-            TriggerBoost(character);
+            if (!character.isBoosted) TriggerBoost(character);
             Despawn();
         }
     }

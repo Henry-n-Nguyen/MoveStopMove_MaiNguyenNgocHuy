@@ -12,6 +12,7 @@ public class Constant : MonoBehaviour
     public const string TRIGGER_IDLE = "idle";
     public const string TRIGGER_ATTACK = "attack";
     public const string TRIGGER_DEAD = "dead";
+    public const string TRIGGER_DANCE_SHOP = "dance_shop";
 
     // Layer Constants
     public const string LAYER_CHARACTER = "Character";

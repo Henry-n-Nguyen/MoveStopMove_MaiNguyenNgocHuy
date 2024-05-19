@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
 public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance;
 
-    public bool onPause;
+    public GamePlayState currentGamePlayState;
 
     private void Awake()
     {
@@ -15,12 +16,13 @@ public class GamePlayManager : MonoBehaviour
 
     private void Start()
     {
-        OnHold();
         OnInit();
     }
 
     public void OnInit()
     {
+        currentGamePlayState = GamePlayState.None;
+
         StartCoroutine(LoadingGame());   
     }
 
@@ -28,21 +30,11 @@ public class GamePlayManager : MonoBehaviour
     {
         UIManager.instance.OpenUI<Loading>();
 
-        BotGenerator.instance.SpawnBot(8);
+        BotGenerator.instance.SpawnPlayer();
 
         yield return new WaitForSeconds(5f);
 
         UIManager.instance.CloseDirectly<Loading>();
         UIManager.instance.OpenUI<MainMenu>();
-    }
-
-    public void OnHold()
-    {
-        onPause = true;
-    }
-
-    public void ResumeGame()
-    {
-        onPause = false;
     }
 }

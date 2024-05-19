@@ -12,8 +12,10 @@ public class Ingame : UICanvas
 
     private void OnInit()
     {
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.Ingame;
+
         CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
-        //StartCoroutine(SpawnBoosterAfterTime(15f));
+        StartCoroutine(SpawnBoosterAfterTime(15f));
     }
 
     private IEnumerator SpawnBoosterAfterTime(float time)

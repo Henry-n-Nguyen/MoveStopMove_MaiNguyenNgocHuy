@@ -52,7 +52,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     private string currentAnimName;
 
     // Boost Variables
-    protected bool isBoosted;
+    public bool isBoosted;
 
     protected List<BoostType> boostedType = new List<BoostType>();
 
@@ -67,6 +67,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void Update()
     {
+        targetScript.enabled = !IsOnPause();
         isReadyToAttack = IsReadyToAttack();
 
         if (currentState != null)
@@ -157,19 +158,25 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     } // For hat equip
 
-    public void Equip(EquipmentType equipmentType, Material material)
+    public void Equip(EquipmentType equipmentType, Skin skin)
+    {
+        switch (equipmentType)
+        {
+            case EquipmentType.Skin:
+                skinMeshRenderer.material = skin.material;
+                break;
+        }
+    } // For skin
+
+    public void Equip(EquipmentType equipmentType, Pant pant)
     {
         switch (equipmentType)
         {
             case EquipmentType.Pant:
-                pantMeshRenderer.material = material;
-                break;
-            case EquipmentType.Skin:
-                skinMeshRenderer.material = material;
+                pantMeshRenderer.material = pant.material;
                 break;
         }
-    } // For material equip such as skin, pant, ...
-
+    } // For pant
 
     // Public function
     public bool IsReadyToAttack()
@@ -187,18 +194,16 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public bool IsOnPause()
     {
-        bool onPause = GamePlayManager.instance.onPause;
+        GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
 
-        if (!onPause)
-        {
-            targetScript.enabled = true;
-        }
-        else
-        {
-            targetScript.enabled = false;
-        }
+        return gamePlayState != GamePlayState.Ingame;
+    }
 
-        return onPause;
+    public bool IsOnShop()
+    {
+        GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
+
+        return gamePlayState == GamePlayState.Shop;
     }
 
     public virtual void Moving()
@@ -229,6 +234,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     public virtual void Dead()
     {
         ChangeAnim(Constant.TRIGGER_DEAD);
+    }
+
+    public virtual void Dancing()
+    {
+        ChangeAnim(Constant.TRIGGER_DANCE_SHOP);
     }
 
     protected AbstractCharacter FindClosestCharacter()

@@ -16,8 +16,6 @@ public class Settings : UICanvas
     {
         UIManager.instance.CloseDirectly<Settings>();
 
-        GamePlayManager.instance.OnHold();
-
         UIManager.instance.OpenUI<MainMenu>();
     }
 }

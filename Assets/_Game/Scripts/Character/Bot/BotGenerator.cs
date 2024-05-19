@@ -7,16 +7,15 @@ public class BotGenerator : MonoBehaviour
 {
     public static BotGenerator instance;
 
-    [Header("Button to Spawn :V")]
-    [SerializeField] private bool isSpawn;
-
     [Header("Pre-Setup")]
-    [SerializeField] private AbstractCharacter prefab;
+    [SerializeField] private Player playerPrefab;
 
     [Header("References")]
-    [SerializeField] private Player player;
+    [SerializeField] private Transform characterHolder;
 
     [SerializeField] private LayerMask spawnPointLayer;
+
+    public Player player = null;
 
     private List<Transform> activatedTransform = new List<Transform>();
 
@@ -28,14 +27,20 @@ public class BotGenerator : MonoBehaviour
         instance = this;
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SpawnPlayer()
     {
-        //TEST
-        if (isSpawn)
+        if (player != null)
         {
-            SpawnBot(8);
-            isSpawn = false;
+            player.OnInit();
+        }
+        else
+        {
+            Player createdPlayer = Instantiate(playerPrefab, characterHolder);
+
+            player = createdPlayer;
+
+            CameraFollow.instance.target = player.transform;
+            UserDataManager.instance.player = player;
         }
     }
 
@@ -47,6 +52,8 @@ public class BotGenerator : MonoBehaviour
 
         for (int i = 0; i < quantity; i++)
         {
+            if (activatedTransform.Count == spawnPointList.Count) continue;
+
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, spawnPointList.Count);
 
@@ -70,17 +77,21 @@ public class BotGenerator : MonoBehaviour
 
             character.OnInit();
 
-            randomNumber = Random.Range(0, EquipmentManager.instance.weaponList.Count);
-            character.Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(randomNumber));
+            List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
+            randomNumber = Random.Range(0, weaponList.Count);
+            character.Equip(EquipmentType.Weapon, weaponList[randomNumber]);
 
-            randomNumber = Random.Range(0, EquipmentManager.instance.hatList.Count);
-            character.Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(randomNumber));
+            List<Hat> hatList = EquipmentManager.instance.GetHatList();
+            randomNumber = Random.Range(0, hatList.Count);
+            character.Equip(EquipmentType.Hat, hatList[randomNumber]);
 
-            randomNumber = Random.Range(0, MaterialManager.instance.pantMaterialList.Count);
-            character.Equip(EquipmentType.Pant, MaterialManager.instance.pantMaterialList[randomNumber]);
+            List<Pant> pantList = MaterialManager.instance.GetPantList();
+            randomNumber = Random.Range(0, pantList.Count);
+            character.Equip(EquipmentType.Pant, pantList[randomNumber]);
 
-            randomNumber = Random.Range(0, MaterialManager.instance.skinMaterialList.Count);
-            character.Equip(EquipmentType.Skin, MaterialManager.instance.skinMaterialList[randomNumber]);
+            List<Skin> skinList = MaterialManager.instance.GetSkinList();
+            randomNumber = Random.Range(0, skinList.Count);
+            character.Equip(EquipmentType.Skin, skinList[randomNumber]);
         }
     }
 

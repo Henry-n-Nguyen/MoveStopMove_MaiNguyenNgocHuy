@@ -1,18 +1,17 @@
+using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Loading : UICanvas
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnEnable()
     {
-        
+        OnInit();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnInit()
     {
-        
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.Loading;
     }
 }

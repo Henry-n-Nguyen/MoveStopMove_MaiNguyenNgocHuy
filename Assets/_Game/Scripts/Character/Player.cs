@@ -16,11 +16,31 @@ public class Player : AbstractCharacter
     {
         base.OnInit();
 
-        isDetectedTarget = false;
+        LoadDataFromUserData();
 
+        characterTransform.position = Vector3.zero;
         Rotate(Direct.Forward);
-
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
+
+        point = 0;
+        scaleRatio = 1f;
+
+        isDetectedTarget = false;
+    }
+
+    public void LoadDataFromUserData()
+    {
+        int equippedWeaponId = UserDataManager.instance.userData.equippedWeapoonId;
+        Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
+
+        int equippedHatId = UserDataManager.instance.userData.equippedHatId;
+        Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(equippedHatId));
+
+        int equippedPantId = UserDataManager.instance.userData.equippedPantId;
+        Equip(EquipmentType.Pant, MaterialManager.instance.GetPantById(equippedPantId));
+
+        int equippedSkinId = UserDataManager.instance.userData.equippedSkinId;
+        Equip(EquipmentType.Skin, MaterialManager.instance.GetPantById(equippedSkinId));
     }
 
     public override void Moving()
@@ -60,6 +80,11 @@ public class Player : AbstractCharacter
     public override void StopMoving()
     {
         base.StopMoving();
+
+        if (IsOnShop())
+        {
+            ChangeState(new DanceState());
+        }
 
         if (IsOnPause())
         {
@@ -114,6 +139,16 @@ public class Player : AbstractCharacter
             base.Dead();
 
             isDead = true;
+        }
+    }
+
+    public override void Dancing()
+    {
+        base.Dancing();
+
+        if (!IsOnShop())
+        {
+            ChangeState(new IdleState());
         }
     }
 

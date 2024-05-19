@@ -1,15 +1,22 @@
 using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class WeaponShop : UICanvas
 {
+    [Header("Pre")]
+    [SerializeField] private Image weaponPrefab;
+
+    [Header("References")]
+    [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private RectTransform content;
 
-    [SerializeField] private List<Image> weaponImages = new List<Image>();
-    
+    // In Editor
+    private List<Sprite> weaponImages = new List<Sprite>();
+
     private List<Image> activeWeaponImages = new List<Image>();
 
     private int id;
@@ -21,17 +28,27 @@ public class WeaponShop : UICanvas
 
     private void OnInit()
     {
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.Shop;
+
         id = 0;
 
-        weaponImages = EquipmentManager.instance.GetWeaponImageList();
+        OnIdChanges();
 
-        foreach (Image image in weaponImages)
+        weaponImages = EquipmentManager.instance.GetWeaponSpriteList();
+
+        foreach (Sprite image in weaponImages)
         {
-            Image createdImage = Instantiate(image, content);
+            Image createdImage = Instantiate(weaponPrefab, content);
+
+            createdImage.sprite = image;
 
             activeWeaponImages.Add(createdImage);
         }
+    }
 
+    private void OnIdChanges()
+    {
+        coinText.text = ((id + 1) * 500f).ToString();
     }
 
     public void PrevWeapon()
@@ -40,15 +57,17 @@ public class WeaponShop : UICanvas
         {
             id--;
             content.position += Vector3.right * 650f;
+            OnIdChanges();
         }
     }
 
     public void NextWeapon()
     {
-        if (id < weaponImages.Count)
+        if (id < weaponImages.Count - 1)
         {
             id++;
             content.position -= Vector3.right * 650f;
+            OnIdChanges();
         }
     }
 

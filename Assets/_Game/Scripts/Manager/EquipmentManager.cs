@@ -7,39 +7,24 @@ public class EquipmentManager : MonoBehaviour
 {
     public static EquipmentManager instance;
 
-    public List<Weapon> weaponList = new List<Weapon>();
-    public List<Image> weaponImageList = new List<Image>();
-    public List<Hat> hatList = new List<Hat>();
+    [SerializeField] private List<Weapon> weaponList = new List<Weapon>();
+    [SerializeField] private List<Sprite> weaponSpriteList = new List<Sprite>();
+    [SerializeField] private List<Hat> hatList = new List<Hat>();
+    [SerializeField] private List<Sprite> hatSpriteList = new List<Sprite>();
 
     private void Awake()
     {
         instance = this;
     }
 
-    public Image GetImageById(int id)
-    {
-        Image weaponImage= weaponImageList[0];
-
-        if (id < weaponImageList.Count) weaponImage = weaponImageList[id];
-
-        return weaponImage;
-    }
-
-    public List<Image> GetWeaponImageList()
-    {
-        return weaponImageList;
-    }
-
     public Weapon GetWeaponById(int id)
     {
-        Weapon weaponWithId = weaponList[0];
-        
         foreach (Weapon weapon in weaponList)
         {
-            if (weapon.id == id) weaponWithId = weapon;
+            if (weapon.id == id) return weapon;
         }
 
-        return weaponWithId;
+        return weaponList[id] != null ? weaponList[id] : weaponList[0];
     }
 
     public List<Weapon> GetWeaponList()
@@ -47,16 +32,19 @@ public class EquipmentManager : MonoBehaviour
         return weaponList;
     }
 
+    public List<Sprite> GetWeaponSpriteList()
+    {
+        return weaponSpriteList;
+    }
+
     public Hat GetHatById(int id)
     {
-        Hat hatWithId = hatList[0];
-
         foreach (Hat hat in hatList)
         {
-            if (hat.id == id) hatWithId = hat;
+            if (hat.id == id) return hat;
         }
 
-        return hatWithId;
+        return hatList[id] != null ? hatList[id] : hatList[0];
     }
 
     public List<Hat> GetHatList()
@@ -64,13 +52,8 @@ public class EquipmentManager : MonoBehaviour
         return hatList;
     }
 
-    public bool IsWeaponWithThisIdExist(int id)
+    public List<Sprite> GetHatSpriteList()
     {
-        foreach (Weapon weapon in weaponList)
-        {
-            if (weapon.id == id) return true;
-        }
-
-        return false;
+        return hatSpriteList;
     }
 }

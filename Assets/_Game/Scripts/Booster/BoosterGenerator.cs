@@ -26,6 +26,16 @@ public class BoosterGenerator : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        OnInit();
+    }
+
+    private void OnInit()
+    {
+        playerTransform = BotGenerator.instance.player.transform;
+    }
+
     // Update is called once per frame
     void Update()
     {

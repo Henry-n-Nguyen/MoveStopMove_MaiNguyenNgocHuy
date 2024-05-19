@@ -2,9 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
+using TMPro;
 
 public class MainMenu : UICanvas
 {
+    [SerializeField] private TextMeshProUGUI coinText;
+
     private void OnEnable()
     {
         OnInit();
@@ -12,7 +15,15 @@ public class MainMenu : UICanvas
 
     private void OnInit()
     {
+        coinText.text = UserDataManager.instance.userData.coin.ToString();
+
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
+
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
+
+        BotGenerator.instance.SpawnPlayer();
+        BotPool.Collect();
+        BotGenerator.instance.SpawnBot(8);
     }
 
     public void PlayGame()
@@ -21,14 +32,19 @@ public class MainMenu : UICanvas
 
         UIManager.instance.OpenUI<DynamicJoyStick>();
         UIManager.instance.OpenUI<Ingame>();
-
-        GamePlayManager.instance.ResumeGame();
     }
 
-    public void GoToWeaponShop()
+    public void EnterWeaponShop()
     {
         UIManager.instance.CloseDirectly<MainMenu>();
 
         UIManager.instance.OpenUI<WeaponShop>();
+    }
+
+    public void EnterCostumeShop()
+    {
+        UIManager.instance.CloseDirectly<MainMenu>();
+
+        UIManager.instance.OpenUI<CostumeShop>();
     }
 }
