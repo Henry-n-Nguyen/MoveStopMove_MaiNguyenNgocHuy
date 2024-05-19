@@ -35,7 +35,9 @@ namespace HuySpace
     {
         MainCamera,
         CostumeShop,
-        MainMenu
+        MainMenu,
+        Win,
+        Lose
     }
 
     public enum GamePlayState

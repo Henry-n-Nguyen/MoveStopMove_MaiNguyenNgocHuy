@@ -9,7 +9,7 @@ public class CameraManager : MonoBehaviour
 
     [Header("References")]
     [SerializeField] private GameObject costumeShopCamera;
-    [SerializeField] private GameObject mainMenuCamera;
+    [SerializeField] private GameObject FaceToFaceCamera;
 
     private List<Weapon> weaponShopList = new List<Weapon>();
 
@@ -26,7 +26,7 @@ public class CameraManager : MonoBehaviour
     public void OnInit()
     {
         costumeShopCamera.SetActive(false);
-        mainMenuCamera.SetActive(false);
+        FaceToFaceCamera.SetActive(false);
     }
 
     public void TurnOnCamera(CameraState state)
@@ -39,8 +39,10 @@ public class CameraManager : MonoBehaviour
                 costumeShopCamera.SetActive(true);
                 break;
             case CameraState.MainMenu:
+            case CameraState.Win:
+            case CameraState.Lose:
                 OnInit();
-                mainMenuCamera.SetActive(true);
+                FaceToFaceCamera.SetActive(true);
                 break;
         }
     }

@@ -17,6 +17,8 @@ public class MainMenu : UICanvas
     {
         coinText.text = UserDataManager.instance.userData.coin.ToString();
 
+        GamePlayManager.instance.OnInit();
+
         GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
 
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);

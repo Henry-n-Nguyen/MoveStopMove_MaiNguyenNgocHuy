@@ -2,10 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class UserDataManager : MonoBehaviour
 {
     public static UserDataManager instance;
@@ -15,17 +11,6 @@ public class UserDataManager : MonoBehaviour
     public UserData userData;
 
     public Player player;
-
-    public bool isSave;
-
-    private void Update()
-    {
-        if(isSave) // TEST
-        {
-            Save();
-            isSave = false;
-        }
-    }
 
     private void Awake()
     {

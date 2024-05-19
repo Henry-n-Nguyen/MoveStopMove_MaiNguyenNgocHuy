@@ -58,6 +58,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     protected float tempScaleRatio;
     protected float tempSpeed;
+    protected float tempAttackRange;
 
     // Function
     private void Start()
@@ -102,10 +103,34 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         switch (point)
         {
-            case int x when x >= 3 && x <= 7: scaleRatio = 1.1f; OnScaleRatioChanges(); break;
-            case int x when x >= 8 && x <= 14: scaleRatio = 1.25f; OnScaleRatioChanges(); break;
-            case int x when x >= 15 && x <= 23: scaleRatio = 1.5f; OnScaleRatioChanges(); break;
-            case int x when x >= 24: scaleRatio = 1.9f; OnScaleRatioChanges(); break;
+            case 3: 
+                scaleRatio = 1.1f; 
+                OnScaleRatioChanges();
+
+                CameraFollow.instance.offset *= scaleRatio;
+
+                break;
+            case 7: 
+                scaleRatio = 1.25f; 
+                OnScaleRatioChanges();
+
+                CameraFollow.instance.offset *= scaleRatio;
+
+                break;
+            case 15: 
+                scaleRatio = 1.5f; 
+                OnScaleRatioChanges(); 
+                
+                CameraFollow.instance.offset *= scaleRatio;
+
+                break;
+            case 24: 
+                scaleRatio = 1.9f; 
+                OnScaleRatioChanges(); 
+                
+                CameraFollow.instance.offset *= scaleRatio;
+
+                break;
         }
     }
 
@@ -241,6 +266,11 @@ public abstract class AbstractCharacter : MonoBehaviour
         ChangeAnim(Constant.TRIGGER_DANCE_SHOP);
     }
 
+    public virtual void Win()
+    {
+        ChangeAnim(Constant.TRIGGER_WIN);
+    }
+
     protected AbstractCharacter FindClosestCharacter()
     {
         AbstractCharacter closestEnemy = null;
@@ -290,6 +320,8 @@ public abstract class AbstractCharacter : MonoBehaviour
         boostedType.Add(BoostType.EnormousBoost);
 
         tempScaleRatio = scaleRatio;
+        tempSpeed = moveSpeed;
+        tempAttackRange = attackRange;
         scaleRatio *= 1.5f;
         OnScaleRatioChanges();
     }
@@ -300,8 +332,19 @@ public abstract class AbstractCharacter : MonoBehaviour
         {
             switch (type)
             {
-                case BoostType.SpeedBoost: moveSpeed = tempSpeed; agent.speed = moveSpeed * 0.67f; break;
-                case BoostType.EnormousBoost: scaleRatio = tempScaleRatio; break;
+                case BoostType.EnormousBoost:
+                    scaleRatio = tempScaleRatio;
+                    moveSpeed = tempSpeed; 
+                    agent.speed = moveSpeed * 0.67f;
+                    attackRange = tempAttackRange;
+                    
+                    break;
+
+                case BoostType.SpeedBoost: 
+                    moveSpeed = tempSpeed; 
+                    agent.speed = moveSpeed * 0.67f; 
+                    
+                    break;
             }
         }
 

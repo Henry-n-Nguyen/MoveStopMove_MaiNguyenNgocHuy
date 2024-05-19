@@ -20,7 +20,7 @@ public class BotGenerator : MonoBehaviour
     // Private variables
     private int index = 1;
 
-    public int characterInBattleAmount = 0;
+    public int characterInBattleAmount = 1;
 
     private List<Transform> activatedTransform = new List<Transform>();
 
@@ -41,6 +41,7 @@ public class BotGenerator : MonoBehaviour
 
             player = createdPlayer;
 
+            GamePlayManager.instance.player = player;
             CameraFollow.instance.target = player.transform;
             UserDataManager.instance.player = player;
         }

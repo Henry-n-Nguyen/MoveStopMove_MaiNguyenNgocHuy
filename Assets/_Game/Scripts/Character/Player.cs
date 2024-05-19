@@ -26,6 +26,8 @@ public class Player : AbstractCharacter
         scaleRatio = 1f;
 
         isDetectedTarget = false;
+
+        CameraFollow.instance.offset *= scaleRatio;
     }
 
     public void LoadDataFromUserData()
@@ -139,6 +141,8 @@ public class Player : AbstractCharacter
             base.Dead();
 
             isDead = true;
+
+            GamePlayManager.instance.LoseGame();
         }
     }
 
@@ -150,6 +154,11 @@ public class Player : AbstractCharacter
         {
             ChangeState(new IdleState());
         }
+    }
+
+    public override void Win()
+    {
+        base.Win();
     }
 
     private void Rotate(Direct dir)

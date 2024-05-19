@@ -84,7 +84,7 @@ public class UIManager : MonoBehaviour
     }
 
     // Close all canvas
-    private void CloseAll()
+    public void CloseAll()
     {
         foreach (var canvas in activatedCanvases)
         {

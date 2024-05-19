@@ -39,6 +39,11 @@ public abstract class AbstractBullet : MonoBehaviour
             owner.OnPointChange();
             owner.targetsInRange.Remove(character);
 
+            if (owner.gameObject.CompareTag("Player"))
+            {
+                GamePlayManager.instance.coinToEarn += character.point * 5;
+            }
+
             Despawn();
         }
         else if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_VEHICLE))
