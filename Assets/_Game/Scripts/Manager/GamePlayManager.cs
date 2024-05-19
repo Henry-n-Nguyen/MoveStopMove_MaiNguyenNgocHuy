@@ -7,7 +7,13 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance;
 
-    public GamePlayState currentGamePlayState;
+    [HideInInspector] public GamePlayState currentGamePlayState;
+
+    [HideInInspector] public Player player;
+
+    [SerializeField] private int characterAmount;
+
+    public int aliveCharacterAmount;
 
     private void Awake()
     {
@@ -22,6 +28,8 @@ public class GamePlayManager : MonoBehaviour
     public void OnInit()
     {
         currentGamePlayState = GamePlayState.None;
+
+        aliveCharacterAmount = characterAmount;
 
         StartCoroutine(LoadingGame());   
     }

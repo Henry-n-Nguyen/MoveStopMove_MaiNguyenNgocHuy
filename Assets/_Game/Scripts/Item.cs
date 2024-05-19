@@ -10,6 +10,8 @@ public class Item : MonoBehaviour
 
     [HideInInspector] public int id;
 
+    [HideInInspector] public CostumeShop costumeShopScript;
+
     [HideInInspector] public EquipmentType equipmentType;
 
     private Player player;
@@ -27,13 +29,24 @@ public class Item : MonoBehaviour
         {
             case EquipmentType.Hat:
                 player.Equip(equipmentType, EquipmentManager.instance.GetHatById(id));
+                costumeShopScript.id = id;
+                costumeShopScript.price = 800;
+
                 break;
             case EquipmentType.Skin:
                 player.Equip(equipmentType, MaterialManager.instance.GetSkinById(id));
+                costumeShopScript.id = id;
+                costumeShopScript.price = 500;
+
                 break;
             case EquipmentType.Pant:
                 player.Equip(equipmentType, MaterialManager.instance.GetPantById(id));
+                costumeShopScript.id = id;
+                costumeShopScript.price = 400;
+
                 break;
         }
+
+        costumeShopScript.OnClick();
     }
 }

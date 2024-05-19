@@ -15,12 +15,14 @@ public class BotGenerator : MonoBehaviour
 
     [SerializeField] private LayerMask spawnPointLayer;
 
-    public Player player = null;
-
-    private List<Transform> activatedTransform = new List<Transform>();
+    [HideInInspector] public Player player = null;
 
     // Private variables
     private int index = 1;
+
+    public int characterInBattleAmount = 0;
+
+    private List<Transform> activatedTransform = new List<Transform>();
 
     private void Awake()
     {
@@ -52,7 +54,7 @@ public class BotGenerator : MonoBehaviour
 
         for (int i = 0; i < quantity; i++)
         {
-            if (activatedTransform.Count == spawnPointList.Count) continue;
+            if (activatedTransform.Count == spawnPointList.Count || characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
 
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, spawnPointList.Count);
@@ -92,6 +94,8 @@ public class BotGenerator : MonoBehaviour
             List<Skin> skinList = MaterialManager.instance.GetSkinList();
             randomNumber = Random.Range(0, skinList.Count);
             character.Equip(EquipmentType.Skin, skinList[randomNumber]);
+
+            characterInBattleAmount++;
         }
     }
 

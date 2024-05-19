@@ -20,7 +20,7 @@ public class UserDataManager : MonoBehaviour
 
     private void Update()
     {
-        if(isSave)
+        if(isSave) // TEST
         {
             Save();
             isSave = false;

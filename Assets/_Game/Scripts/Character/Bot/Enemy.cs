@@ -156,8 +156,10 @@ public class Enemy : AbstractCharacter
     private IEnumerator DespawnEnemy(float time)
     {
         yield return new WaitForSeconds(time);
-        BotGenerator.instance.SpawnBot(1);
         BotPool.Despawn(this);
+        GamePlayManager.instance.aliveCharacterAmount--;
+        BotGenerator.instance.characterInBattleAmount--;
+        BotGenerator.instance.SpawnBot(1);
     }
 
     public void IsTargeted(bool isTargeted)

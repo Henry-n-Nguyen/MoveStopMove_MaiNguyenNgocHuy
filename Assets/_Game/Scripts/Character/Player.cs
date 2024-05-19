@@ -30,7 +30,7 @@ public class Player : AbstractCharacter
 
     public void LoadDataFromUserData()
     {
-        int equippedWeaponId = UserDataManager.instance.userData.equippedWeapoonId;
+        int equippedWeaponId = UserDataManager.instance.userData.equippedWeaponId;
         Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
 
         int equippedHatId = UserDataManager.instance.userData.equippedHatId;
@@ -40,7 +40,7 @@ public class Player : AbstractCharacter
         Equip(EquipmentType.Pant, MaterialManager.instance.GetPantById(equippedPantId));
 
         int equippedSkinId = UserDataManager.instance.userData.equippedSkinId;
-        Equip(EquipmentType.Skin, MaterialManager.instance.GetPantById(equippedSkinId));
+        Equip(EquipmentType.Skin, MaterialManager.instance.GetSkinById(equippedSkinId));
     }
 
     public override void Moving()

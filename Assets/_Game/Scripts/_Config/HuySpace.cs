@@ -56,4 +56,11 @@ namespace HuySpace
         PantShop,
         SpecialShop
     }
+
+    public enum ButtonType
+    {
+        BuyButton,
+        EquipButton,
+        EquippedButton
+    }
 }

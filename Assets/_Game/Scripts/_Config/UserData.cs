@@ -13,7 +13,7 @@ public class UserData
     public List<int> pantIdList = new List<int>();
     public List<int> skinIdList = new List<int>();
 
-    public int equippedWeapoonId;
+    public int equippedWeaponId;
     public int equippedHatId;
     public int equippedPantId;
     public int equippedSkinId;

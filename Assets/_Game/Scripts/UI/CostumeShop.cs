@@ -10,10 +10,11 @@ public class CostumeShop : UICanvas
 {
     [Header("References")]
     [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private RectTransform content;
     [SerializeField] private Image costumePrefab;
 
-    [Header("Button")]
+    [Header("Button_Category")]
     [SerializeField] private RectTransform skinButtonSelected;
     [SerializeField] private RectTransform skinButtonNonSelect;
     [SerializeField] private RectTransform hatButtonSelected;
@@ -21,14 +22,24 @@ public class CostumeShop : UICanvas
     [SerializeField] private RectTransform pantButtonSelected;
     [SerializeField] private RectTransform pantButtonNonSelect;
 
+    [Header("Button_Buy/Equip/Equipped")]
+    [SerializeField] private GameObject buyButton;
+    [SerializeField] private GameObject equipButton;
+    [SerializeField] private GameObject equippedButton;
+
+    [Header("Notification")]
+    [SerializeField] private GameObject notificationPrefab;
+    [SerializeField] private GameObject notificationHolder;
 
     // In Editor
-    public CostumeShopState currentShopState;
+    [HideInInspector] public CostumeShopState currentShopState;
 
     private List<Image> activatedSkinImages = new List<Image>();
     private List<Image> activatedHatImages = new List<Image>();
     private List<Image> activatedPantImages = new List<Image>();
-    private List<Image> activatedSpecialImages = new List<Image>();
+
+    [HideInInspector] public int id;
+    [HideInInspector] public int price;
 
     private void OnEnable()
     {
@@ -41,9 +52,107 @@ public class CostumeShop : UICanvas
 
         CameraManager.instance.TurnOnCamera(CameraState.CostumeShop);
 
+        TriggerSkinShop();
+
         currentShopState = CostumeShopState.SkinShop;
 
         OnCategoryIsSelected();
+    }
+
+    public void OnClick()
+    {
+        UserData data = UserDataManager.instance.userData;
+
+        coinText.text = data.coin.ToString();
+
+        switch (currentShopState)
+        {
+            case CostumeShopState.SkinShop:
+                if (data.skinIdList.IndexOf(id) == -1)
+                {
+                    ChangeButton(ButtonType.BuyButton);
+
+                    priceText.text = price.ToString();
+                }
+                else
+                {
+                    if (id == data.equippedSkinId)
+                    {
+                        ChangeButton(ButtonType.EquippedButton);
+                    }
+                    else
+                    {
+                        ChangeButton(ButtonType.EquipButton);
+                    }
+                }
+
+                break;
+            case CostumeShopState.HatShop:
+                if (data.hatIdList.IndexOf(id) == -1)
+                {
+                    ChangeButton(ButtonType.BuyButton);
+
+                    priceText.text = price.ToString();
+                }
+                else
+                {
+                    if (id == data.equippedHatId)
+                    {
+                        ChangeButton(ButtonType.EquippedButton);
+                    }
+                    else
+                    {
+                        ChangeButton(ButtonType.EquipButton);
+                    }
+                }
+
+                break;
+            case CostumeShopState.PantShop:
+                if (data.pantIdList.IndexOf(id) == -1)
+                {
+                    ChangeButton(ButtonType.BuyButton);
+
+                    priceText.text = price.ToString();
+                }
+                else
+                {
+                    if (id == data.equippedPantId)
+                    {
+                        ChangeButton(ButtonType.EquippedButton);
+                    }
+                    else
+                    {
+                        ChangeButton(ButtonType.EquipButton);
+                    }
+                }
+
+                break;
+        }
+    }
+
+    private void ChangeButton(ButtonType type)
+    {
+        switch (type)
+        {
+            case ButtonType.BuyButton:
+                buyButton.SetActive(true);
+                equipButton.SetActive(false);
+                equippedButton.SetActive(false);
+
+                break;
+            case ButtonType.EquipButton:
+                buyButton.SetActive(false);
+                equipButton.SetActive(true);
+                equippedButton.SetActive(false);
+
+                break;
+            case ButtonType.EquippedButton:
+                buyButton.SetActive(false);
+                equipButton.SetActive(false);
+                equippedButton.SetActive(true);
+
+                break;
+        }
     }
 
     private void OnCategoryIsSelected()
@@ -67,6 +176,8 @@ public class CostumeShop : UICanvas
                         createdImage.sprite = skinImages[i];
 
                         Item item = createdImage.GetComponent<Item>();
+
+                        item.costumeShopScript = this;
 
                         item.id = i;
 
@@ -96,6 +207,8 @@ public class CostumeShop : UICanvas
 
                         Item item = createdImage.GetComponent<Item>();
 
+                        item.costumeShopScript = this;
+
                         item.id = i;
 
                         item.equipmentType = EquipmentType.Hat;
@@ -123,6 +236,8 @@ public class CostumeShop : UICanvas
                         createdImage.sprite = pantImages[i];
 
                         Item item = createdImage.GetComponent<Item>();
+
+                        item.costumeShopScript = this;
 
                         item.id = i;
 
@@ -233,5 +348,71 @@ public class CostumeShop : UICanvas
         UIManager.instance.CloseDirectly<CostumeShop>();
 
         UIManager.instance.OpenUI<MainMenu>();
+    }
+
+    public void Buy()
+    {
+        UserData data = UserDataManager.instance.userData;
+
+        if (data.coin >= price)
+        {
+            switch (currentShopState)
+            {
+                case CostumeShopState.SkinShop:
+                    data.coin -= price;
+                    data.skinIdList.Add(id);
+                    data.equippedSkinId = id;
+                    UserDataManager.instance.Save();
+
+                    break;
+                case CostumeShopState.HatShop:
+                    data.coin -= price;
+                    data.hatIdList.Add(id);
+                    data.equippedHatId = id;
+                    UserDataManager.instance.Save();
+
+                    break;
+                case CostumeShopState.PantShop:
+                    data.coin -= price;
+                    data.pantIdList.Add(id);
+                    data.equippedPantId = id;
+                    UserDataManager.instance.Save();
+
+                    break;
+            }
+            
+
+            OnClick();
+        }
+        else
+        {
+            Instantiate(notificationPrefab, notificationHolder.transform);
+        }
+    }
+
+    public void Equip()
+    {
+        UserData data = UserDataManager.instance.userData;
+
+        switch (currentShopState)
+        {
+            case CostumeShopState.SkinShop:
+                data.equippedSkinId = id;
+                UserDataManager.instance.Save();
+
+                break;
+            case CostumeShopState.HatShop:
+                data.equippedHatId = id;
+                UserDataManager.instance.Save();
+
+                break;
+            case CostumeShopState.PantShop:
+                data.equippedPantId = id;
+                UserDataManager.instance.Save();
+
+                break;
+        }
+
+        OnClick();
     }
 }
