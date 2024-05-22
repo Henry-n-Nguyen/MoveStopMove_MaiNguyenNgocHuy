@@ -21,7 +21,8 @@ namespace HuySpace
         Weapon,
         Hat,
         Pant,
-        Skin
+        Skin,
+        Special
     }
 
     public enum BoostType

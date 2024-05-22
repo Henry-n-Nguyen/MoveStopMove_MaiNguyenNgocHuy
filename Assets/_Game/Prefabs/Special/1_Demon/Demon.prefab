@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7996350281119002335
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5872980344857757406}
+  - component: {fileID: 8591489738079360459}
+  m_Layer: 0
+  m_Name: Demon
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5872980344857757406
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7996350281119002335}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &8591489738079360459
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7996350281119002335}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b962ad4f260c228499d3730fe007038c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 1
+  specialHat: {fileID: 7786031347560703782, guid: 56143415b9b8c19409557df512116964, type: 3}
+  specialSkin: {fileID: 5216880911093460177, guid: 997dc5eab09ba9e48bf8179f643b9562, type: 3}
+  specialPant: {fileID: 1925973930028532577, guid: e63d04a1255520041943fe946ed76944, type: 3}
+  wing: {fileID: 5680760451962592120, guid: 563991ac8bf9f4b47802853032f03eda, type: 3}
+  tail: {fileID: 2262039682354584810, guid: 838df24a5fdb6dd4f9b7b0ebace8c6ad, type: 3}
+  leftHandAccessory: {fileID: 0}
