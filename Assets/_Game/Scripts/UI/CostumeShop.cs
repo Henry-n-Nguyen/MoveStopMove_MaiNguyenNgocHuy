@@ -21,6 +21,8 @@ public class CostumeShop : UICanvas
     [SerializeField] private RectTransform hatButtonNonSelect;
     [SerializeField] private RectTransform pantButtonSelected;
     [SerializeField] private RectTransform pantButtonNonSelect;
+    [SerializeField] private RectTransform specialButtonSelected;
+    [SerializeField] private RectTransform specialButtonNonSelect;
 
     [Header("Button_Buy/Equip/Equipped")]
     [SerializeField] private GameObject buyButton;
@@ -37,6 +39,11 @@ public class CostumeShop : UICanvas
     private List<Image> activatedSkinImages = new List<Image>();
     private List<Image> activatedHatImages = new List<Image>();
     private List<Image> activatedPantImages = new List<Image>();
+    private List<Image> activatedSpecialImages = new List<Image>();
+
+    private UserData data;
+
+    private bool isEquippedSpecial;
 
     [HideInInspector] public int id;
     [HideInInspector] public int price;
@@ -52,6 +59,15 @@ public class CostumeShop : UICanvas
 
         CameraManager.instance.TurnOnCamera(CameraState.CostumeShop);
 
+        data = UserDataManager.instance.userData;
+
+        coinText.text = data.coin.ToString();
+
+        isEquippedSpecial = data.isSpecialEquipped;
+        GamePlayManager.instance.player.DeEquipSpecial();
+        data.isSpecialEquipped = false;
+        GamePlayManager.instance.player.LoadDataFromUserData();
+
         TriggerSkinShop();
 
         currentShopState = CostumeShopState.SkinShop;
@@ -61,8 +77,6 @@ public class CostumeShop : UICanvas
 
     public void OnClick()
     {
-        UserData data = UserDataManager.instance.userData;
-
         coinText.text = data.coin.ToString();
 
         switch (currentShopState)
@@ -117,6 +131,26 @@ public class CostumeShop : UICanvas
                 else
                 {
                     if (id == data.equippedPantId)
+                    {
+                        ChangeButton(ButtonType.EquippedButton);
+                    }
+                    else
+                    {
+                        ChangeButton(ButtonType.EquipButton);
+                    }
+                }
+
+                break;
+            case CostumeShopState.SpecialShop:
+                if (data.specialIdList.IndexOf(id) == -1)
+                {
+                    ChangeButton(ButtonType.BuyButton);
+
+                    priceText.text = price.ToString();
+                }
+                else
+                {
+                    if (id == data.equippedSpecialId && isEquippedSpecial)
                     {
                         ChangeButton(ButtonType.EquippedButton);
                     }
@@ -248,6 +282,36 @@ public class CostumeShop : UICanvas
                 }
 
                 break;
+            case CostumeShopState.SpecialShop:
+                specialButtonSelected.gameObject.SetActive(true);
+                specialButtonNonSelect.gameObject.SetActive(false);
+
+                if (activatedSpecialImages.Count > 0)
+                {
+                    ActiveState(currentShopState);
+                }
+                else
+                {
+                    List<Sprite> specialImages = SpecialManager.instance.GetSpecialSpriteList();
+                    for (int i = 0; i < specialImages.Count; i++)
+                    {
+                        Image createdImage = Instantiate(costumePrefab, content);
+
+                        createdImage.sprite = specialImages[i];
+
+                        Item item = createdImage.GetComponent<Item>();
+
+                        item.costumeShopScript = this;
+
+                        item.id = i;
+
+                        item.equipmentType = EquipmentType.Special;
+
+                        activatedSpecialImages.Add(createdImage);
+                    }
+                }
+
+                break;
         }
     }
 
@@ -271,6 +335,13 @@ public class CostumeShop : UICanvas
                 break;
             case CostumeShopState.PantShop:
                 foreach (Image image in activatedPantImages)
+                {
+                    image.gameObject.SetActive(true);
+                }
+
+                break;
+            case CostumeShopState.SpecialShop:
+                foreach (Image image in activatedSpecialImages)
                 {
                     image.gameObject.SetActive(true);
                 }
@@ -313,6 +384,20 @@ public class CostumeShop : UICanvas
                 }
 
                 break;
+            case CostumeShopState.SpecialShop:
+                specialButtonSelected.gameObject.SetActive(false);
+                specialButtonNonSelect.gameObject.SetActive(true);
+
+                foreach (Image image in activatedSpecialImages)
+                {
+                    image.gameObject.SetActive(false);
+                }
+
+                GamePlayManager.instance.player.DeEquipSpecial();
+                data.isSpecialEquipped = false;
+                GamePlayManager.instance.player.LoadDataFromUserData();
+
+                break;
         }
     }
 
@@ -343,8 +428,20 @@ public class CostumeShop : UICanvas
         OnCategoryIsSelected();
     }
 
+    public void TriggerSpecialShop()
+    {
+        DeactiveState(currentShopState);
+
+        currentShopState = CostumeShopState.SpecialShop;
+
+        OnCategoryIsSelected();
+    }
+
     public void ReturnHome()
     {
+        data.isSpecialEquipped = isEquippedSpecial;
+        UserDataManager.instance.Save();
+
         UIManager.instance.CloseDirectly<CostumeShop>();
 
         UIManager.instance.OpenUI<MainMenu>();
@@ -352,13 +449,13 @@ public class CostumeShop : UICanvas
 
     public void Buy()
     {
-        UserData data = UserDataManager.instance.userData;
-
         if (data.coin >= price)
         {
             switch (currentShopState)
             {
                 case CostumeShopState.SkinShop:
+                    isEquippedSpecial = false;
+
                     data.coin -= price;
                     data.skinIdList.Add(id);
                     data.equippedSkinId = id;
@@ -366,6 +463,8 @@ public class CostumeShop : UICanvas
 
                     break;
                 case CostumeShopState.HatShop:
+                    isEquippedSpecial = false;
+
                     data.coin -= price;
                     data.hatIdList.Add(id);
                     data.equippedHatId = id;
@@ -373,9 +472,20 @@ public class CostumeShop : UICanvas
 
                     break;
                 case CostumeShopState.PantShop:
+                    isEquippedSpecial = false;
+
                     data.coin -= price;
                     data.pantIdList.Add(id);
                     data.equippedPantId = id;
+                    UserDataManager.instance.Save();
+
+                    break;
+                case CostumeShopState.SpecialShop:
+                    isEquippedSpecial = true;
+
+                    data.coin -= price;
+                    data.specialIdList.Add(id);
+                    data.equippedSpecialId = id;
                     UserDataManager.instance.Save();
 
                     break;
@@ -392,22 +502,33 @@ public class CostumeShop : UICanvas
 
     public void Equip()
     {
-        UserData data = UserDataManager.instance.userData;
-
         switch (currentShopState)
         {
             case CostumeShopState.SkinShop:
+                isEquippedSpecial = false;
+
                 data.equippedSkinId = id;
                 UserDataManager.instance.Save();
 
                 break;
             case CostumeShopState.HatShop:
+                isEquippedSpecial = false;
+
                 data.equippedHatId = id;
                 UserDataManager.instance.Save();
 
                 break;
             case CostumeShopState.PantShop:
+                isEquippedSpecial = false;
+
                 data.equippedPantId = id;
+                UserDataManager.instance.Save();
+
+                break;
+            case CostumeShopState.SpecialShop:
+                isEquippedSpecial = true;
+
+                data.equippedSpecialId = id;
                 UserDataManager.instance.Save();
 
                 break;

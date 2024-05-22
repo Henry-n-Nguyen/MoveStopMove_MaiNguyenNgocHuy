@@ -12,6 +12,10 @@ public class UserData
     public List<int> hatIdList = new List<int>();
     public List<int> pantIdList = new List<int>();
     public List<int> skinIdList = new List<int>();
+    public List<int> specialIdList = new List<int>();
+
+    public bool isSpecialEquipped;
+    public int equippedSpecialId = 0;
 
     public int equippedWeaponId;
     public int equippedHatId;

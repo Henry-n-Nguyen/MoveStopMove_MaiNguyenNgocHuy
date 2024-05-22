@@ -254,10 +254,14 @@ MonoBehaviour:
   hat: {fileID: 0}
   skinMeshRenderer: {fileID: 6007163679756295697}
   pantMeshRenderer: {fileID: 2903227904142107083}
+  characterHip: {fileID: 7502528297446423031}
+  characterLeftHand: {fileID: 3488220503459064415}
+  characterNeck: {fileID: 7264352439190844369}
   index: 0
   point: 0
   isReadyToAttack: 0
   targetsInRange: []
+  isBoosted: 0
   playerInput: {fileID: 7033175576109326437}
   moveAction:
     m_Name: Move

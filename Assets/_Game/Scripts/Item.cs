@@ -20,7 +20,7 @@ public class Item : MonoBehaviour
     {
         button.onClick.AddListener(OnImageClick);
 
-        player = BotGenerator.instance.player;
+        player = GamePlayManager.instance.player;
     }
 
     public void OnImageClick()
@@ -43,6 +43,14 @@ public class Item : MonoBehaviour
                 player.Equip(equipmentType, MaterialManager.instance.GetPantById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 400;
+
+                break;
+            case EquipmentType.Special:
+                player.DeEquipSpecial();
+                player.Equip(equipmentType, SpecialManager.instance.GetSpecialById(id));
+
+                costumeShopScript.id = id;
+                costumeShopScript.price = 5000;
 
                 break;
         }

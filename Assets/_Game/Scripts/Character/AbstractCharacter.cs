@@ -26,6 +26,10 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected SkinnedMeshRenderer skinMeshRenderer;
     [SerializeField] protected SkinnedMeshRenderer pantMeshRenderer;
 
+    [SerializeField] protected Transform characterHip;
+    [SerializeField] protected Transform characterLeftHand;
+    [SerializeField] protected Transform characterNeck;
+
     // Statitics
     public int index;
 
@@ -45,6 +49,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // List target
     public List<AbstractCharacter> targetsInRange = new List<AbstractCharacter>();
+
+    private List<GameObject> specialAccessorys = new List<GameObject>();
 
     // Private variables
     private IState<AbstractCharacter> currentState;
@@ -202,6 +208,58 @@ public abstract class AbstractCharacter : MonoBehaviour
                 break;
         }
     } // For pant
+
+    public void Equip(EquipmentType equipmentType, Special special)
+    {
+        switch (equipmentType)
+        {
+            case EquipmentType.Special:
+
+                if (special.specialHat != null)
+                {
+                    Equip(EquipmentType.Hat, special.specialHat);
+                }
+
+                if (special.specialPant != null)
+                {
+                    Equip(EquipmentType.Pant, special.specialPant);
+                }
+
+                if (special.specialSkin != null)
+                {
+                    Equip(EquipmentType.Skin, special.specialSkin);
+                }
+
+                if (special.wing != null)
+                {
+                    GameObject characterWing = Instantiate(special.wing, characterNeck);
+                    specialAccessorys.Add(characterWing);
+                }
+
+                if (special.tail != null)
+                {
+                    GameObject characterTail = Instantiate(special.tail, characterHip);
+                    specialAccessorys.Add(characterTail);
+                }
+
+                if (special.leftHandAccessory != null)
+                {
+                    GameObject characterLeftAccessory = Instantiate(special.leftHandAccessory, characterLeftHand);
+                    specialAccessorys.Add(characterLeftAccessory);
+                }
+
+                break;
+        }
+    } // For special
+
+    public virtual void DeEquipSpecial()
+    {
+        while (specialAccessorys.Count > 0)
+        {
+            Destroy(specialAccessorys[0].gameObject);
+            specialAccessorys.RemoveAt(0);
+        }
+    }
 
     // Public function
     public bool IsReadyToAttack()

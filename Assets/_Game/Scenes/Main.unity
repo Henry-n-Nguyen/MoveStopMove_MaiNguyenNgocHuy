@@ -3710,6 +3710,62 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: bcfd0b59005d3624aba71990ecc4c6a3, type: 3}
   m_PrefabInstance: {fileID: 364826312}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &377036240
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 377036241}
+  - component: {fileID: 377036242}
+  m_Layer: 0
+  m_Name: SpecialManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &377036241
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377036240}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2111676907}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &377036242
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 377036240}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6dd6e66f6489ae2458d29a5528365847, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  specialList:
+  - {fileID: 8591489738079360459, guid: 40cd3f63a157f074fb8345dd783567a4, type: 3}
+  - {fileID: 7415146958876892299, guid: 37f40ee3ac02f06459f307826c9e6b12, type: 3}
+  - {fileID: 6972777711114992499, guid: 9adb4eaecaf78994296101fb582bb33e, type: 3}
+  - {fileID: 2189326172477451181, guid: ebaa408338cc37a4885d4226e6498b98, type: 3}
+  - {fileID: 3465885803648051216, guid: 42d25885125d3f94fbe5fa6426fefb1e, type: 3}
+  specialSpriteList:
+  - {fileID: 21300000, guid: 8c3317299f3429044bf03b4b52a2aafb, type: 3}
+  - {fileID: 21300000, guid: c5d7cca7f173b2a48a45d9908a6ae15d, type: 3}
+  - {fileID: 21300000, guid: b204b43708205f64bb82cc522d98925c, type: 3}
+  - {fileID: 21300000, guid: 0d8eb69f7a9bb0f4390340c1eb2b56fe, type: 3}
+  - {fileID: 21300000, guid: a938d955cfd58894dbc5bb7790da869d, type: 3}
 --- !u!1001 &384667865
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -23603,6 +23659,8 @@ MonoBehaviour:
     hatIdList: 
     pantIdList: 
     skinIdList: 
+    specialIdList: 
+    equippedSpecialId: 0
     equippedWeaponId: 0
     equippedHatId: 0
     equippedPantId: 0
@@ -25040,6 +25098,7 @@ Transform:
   - {fileID: 1703364876}
   - {fileID: 443323516}
   - {fileID: 684168109}
+  - {fileID: 377036241}
   - {fileID: 2101148762}
   - {fileID: 1650446517}
   - {fileID: 2002837854}

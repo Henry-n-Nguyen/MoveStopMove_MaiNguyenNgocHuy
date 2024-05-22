@@ -32,17 +32,32 @@ public class Player : AbstractCharacter
 
     public void LoadDataFromUserData()
     {
-        int equippedWeaponId = UserDataManager.instance.userData.equippedWeaponId;
-        Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
+        UserData data = UserDataManager.instance.userData;
 
-        int equippedHatId = UserDataManager.instance.userData.equippedHatId;
-        Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(equippedHatId));
+        if (data.isSpecialEquipped)
+        {
+            int equippedSpecialId = data.equippedSpecialId;
+            Equip(EquipmentType.Special, SpecialManager.instance.GetSpecialById(equippedSpecialId));
+        }
+        else
+        {
+            int equippedWeaponId = data.equippedWeaponId;
+            Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
 
-        int equippedPantId = UserDataManager.instance.userData.equippedPantId;
-        Equip(EquipmentType.Pant, MaterialManager.instance.GetPantById(equippedPantId));
+            int equippedHatId = data.equippedHatId;
+            Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(equippedHatId));
 
-        int equippedSkinId = UserDataManager.instance.userData.equippedSkinId;
-        Equip(EquipmentType.Skin, MaterialManager.instance.GetSkinById(equippedSkinId));
+            int equippedPantId = data.equippedPantId;
+            Equip(EquipmentType.Pant, MaterialManager.instance.GetPantById(equippedPantId));
+
+            int equippedSkinId = data.equippedSkinId;
+            Equip(EquipmentType.Skin, MaterialManager.instance.GetSkinById(equippedSkinId));
+        }
+    }
+
+    public override void DeEquipSpecial()
+    {
+        base.DeEquipSpecial();
     }
 
     public override void Moving()
