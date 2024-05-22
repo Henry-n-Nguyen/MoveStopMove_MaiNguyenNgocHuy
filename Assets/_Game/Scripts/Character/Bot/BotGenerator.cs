@@ -110,7 +110,7 @@ public class BotGenerator : MonoBehaviour
     {
         List<Transform> nearbySpawnPoints = new List<Transform>();
 
-        Collider[] spawnPointsInRange = Physics.OverlapSphere(targetTransform.position, 90f, spawnPointLayer);
+        Collider[] spawnPointsInRange = Physics.OverlapSphere(targetTransform.position, 60f, spawnPointLayer);
 
         if (spawnPointsInRange.Length > 0)
         {

@@ -23660,6 +23660,7 @@ MonoBehaviour:
     pantIdList: 
     skinIdList: 
     specialIdList: 
+    isSpecialEquipped: 0
     equippedSpecialId: 0
     equippedWeaponId: 0
     equippedHatId: 0

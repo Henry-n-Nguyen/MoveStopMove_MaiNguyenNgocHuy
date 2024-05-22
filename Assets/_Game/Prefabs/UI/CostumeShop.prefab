@@ -2716,7 +2716,7 @@ MonoBehaviour:
   coinText: {fileID: 21713209762328342}
   priceText: {fileID: 2224801393076252217}
   content: {fileID: 1404335949390739821}
-  costumePrefab: {fileID: 4080398623835196490, guid: 2d21cb907f32dda46ba419bf191ecc0e, type: 3}
+  costumePrefab: {fileID: 2158709325963918059, guid: 7d7c257401d15ac438d03892f69b0d54, type: 3}
   skinButtonSelected: {fileID: 6035268494196089121}
   skinButtonNonSelect: {fileID: 8465021703052149045}
   hatButtonSelected: {fileID: 3386421405449330249}

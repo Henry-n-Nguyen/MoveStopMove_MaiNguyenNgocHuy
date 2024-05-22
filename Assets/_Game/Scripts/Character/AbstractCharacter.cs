@@ -8,6 +8,7 @@ using HuySpace;
 public abstract class AbstractCharacter : MonoBehaviour
 {
     // Editor
+    [Header("SetUp-References")]
     [SerializeField] protected Transform characterTransform;
     [SerializeField] protected AbstractCharacter characterScript;
     [SerializeField] protected Target targetScript;
@@ -19,6 +20,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Animator anim;
 
+    [Header("Equipment-References")]
     [SerializeField] protected Transform weaponHolder;
     [SerializeField] protected Weapon weapon;
     [SerializeField] protected Transform hatHolder;
@@ -26,11 +28,16 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected SkinnedMeshRenderer skinMeshRenderer;
     [SerializeField] protected SkinnedMeshRenderer pantMeshRenderer;
 
+    [Header("Special-Equipment-References")]
     [SerializeField] protected Transform characterHip;
     [SerializeField] protected Transform characterLeftHand;
     [SerializeField] protected Transform characterNeck;
 
+    [Header("VFX")]
+    [SerializeField] protected ParticleSystem hitVFX;
+
     // Statitics
+    [Header("Public")]
     public int index;
 
     public int point = 0;
@@ -316,6 +323,10 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Dead()
     {
+        ParticleSystem VFX = Instantiate(hitVFX, characterTransform);
+        ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
+        VFXcolor.color = skinMeshRenderer.materials[0].color;
+
         ChangeAnim(Constant.TRIGGER_DEAD);
     }
 
@@ -412,6 +423,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Getter
+
     public float GetAttackRange()
     {
         return attackRange;

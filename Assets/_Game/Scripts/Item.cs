@@ -8,6 +8,8 @@ public class Item : MonoBehaviour
 {
     [SerializeField] private Button button;
 
+    public Image icon;
+
     [HideInInspector] public int id;
 
     [HideInInspector] public CostumeShop costumeShopScript;
