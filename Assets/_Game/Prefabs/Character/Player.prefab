@@ -257,6 +257,7 @@ MonoBehaviour:
   characterHip: {fileID: 7502528297446423031}
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
+  hitVFX: {fileID: 3110220322836238196, guid: 85085b50dbf6935408e67ac516381d34, type: 3}
   index: 0
   point: 0
   isReadyToAttack: 0

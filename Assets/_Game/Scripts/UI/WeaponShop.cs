@@ -10,7 +10,7 @@ public class WeaponShop : UICanvas
     const string TRIGGER_FLYTEXT = "fly";
 
     [Header("Pre")]
-    [SerializeField] private Image weaponPrefab;
+    [SerializeField] private Item weaponPrefab;
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI coinText;
@@ -29,7 +29,7 @@ public class WeaponShop : UICanvas
     // In Editor
     private List<Sprite> weaponImages = new List<Sprite>();
 
-    private List<Image> activeWeaponImages = new List<Image>();
+    private List<Item> activeWeaponImages = new List<Item>();
 
     private int index;
     private int price;
@@ -51,11 +51,11 @@ public class WeaponShop : UICanvas
 
         foreach (Sprite image in weaponImages)
         {
-            Image createdImage = Instantiate(weaponPrefab, content);
+            Item createdItem = Instantiate(weaponPrefab, content);
 
-            createdImage.sprite = image;
+            createdItem.icon.sprite = image;
 
-            activeWeaponImages.Add(createdImage);
+            activeWeaponImages.Add(createdItem);
         }
     }
 

@@ -2722,7 +2722,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ccc04298a6a095748923e00a6032c752, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weaponPrefab: {fileID: 4080398623835196490, guid: 2d21cb907f32dda46ba419bf191ecc0e, type: 3}
+  weaponPrefab: {fileID: 2158709325963918059, guid: 7d7c257401d15ac438d03892f69b0d54, type: 3}
   coinText: {fileID: 8196583533030226710}
   priceText: {fileID: 3513709503505755624}
   content: {fileID: 7089765012699344431}

@@ -12,7 +12,7 @@ public class CostumeShop : UICanvas
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private RectTransform content;
-    [SerializeField] private Image costumePrefab;
+    [SerializeField] private Item costumePrefab;
 
     [Header("Button_Category")]
     [SerializeField] private RectTransform skinButtonSelected;
@@ -36,10 +36,10 @@ public class CostumeShop : UICanvas
     // In Editor
     [HideInInspector] public CostumeShopState currentShopState;
 
-    private List<Image> activatedSkinImages = new List<Image>();
-    private List<Image> activatedHatImages = new List<Image>();
-    private List<Image> activatedPantImages = new List<Image>();
-    private List<Image> activatedSpecialImages = new List<Image>();
+    private List<Item> activatedSkinImages = new List<Item>();
+    private List<Item> activatedHatImages = new List<Item>();
+    private List<Item> activatedPantImages = new List<Item>();
+    private List<Item> activatedSpecialImages = new List<Item>();
 
     private UserData data;
 
@@ -205,19 +205,17 @@ public class CostumeShop : UICanvas
                     List<Sprite> skinImages = MaterialManager.instance.GetSkinSpriteList();
                     for (int i = 0; i < skinImages.Count; i++)
                     {
-                        Image createdImage = Instantiate(costumePrefab, content);
+                        Item createdItem = Instantiate(costumePrefab, content);
 
-                        createdImage.sprite = skinImages[i];
+                        createdItem.icon.sprite = skinImages[i];
 
-                        Item item = createdImage.GetComponent<Item>();
+                        createdItem.costumeShopScript = this;
 
-                        item.costumeShopScript = this;
+                        createdItem.id = i;
 
-                        item.id = i;
+                        createdItem.equipmentType = EquipmentType.Skin;
 
-                        item.equipmentType = EquipmentType.Skin;
-
-                        activatedSkinImages.Add(createdImage);
+                        activatedSkinImages.Add(createdItem);
                     }
                 }
 
@@ -235,19 +233,17 @@ public class CostumeShop : UICanvas
                     List<Sprite> hatImages = EquipmentManager.instance.GetHatSpriteList();
                     for (int i = 0; i < hatImages.Count; i++)
                     {
-                        Image createdImage = Instantiate(costumePrefab, content);
+                        Item createdItem = Instantiate(costumePrefab, content);
 
-                        createdImage.sprite = hatImages[i];
+                        createdItem.icon.sprite = hatImages[i];
 
-                        Item item = createdImage.GetComponent<Item>();
+                        createdItem.costumeShopScript = this;
 
-                        item.costumeShopScript = this;
+                        createdItem.id = i;
 
-                        item.id = i;
+                        createdItem.equipmentType = EquipmentType.Hat;
 
-                        item.equipmentType = EquipmentType.Hat;
-
-                        activatedHatImages.Add(createdImage);
+                        activatedHatImages.Add(createdItem);
                     }
                 }
 
@@ -265,19 +261,17 @@ public class CostumeShop : UICanvas
                     List<Sprite> pantImages = MaterialManager.instance.GetPantSpriteList();
                     for (int i = 0; i < pantImages.Count; i++)
                     {
-                        Image createdImage = Instantiate(costumePrefab, content);
+                        Item createdItem = Instantiate(costumePrefab, content);
 
-                        createdImage.sprite = pantImages[i];
+                        createdItem.icon.sprite = pantImages[i];
 
-                        Item item = createdImage.GetComponent<Item>();
+                        createdItem.costumeShopScript = this;
 
-                        item.costumeShopScript = this;
+                        createdItem.id = i;
 
-                        item.id = i;
+                        createdItem.equipmentType = EquipmentType.Pant;
 
-                        item.equipmentType = EquipmentType.Pant;
-
-                        activatedPantImages.Add(createdImage);
+                        activatedPantImages.Add(createdItem);
                     }
                 }
 
@@ -295,19 +289,17 @@ public class CostumeShop : UICanvas
                     List<Sprite> specialImages = SpecialManager.instance.GetSpecialSpriteList();
                     for (int i = 0; i < specialImages.Count; i++)
                     {
-                        Image createdImage = Instantiate(costumePrefab, content);
+                        Item createdItem = Instantiate(costumePrefab, content);
 
-                        createdImage.sprite = specialImages[i];
+                        createdItem.icon.sprite = specialImages[i];
 
-                        Item item = createdImage.GetComponent<Item>();
+                        createdItem.costumeShopScript = this;
 
-                        item.costumeShopScript = this;
+                        createdItem.id = i;
 
-                        item.id = i;
+                        createdItem.equipmentType = EquipmentType.Special;
 
-                        item.equipmentType = EquipmentType.Special;
-
-                        activatedSpecialImages.Add(createdImage);
+                        activatedSpecialImages.Add(createdItem);
                     }
                 }
 
@@ -320,30 +312,30 @@ public class CostumeShop : UICanvas
         switch (state)
         {
             case CostumeShopState.SkinShop:
-                foreach (Image image in activatedSkinImages)
+                foreach (Item item in activatedSkinImages)
                 {
-                    image.gameObject.SetActive(true);
+                    item.gameObject.SetActive(true);
                 }
 
                 break;
             case CostumeShopState.HatShop:
-                foreach (Image image in activatedHatImages)
+                foreach (Item item in activatedHatImages)
                 {
-                    image.gameObject.SetActive(true);
+                    item.gameObject.SetActive(true);
                 }
 
                 break;
             case CostumeShopState.PantShop:
-                foreach (Image image in activatedPantImages)
+                foreach (Item item in activatedPantImages)
                 {
-                    image.gameObject.SetActive(true);
+                    item.gameObject.SetActive(true);
                 }
 
                 break;
             case CostumeShopState.SpecialShop:
-                foreach (Image image in activatedSpecialImages)
+                foreach (Item item in activatedSpecialImages)
                 {
-                    image.gameObject.SetActive(true);
+                    item.gameObject.SetActive(true);
                 }
 
                 break;
@@ -358,9 +350,9 @@ public class CostumeShop : UICanvas
                 skinButtonSelected.gameObject.SetActive(false);
                 skinButtonNonSelect.gameObject.SetActive(true);
 
-                foreach (Image image in activatedSkinImages)
+                foreach (Item item in activatedSkinImages)
                 {
-                    image.gameObject.SetActive(false);
+                    item.gameObject.SetActive(false);
                 }
 
                 break;
@@ -368,9 +360,9 @@ public class CostumeShop : UICanvas
                 hatButtonSelected.gameObject.SetActive(false);
                 hatButtonNonSelect.gameObject.SetActive(true);
 
-                foreach (Image image in activatedHatImages)
+                foreach (Item item in activatedHatImages)
                 {
-                    image.gameObject.SetActive(false);
+                    item.gameObject.SetActive(false);
                 }
 
                 break;
@@ -378,9 +370,9 @@ public class CostumeShop : UICanvas
                 pantButtonSelected.gameObject.SetActive(false);
                 pantButtonNonSelect.gameObject.SetActive(true);
 
-                foreach (Image image in activatedPantImages)
+                foreach (Item item in activatedPantImages)
                 {
-                    image.gameObject.SetActive(false);
+                    item.gameObject.SetActive(false);
                 }
 
                 break;
@@ -388,9 +380,9 @@ public class CostumeShop : UICanvas
                 specialButtonSelected.gameObject.SetActive(false);
                 specialButtonNonSelect.gameObject.SetActive(true);
 
-                foreach (Image image in activatedSpecialImages)
+                foreach (Item item in activatedSpecialImages)
                 {
-                    image.gameObject.SetActive(false);
+                    item.gameObject.SetActive(false);
                 }
 
                 GamePlayManager.instance.player.DeEquipSpecial();
