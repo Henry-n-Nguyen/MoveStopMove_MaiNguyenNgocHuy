@@ -47,16 +47,9 @@ public class WeaponShop : UICanvas
 
         OnChanges();
 
-        weaponImages = EquipmentManager.instance.GetWeaponSpriteList();
+        weaponImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Weapon];
 
-        foreach (Sprite image in weaponImages)
-        {
-            Item createdItem = Instantiate(weaponPrefab, content);
-
-            createdItem.icon.sprite = image;
-
-            activeWeaponImages.Add(createdItem);
-        }
+        DisplayWeapon(index);
     }
 
     private void OnChanges()
@@ -110,12 +103,32 @@ public class WeaponShop : UICanvas
         }
     }
 
+    private void DisplayWeapon(int index)
+    {
+        if (index >=  activeWeaponImages.Count)
+        {
+            Item createdItem = Instantiate(weaponPrefab, content);
+
+            createdItem.icon.sprite = weaponImages[index];
+
+            activeWeaponImages.Add(createdItem);
+        }
+
+        activeWeaponImages[index].Spawn();
+    }
+
+    private void NonDisplayWeapon(int index)
+    {
+        activeWeaponImages[index].Despawn();
+    }
+
     public void PrevWeapon()
     {
         if (index > 0)
         {
+            NonDisplayWeapon(index);
             index--;
-            content.position += Vector3.right * 650f;
+            DisplayWeapon(index);
             OnChanges();
         }
     }
@@ -124,8 +137,9 @@ public class WeaponShop : UICanvas
     {
         if (index < weaponImages.Count - 1)
         {
+            NonDisplayWeapon(index);
             index++;
-            content.position -= Vector3.right * 650f;
+            DisplayWeapon(index);
             OnChanges();
         }
     }

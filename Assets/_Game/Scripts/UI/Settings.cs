@@ -1,9 +1,21 @@
+using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEditor.Timeline.TimelinePlaybackControls;
 
 public class Settings : UICanvas
 {
+    private void OnEnable()
+    {
+        OnInit();
+    }
+
+    private void OnInit()
+    {
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
+    }
+
     public void ResumeGame()
     {
         UIManager.instance.CloseDirectly<Settings>();

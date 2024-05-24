@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class Radar : MonoBehaviour
 {
@@ -8,31 +10,40 @@ public class Radar : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER) && other.gameObject != owner.gameObject)
-        {
-            AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
-            if (!character.IsDead) owner.targetsInRange.Add(character);
-        }
+        CollideWithCharacter(other);
+    }
 
-        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
+    private void CollideWithCharacter(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_CHARACTER))
         {
-            Enemy enemy = other.GetComponent<Enemy>();
-            if (!enemy.IsDead) enemy.IsTargeted(true);
+            AbstractCharacter character = Cache.GetCharacter(other);
+            if (character != owner)
+            {
+                if (!character.IsDead) 
+                { 
+                    owner.targetsInRange.Add(character);
+                }
+            }
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER) && other.gameObject != owner.gameObject)
-        {
-            int indexOfTarget = owner.targetsInRange.IndexOf(other.gameObject.GetComponent<AbstractCharacter>());
-            if (indexOfTarget != -1) owner.targetsInRange.RemoveAt(indexOfTarget);
-        }
+        EndCollideWithCharacter(other);
+    }
 
-        if (other.gameObject.CompareTag(Constant.TAG_ENEMY))
+    private void EndCollideWithCharacter(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_CHARACTER))
         {
-            Enemy enemy = other.GetComponent<Enemy>();
-            enemy.IsTargeted(false);
+            AbstractCharacter character = Cache.GetCharacter(other);
+
+            if (character.gameObject != owner.gameObject)
+            {
+                int indexOfTarget = owner.targetsInRange.IndexOf(character);
+                if (indexOfTarget != -1) owner.targetsInRange.RemoveAt(indexOfTarget); 
+            }
         }
     }
 }

@@ -6,6 +6,8 @@ using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
+    [SerializeField] private GameObject itemGameObject;
+
     [SerializeField] private Button button;
 
     public Image icon;
@@ -36,20 +38,20 @@ public class Item : MonoBehaviour
 
                 break;
             case EquipmentType.Skin:
-                player.Equip(equipmentType, MaterialManager.instance.GetSkinById(id));
+                player.Equip(equipmentType, EquipmentManager.instance.GetSkinById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 500;
 
                 break;
             case EquipmentType.Pant:
-                player.Equip(equipmentType, MaterialManager.instance.GetPantById(id));
+                player.Equip(equipmentType, EquipmentManager.instance.GetPantById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 400;
 
                 break;
             case EquipmentType.Special:
                 player.DeEquipSpecial();
-                player.Equip(equipmentType, SpecialManager.instance.GetSpecialById(id));
+                player.Equip(equipmentType, EquipmentManager.instance.GetSpecialById(id));
 
                 costumeShopScript.id = id;
                 costumeShopScript.price = 5000;
@@ -58,5 +60,15 @@ public class Item : MonoBehaviour
         }
 
         costumeShopScript.OnClick();
+    }
+
+    public void Spawn()
+    {
+        itemGameObject.SetActive(true);
+    }
+
+    public void Despawn()
+    {
+        itemGameObject.SetActive(false);
     }
 }

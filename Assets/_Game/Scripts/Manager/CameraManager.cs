@@ -11,8 +11,6 @@ public class CameraManager : MonoBehaviour
     [SerializeField] private GameObject costumeShopCamera;
     [SerializeField] private GameObject FaceToFaceCamera;
 
-    private List<Weapon> weaponShopList = new List<Weapon>();
-
     private void Awake()
     {
         instance = this;

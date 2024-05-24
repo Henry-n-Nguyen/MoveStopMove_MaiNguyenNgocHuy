@@ -17,6 +17,32 @@ public class Enemy : AbstractCharacter
     private float patrolingTimer = 0;
     private float idlingTimer = 0;
 
+    private void OnTriggerEnter(Collider other)
+    {
+        CollideWithPlayerRadar(other);
+    }
+
+    private void CollideWithPlayerRadar(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_RADAR))
+        {
+            IsTargeted(true);
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        EndCollideWithPlayerRadar(other);
+    }
+
+    private void EndCollideWithPlayerRadar(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_RADAR))
+        {
+            IsTargeted(false);
+        }
+    }
+
     public override void OnInit()
     {
         base.OnInit();
@@ -97,6 +123,7 @@ public class Enemy : AbstractCharacter
 
         if (IsOnPause())
         {
+            desPointSet = false;
             return;
         }
 
@@ -127,16 +154,21 @@ public class Enemy : AbstractCharacter
         }
     }
 
-    public override void Attack()
+    public override void ReadyToAttack()
     {
         if (!isDetectedTarget)
         {
             TurnTowardClosestCharacter();
 
-            base.Attack();
+            base.ReadyToAttack();
 
             isDetectedTarget = true;
         }
+    }
+
+    public override void Attack()
+    {
+        base.Attack();
     }
 
     public override void Dead()
@@ -147,7 +179,7 @@ public class Enemy : AbstractCharacter
 
             base.Dead();
 
-            StartCoroutine(DespawnEnemy(3f));
+            StartCoroutine(DespawnEnemy(2.5f));
 
             isDead = true;
         }

@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c16bb8a27a1c06c469473b37067aa31b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boosterGameObject: {fileID: 8251768326321767036}
   anim: {fileID: 2064168689732258248}
 --- !u!65 &8998825017432295726
 BoxCollider:

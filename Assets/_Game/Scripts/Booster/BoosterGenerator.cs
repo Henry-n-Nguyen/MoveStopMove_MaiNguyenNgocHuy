@@ -33,7 +33,7 @@ public class BoosterGenerator : MonoBehaviour
 
     private void OnInit()
     {
-        playerTransform = BotGenerator.instance.player.transform;
+        playerTransform = GamePlayManager.instance.playerTransform;
     }
 
     // Update is called once per frame
@@ -98,7 +98,7 @@ public class BoosterGenerator : MonoBehaviour
         {
             foreach (Collider spawnPoint in spawnPointsInRange)
             {
-                nearbySpawnPoints.Add(spawnPoint.transform);
+                nearbySpawnPoints.Add(Cache.GetSpawnpoint(spawnPoint));
             }
         }
 

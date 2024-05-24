@@ -4,15 +4,7 @@ using UnityEngine;
 
 public class Hat : MonoBehaviour
 {
+    [SerializeField] private GameObject hatGameObject;
+
     public int id;
-
-    public void Spawn()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Despawn()
-    {
-        gameObject.SetActive(false);
-    }
 }

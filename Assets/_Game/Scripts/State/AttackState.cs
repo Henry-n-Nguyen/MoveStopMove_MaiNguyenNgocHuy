@@ -13,7 +13,7 @@ public class AttackState : IState<AbstractCharacter>
 
     public void OnExecute(AbstractCharacter t)
     {
-        t.Attack();
+        t.ReadyToAttack();
 
         timer += Time.deltaTime;
 

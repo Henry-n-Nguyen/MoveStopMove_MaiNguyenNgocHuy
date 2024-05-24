@@ -15,7 +15,7 @@ public class Win : UICanvas
 
     private void OnInit()
     {
-        earnCoinText.text = "+ " + GamePlayManager.instance.coinToEarn.ToString();
+        earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
         GamePlayManager.instance.currentGamePlayState = GamePlayState.Win;
 

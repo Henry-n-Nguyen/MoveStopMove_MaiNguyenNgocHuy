@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
@@ -7,6 +8,7 @@ using UnityEngine.WSA;
 
 public abstract class AbstractBullet : MonoBehaviour
 {
+    [SerializeField] protected GameObject bulletGameObject;
     [SerializeField] protected Transform bulletTransform;
     [SerializeField] protected Transform meshTransform;
 
@@ -30,23 +32,31 @@ public abstract class AbstractBullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER) && other.gameObject != owner.gameObject) 
+        CollideWithCharacter(other);
+        CollideWithWall(other);
+    }
+
+    private void CollideWithCharacter(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_CHARACTER))
         {
-            AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
-            character.ChangeState(new DeadState());
-
-            owner.point++;
-            owner.OnPointChange();
-            owner.targetsInRange.Remove(character);
-
-            if (owner.gameObject.CompareTag("Player"))
+            AbstractCharacter character = Cache.GetCharacter(other);
+            if (character != owner)
             {
-                GamePlayManager.instance.coinToEarn += character.point * 5;
-            }
+                character.ChangeState(new DeadState());
 
-            Despawn();
+                owner.point++;
+                owner.OnPointChange();
+                owner.targetsInRange.Remove(character);
+
+                Despawn();
+            }
         }
-        else if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_VEHICLE))
+    }
+
+    private void CollideWithWall(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_VEHICLE))
         {
             Despawn();
         }
@@ -62,19 +72,19 @@ public abstract class AbstractBullet : MonoBehaviour
 
     protected virtual void Launch()
     {
-        
+
     }
 
     public void Spawn()
     {
         bulletTransform.position = owner.GetAttackPoint().position;
-        bulletTransform.rotation = owner.transform.rotation;
-        gameObject.SetActive(true);
+        bulletTransform.rotation = owner.characterTransform.rotation;
+        bulletGameObject.SetActive(true);
     }
 
     public void Despawn()
     {
-        gameObject.SetActive(false);
-        transform.localPosition = Vector3.zero;
+        bulletGameObject.SetActive(false);
+        bulletTransform.localPosition = Vector3.zero;
     }
 }

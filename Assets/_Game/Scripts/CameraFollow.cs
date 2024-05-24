@@ -1,24 +1,32 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class CameraFollow : MonoBehaviour
 {
     public static CameraFollow instance;
 
+    private Vector3 offset;
+
     public Transform target;
+
+    [SerializeField] private float smoothTime = 0.25f;
+
+    private Vector3 _currentVelocity = Vector3.zero;
     
-    public Vector3 offset;
     private void Awake()
     {
         instance = this;
-        
+
         OnInit();
     }
 
     void LateUpdate()
     {
-        transform.position = target.position + offset;
+        Vector3 targetPosition = target.position + offset;
+
+        transform.position = Vector3.SmoothDamp(transform.position, targetPosition, ref _currentVelocity, smoothTime);
     }
 
     public void OnInit()

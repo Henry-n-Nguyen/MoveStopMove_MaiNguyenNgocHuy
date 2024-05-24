@@ -13,14 +13,4 @@ public class Special : MonoBehaviour
     public GameObject wing = null;
     public GameObject tail =  null;
     public GameObject leftHandAccessory = null;
-
-    public void Spawn()
-    {
-        gameObject.SetActive(true);
-    }
-
-    public void Despawn()
-    {
-        gameObject.SetActive(false);
-    }
 }

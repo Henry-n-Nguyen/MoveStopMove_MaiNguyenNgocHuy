@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
+using System.Linq;
 
 public class BotGenerator : MonoBehaviour
 {
@@ -42,7 +43,10 @@ public class BotGenerator : MonoBehaviour
             player = createdPlayer;
 
             GamePlayManager.instance.player = player;
+            GamePlayManager.instance.playerTransform = player.transform;
+
             CameraFollow.instance.target = player.transform;
+
             UserDataManager.instance.player = player;
         }
     }
@@ -88,11 +92,11 @@ public class BotGenerator : MonoBehaviour
             randomNumber = Random.Range(0, hatList.Count);
             character.Equip(EquipmentType.Hat, hatList[randomNumber]);
 
-            List<Pant> pantList = MaterialManager.instance.GetPantList();
+            List<Pant> pantList = EquipmentManager.instance.GetPantList();
             randomNumber = Random.Range(0, pantList.Count);
             character.Equip(EquipmentType.Pant, pantList[randomNumber]);
 
-            List<Skin> skinList = MaterialManager.instance.GetSkinList();
+            List<Skin> skinList = EquipmentManager.instance.GetSkinList();
             randomNumber = Random.Range(0, skinList.Count);
             character.Equip(EquipmentType.Skin, skinList[randomNumber]);
 
@@ -108,35 +112,35 @@ public class BotGenerator : MonoBehaviour
 
     public List<Transform> FindNearbySpawnPoints(Transform targetTransform)
     {
-        List<Transform> nearbySpawnPoints = new List<Transform>();
+        List<Transform> nearbySpawnPointsTransform = new List<Transform>();
 
-        Collider[] spawnPointsInRange = Physics.OverlapSphere(targetTransform.position, 60f, spawnPointLayer);
+        Collider[] spawnPointCollides = Physics.OverlapSphere(targetTransform.position, 60f, spawnPointLayer);
 
-        if (spawnPointsInRange.Length > 0)
+        if (spawnPointCollides.Length > 0)
         {
-            foreach (Collider spawnPoint in spawnPointsInRange)
+            for (int i = 0; i < spawnPointCollides.Length; i++)
             {
-                nearbySpawnPoints.Add(spawnPoint.transform);
+                nearbySpawnPointsTransform.Add(Cache.GetSpawnpoint(spawnPointCollides[i]));
             }
         }
 
-        Transform nearestSpawnpoint = nearbySpawnPoints[0];
+        Transform nearestSpawnpoint = nearbySpawnPointsTransform[0];
 
         float currentDistance = Vector3.Distance(targetTransform.position, nearestSpawnpoint.position);
 
-        foreach (Transform spawnPoint in nearbySpawnPoints)
+        for (int i = 0; i < nearbySpawnPointsTransform.Count; i++)
         {
-            float newDistance = Vector3.Distance(targetTransform.position, spawnPoint.position);
+            float newDistance = Vector3.Distance(targetTransform.position, nearbySpawnPointsTransform[i].position);
 
             if (newDistance < currentDistance)
             {
                 currentDistance = newDistance;
-                nearestSpawnpoint = spawnPoint;
+                nearestSpawnpoint = nearbySpawnPointsTransform[i];
             }
         }
 
-        nearbySpawnPoints.Remove(nearestSpawnpoint);
+        nearbySpawnPointsTransform.Remove(nearestSpawnpoint);
 
-        return nearbySpawnPoints;
+        return nearbySpawnPointsTransform;
     }
 }
