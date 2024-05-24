@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,8 @@ public abstract class AbstractBooster : MonoBehaviour
     const string TRIGGER_SPAWN = "spawn";
 
     [Header("Set-up")]
+    [SerializeField] private GameObject boosterGameObject;
+
     [SerializeField] private Animator anim;
 
     private void OnEnable()
@@ -14,14 +17,19 @@ public abstract class AbstractBooster : MonoBehaviour
         anim.ResetTrigger(TRIGGER_SPAWN);
         anim.SetTrigger(TRIGGER_SPAWN);
 
-        StartCoroutine(SelfDetroy(15f));
+        StartCoroutine(SelfDestroy(15f));
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer(Constant.LAYER_CHARACTER))
+        CollideWithCharacter(other);
+    }
+
+    private void CollideWithCharacter(Collider other)
+    {
+        if (other.CompareTag(Constant.TAG_CHARACTER))
         {
-            AbstractCharacter character = other.gameObject.GetComponent<AbstractCharacter>();
+            AbstractCharacter character = Cache.GetCharacter(other);
             if (!character.isBoosted) TriggerBoost(character);
             Despawn();
         }
@@ -34,15 +42,15 @@ public abstract class AbstractBooster : MonoBehaviour
 
     public void Spawn()
     {
-        gameObject.SetActive(true);
+        boosterGameObject.SetActive(true);
     }
 
     public void Despawn()
     {
-        Destroy(this.gameObject);
+        Destroy(boosterGameObject);
     }
 
-    private IEnumerator SelfDetroy(float time)
+    private IEnumerator SelfDestroy(float time)
     {
         yield return new WaitForSeconds(time);
         Despawn();

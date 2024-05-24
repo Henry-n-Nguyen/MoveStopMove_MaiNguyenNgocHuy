@@ -26,8 +26,6 @@ public class Player : AbstractCharacter
         scaleRatio = 1f;
 
         isDetectedTarget = false;
-
-        CameraFollow.instance.offset *= scaleRatio;
     }
 
     public void LoadDataFromUserData()
@@ -37,7 +35,7 @@ public class Player : AbstractCharacter
         if (data.isSpecialEquipped)
         {
             int equippedSpecialId = data.equippedSpecialId;
-            Equip(EquipmentType.Special, SpecialManager.instance.GetSpecialById(equippedSpecialId));
+            Equip(EquipmentType.Special, EquipmentManager.instance.GetSpecialById(equippedSpecialId));
         }
         else
         {
@@ -48,10 +46,10 @@ public class Player : AbstractCharacter
             Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(equippedHatId));
 
             int equippedPantId = data.equippedPantId;
-            Equip(EquipmentType.Pant, MaterialManager.instance.GetPantById(equippedPantId));
+            Equip(EquipmentType.Pant, EquipmentManager.instance.GetPantById(equippedPantId));
 
             int equippedSkinId = data.equippedSkinId;
-            Equip(EquipmentType.Skin, MaterialManager.instance.GetSkinById(equippedSkinId));
+            Equip(EquipmentType.Skin, EquipmentManager.instance.GetSkinById(equippedSkinId));
         }
     }
 
@@ -130,11 +128,11 @@ public class Player : AbstractCharacter
         }
     }
 
-    public override void Attack()
+    public override void ReadyToAttack()
     {
         if (!isDetectedTarget)
         {
-            base.Attack();
+            base.ReadyToAttack();
 
             isDetectedTarget = true;
         }
@@ -147,6 +145,11 @@ public class Player : AbstractCharacter
 
             isDetectedTarget = false;
         }
+    }
+
+    public override void Attack()
+    {
+        base.Attack();
     }
 
     public override void Dead()

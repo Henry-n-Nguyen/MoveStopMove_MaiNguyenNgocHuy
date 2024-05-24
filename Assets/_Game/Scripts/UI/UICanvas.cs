@@ -26,7 +26,7 @@ public class UICanvas : MonoBehaviour
     // Call before active Canvas
     public virtual void Setup()
     {
-
+        
     }
 
     //Open canvas

@@ -7,15 +7,19 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance;
 
+    [SerializeField] private int characterAmount;
+
     [HideInInspector] public GamePlayState currentGamePlayState;
 
     [HideInInspector] public Player player;
 
-    [SerializeField] private int characterAmount;
+    [HideInInspector] public Transform playerTransform;
 
     [HideInInspector] public int aliveCharacterAmount;
 
     [HideInInspector] public int coinToEarn;
+
+    private UserData data;
 
     private void Awake()
     {
@@ -46,6 +50,8 @@ public class GamePlayManager : MonoBehaviour
     public void OnInit()
     {
         aliveCharacterAmount = characterAmount;
+        data = UserDataManager.instance.userData;
+
         coinToEarn = 0;
     }
 
@@ -63,19 +69,18 @@ public class GamePlayManager : MonoBehaviour
 
     public void WinGame()
     {
-        UserData data = UserDataManager.instance.userData;
-
-        currentGamePlayState = GamePlayState.Win;
-
+        coinToEarn = player.point * 10;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
-        StartCoroutine(WinGame(2f));
+        StartCoroutine(WinGame(2.5f));
     }
 
     private IEnumerator WinGame(float time)
     {
         yield return new WaitForSeconds(time);
+
+        currentGamePlayState = GamePlayState.Win;
 
         player.OnInit();
         player.Win();
@@ -86,20 +91,19 @@ public class GamePlayManager : MonoBehaviour
 
     public void LoseGame()
     {
-        UserData data = UserDataManager.instance.userData;
-
-        currentGamePlayState = GamePlayState.Lose;
-
+        coinToEarn = player.point * 10;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
-        StartCoroutine(LoseGame(2f));
+        StartCoroutine(LoseGame(2.5f));
     }
 
     private IEnumerator LoseGame(float time)
     {
         yield return new WaitForSeconds(time);
-        
+
+        currentGamePlayState = GamePlayState.Lose;
+
         player.OnInit();
 
         UIManager.instance.CloseAll();

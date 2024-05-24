@@ -4,15 +4,16 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
+    public GameObject weaponGameObject;
     public int id;
 
     public void Spawn()
     {
-        gameObject.SetActive(true);
+        weaponGameObject.SetActive(true);
     }
 
     public void Despawn()
     {
-        gameObject.SetActive(false);
+        weaponGameObject.SetActive(false);
     }
 }

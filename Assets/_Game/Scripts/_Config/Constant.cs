@@ -15,11 +15,8 @@ public class Constant : MonoBehaviour
     public const string TRIGGER_DANCE_SHOP = "dance_shop";
     public const string TRIGGER_WIN = "dance_win";
 
-    // Layer Constants
-    public const string LAYER_CHARACTER = "Character";
-    public const string LAYER_VEHICLE = "Vehicle";
-
     // Tag Constants
-    public const string TAG_ENEMY = "Enemy";
-    public const string TAG_PLAYER = "Player";
+    public const string TAG_VEHICLE = "Vehicle";
+    public const string TAG_CHARACTER = "Character";
+    public const string TAG_RADAR = "Radar";
 }

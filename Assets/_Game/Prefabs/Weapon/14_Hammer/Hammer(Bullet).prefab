@@ -95,12 +95,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10bbada73362c9c409c61de0e44bb24b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletGameObject: {fileID: 2999158825777029444}
   bulletTransform: {fileID: 3895978683241716943}
   meshTransform: {fileID: 4131562705331224660}
-  collide: {fileID: 3128361253291859732}
   id: 14
   owner: {fileID: 0}
-  speed: 5
 --- !u!1001 &2175990884270955646
 PrefabInstance:
   m_ObjectHideFlags: 0

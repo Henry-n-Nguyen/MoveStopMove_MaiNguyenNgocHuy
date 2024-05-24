@@ -15,7 +15,7 @@ public class Ingame : UICanvas
         OnInit();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (GamePlayManager.instance.aliveCharacterAmount < temporaryAliveCharacter)
         {

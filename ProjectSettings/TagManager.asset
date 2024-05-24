@@ -4,7 +4,9 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
+  - Character
+  - Radar
+  - Vehicle
   layers:
   - Default
   - TransparentFX
@@ -12,10 +14,10 @@ TagManager:
   - 
   - Water
   - UI
-  - Character
   - SpawnPoint
-  - Vehicle
   - Texture
+  - 
+  - 
   - 
   - 
   - 

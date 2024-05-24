@@ -16,7 +16,7 @@ public class Lose : UICanvas
 
     private void OnInit()
     {
-        earnCoinText.text = "+ " + GamePlayManager.instance.coinToEarn.ToString();
+        earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
         rankText.text = "#" + GamePlayManager.instance.aliveCharacterAmount.ToString();
 

@@ -18,9 +18,9 @@ public class BulletManager : MonoBehaviour
     {
         instance = this;
 
-        foreach (AbstractBullet prefab in prefabs)
+        for (int i = 0; i < prefabs.Length; i++)
         {
-            bulletPrefabs.Add(prefab.id, prefab);
+                bulletPrefabs.Add(prefabs[i].id, prefabs[i]);
         }
     }
 

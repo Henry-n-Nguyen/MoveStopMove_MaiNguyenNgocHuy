@@ -9,7 +9,6 @@ public abstract class AbstractCharacter : MonoBehaviour
 {
     // Editor
     [Header("SetUp-References")]
-    [SerializeField] protected Transform characterTransform;
     [SerializeField] protected AbstractCharacter characterScript;
     [SerializeField] protected Target targetScript;
 
@@ -38,6 +37,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Statitics
     [Header("Public")]
+    public Transform characterTransform;
+
     public int index;
 
     public int point = 0;
@@ -84,6 +85,11 @@ public abstract class AbstractCharacter : MonoBehaviour
         targetScript.enabled = !IsOnPause();
         isReadyToAttack = IsReadyToAttack();
 
+        if (IsOnPause())
+        {
+            ChangeState(new IdleState());
+        }
+
         if (currentState != null)
         {
             currentState.OnExecute(this);
@@ -92,11 +98,14 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void OnInit()
     {
+        if (isBoosted)
+        {
+            ClearBoost();
+        }
+
         isDead = false;
-        isBoosted = false;
 
         targetsInRange.Clear();
-        boostedType.Clear();
 
         radarObject.radius = attackRange;
 
@@ -120,28 +129,20 @@ public abstract class AbstractCharacter : MonoBehaviour
                 scaleRatio = 1.1f; 
                 OnScaleRatioChanges();
 
-                CameraFollow.instance.offset *= scaleRatio;
-
                 break;
             case 7: 
                 scaleRatio = 1.25f; 
                 OnScaleRatioChanges();
 
-                CameraFollow.instance.offset *= scaleRatio;
-
                 break;
             case 15: 
                 scaleRatio = 1.5f; 
-                OnScaleRatioChanges(); 
-                
-                CameraFollow.instance.offset *= scaleRatio;
+                OnScaleRatioChanges();
 
                 break;
             case 24: 
                 scaleRatio = 1.9f; 
-                OnScaleRatioChanges(); 
-                
-                CameraFollow.instance.offset *= scaleRatio;
+                OnScaleRatioChanges();
 
                 break;
         }
@@ -269,18 +270,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Public function
-    public bool IsReadyToAttack()
-    {
-        if (BulletManager.instance.IsBulletActivated(this.index)) { 
-            this.weapon.Despawn();
-            return false;
-        }
-        else
-        {
-            this.weapon.Spawn();
-            return true;
-        }
-    }
 
     public bool IsOnPause()
     {
@@ -306,18 +295,34 @@ public abstract class AbstractCharacter : MonoBehaviour
         ChangeAnim(Constant.TRIGGER_IDLE);
     }
 
-    public virtual void Attack()
+    public bool IsReadyToAttack()
     {
-        ChangeAnim(Constant.TRIGGER_ATTACK);
-
+        if (BulletManager.instance.IsBulletActivated(this.index)) { 
+            this.weapon.Despawn();
+            return false;
+        }
+        else
+        {
+            this.weapon.Spawn();
+            return true;
+        }
+    }
+    
+    public virtual void ReadyToAttack()
+    {
         if (isReadyToAttack)
         {
-            BulletManager.instance.Spawn(characterScript);
+            ChangeAnim(Constant.TRIGGER_ATTACK);
+        }
+    }
 
-            if (isBoosted)
-            {
-                ClearBoost();
-            }
+    public virtual void Attack()
+    {
+        BulletManager.instance.Spawn(characterScript);
+
+        if (isBoosted)
+        {
+            ClearBoost();
         }
     }
 
@@ -346,14 +351,14 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         float minDistance = 0f;
 
-        foreach (AbstractCharacter character in targetsInRange)
+        for (int i = 0; i < targetsInRange.Count; i++)
         {
-            float distance = Vector3.Distance(characterTransform.position, character.transform.position);
+            float distance = Vector3.Distance(characterTransform.position, targetsInRange[i].characterTransform.position);
 
             if (minDistance < distance)
             {
                 minDistance = distance;
-                closestEnemy = character;
+                closestEnemy = targetsInRange[i];
             }
         }
 
@@ -366,7 +371,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            characterTransform.forward = (closestEnemy.transform.position - characterTransform.position).normalized;
+            characterTransform.forward = (closestEnemy.characterTransform.position - characterTransform.position).normalized;
         }
     }
 
@@ -397,9 +402,9 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void ClearBoost()
     {
-        foreach (BoostType type in boostedType)
+        for (int i = 0; i < boostedType.Count; i++)
         {
-            switch (type)
+            switch (boostedType[i])
             {
                 case BoostType.EnormousBoost:
                     scaleRatio = tempScaleRatio;
@@ -420,6 +425,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         OnScaleRatioChanges();
 
         isBoosted = false;
+        boostedType.Clear();
     }
 
     // Getter

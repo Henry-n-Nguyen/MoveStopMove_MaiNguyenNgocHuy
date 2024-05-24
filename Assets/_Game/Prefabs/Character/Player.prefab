@@ -80,9 +80,9 @@ GameObject:
   - component: {fileID: 878725946857413220}
   - component: {fileID: 4560287272006892595}
   - component: {fileID: 5132354933558497253}
-  m_Layer: 6
+  m_Layer: 0
   m_Name: Player
-  m_TagString: Player
+  m_TagString: Character
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -240,7 +240,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937eeca91914a614bb23b2c81e912f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  characterTransform: {fileID: 3308923855994619669}
   characterScript: {fileID: 4560287272006892595}
   targetScript: {fileID: 5132354933558497253}
   radarObject: {fileID: 7277379578229232064}
@@ -258,6 +257,7 @@ MonoBehaviour:
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
   hitVFX: {fileID: 3110220322836238196, guid: 85085b50dbf6935408e67ac516381d34, type: 3}
+  characterTransform: {fileID: 3308923855994619669}
   index: 0
   point: 0
   isReadyToAttack: 0
@@ -1543,7 +1543,7 @@ GameObject:
   - component: {fileID: 2025249183242369659}
   m_Layer: 0
   m_Name: AttackRange
-  m_TagString: Untagged
+  m_TagString: Radar
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
