@@ -19,6 +19,8 @@ public class BoosterGenerator : MonoBehaviour
 
     [SerializeField] private LayerMask spawnPointLayer;
 
+    private AbstractBooster createdBooster;
+
     public List<Transform> activatedTransform = new List<Transform>();
 
     private void Awake()
@@ -49,6 +51,10 @@ public class BoosterGenerator : MonoBehaviour
 
     public void SpawnBooster(int quantity)
     {
+        CancelInvoke();
+
+        if (createdBooster != null) createdBooster.Despawn();
+
         List<Transform> spawnPointList = FindNearbySpawnPoints(playerTransform);
 
         if (spawnPointList.Count > quantity)
@@ -76,6 +82,8 @@ public class BoosterGenerator : MonoBehaviour
                 AbstractBooster booster = Instantiate(prefabs[randomNumber], randomPosition, Quaternion.identity, holder);
 
                 booster.Spawn();
+
+                createdBooster = booster;
             }
         }
     }

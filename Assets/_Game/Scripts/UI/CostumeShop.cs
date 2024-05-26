@@ -63,11 +63,9 @@ public class CostumeShop : UICanvas
         data.isSpecialEquipped = false;
         UserDataManager.instance.Load();
 
-        currentShopState = CostumeShopState.SkinShop;
+        TriggerSkinShop();
 
         OnCategoryIsSelected();
-
-        TriggerSkinShop();
     }
 
     public void OnClick()
@@ -85,7 +83,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    if (id == data.equippedSkinId)
+                    if (id == data.equippedSkinId && !isEquippedSpecial)
                     {
                         ChangeButton(ButtonType.EquippedButton);
                     }
@@ -105,7 +103,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    if (id == data.equippedHatId)
+                    if (id == data.equippedHatId && !isEquippedSpecial)
                     {
                         ChangeButton(ButtonType.EquippedButton);
                     }
@@ -125,7 +123,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    if (id == data.equippedPantId)
+                    if (id == data.equippedPantId && !isEquippedSpecial)
                     {
                         ChangeButton(ButtonType.EquippedButton);
                     }
