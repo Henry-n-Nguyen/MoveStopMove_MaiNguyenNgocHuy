@@ -32,14 +32,6 @@ public class GamePlayManager : MonoBehaviour
         OnLoading();
     }
 
-    private void Update()
-    {
-        if (aliveCharacterAmount == 1 && !player.IsDead)
-        {
-            WinGame();
-        }
-    }
-
     private void OnLoading()
     {
         currentGamePlayState = GamePlayState.None;

@@ -15,23 +15,14 @@ public class Ingame : UICanvas
         OnInit();
     }
 
-    private void FixedUpdate()
-    {
-        if (GamePlayManager.instance.aliveCharacterAmount < temporaryAliveCharacter)
-        {
-            temporaryAliveCharacter = GamePlayManager.instance.aliveCharacterAmount;
-            aliveCharacterText.text = "Alive : " + temporaryAliveCharacter.ToString();
-        }
-    }
-
     private void OnInit()
     {
         GamePlayManager.instance.currentGamePlayState = GamePlayState.Ingame;
 
-        temporaryAliveCharacter = GamePlayManager.instance.aliveCharacterAmount;
-        aliveCharacterText.text = "Alive : " + temporaryAliveCharacter.ToString();
+        aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
         CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
+
         StartCoroutine(SpawnBoosterAfterTime(15f));
     }
 
@@ -40,6 +31,12 @@ public class Ingame : UICanvas
         yield return new WaitForSeconds(time);
 
         BoosterGenerator.instance.SpawnBooster(1);
+    }
+
+    public void UpdateCounter()
+    {
+        aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
+        if (GamePlayManager.instance.aliveCharacterAmount == 1) GamePlayManager.instance.WinGame();
     }
 
     public void OpenSettings()

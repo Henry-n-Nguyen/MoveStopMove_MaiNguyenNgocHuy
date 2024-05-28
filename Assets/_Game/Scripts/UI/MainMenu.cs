@@ -18,14 +18,11 @@ public class MainMenu : UICanvas
         coinText.text = UserDataManager.instance.userData.coin.ToString();
 
         GamePlayManager.instance.OnInit();
-
         GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
-
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
 
         BotGenerator.instance.SpawnPlayer();
-        BotPool.Collect();
-        BotGenerator.instance.SpawnBot(8);
+        BotGenerator.instance.SpawnBots(8);
     }
 
     public void PlayGame()

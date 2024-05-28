@@ -51,15 +51,22 @@ public class BotGenerator : MonoBehaviour
         }
     }
 
-    public void SpawnBot(int quantity)
+    public void SpawnBots(int quantity)
     {
         List<Transform> spawnPointList = FindNearbySpawnPoints(player.transform);
+
+        if (spawnPointList.Count == 0)
+        {
+            return;
+        }
+
+        if (quantity >= spawnPointList.Count) quantity = spawnPointList.Count;
 
         int randomNumber = 0;
 
         for (int i = 0; i < quantity; i++)
         {
-            if (activatedTransform.Count == spawnPointList.Count || characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
+            if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
 
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, spawnPointList.Count);
@@ -74,34 +81,41 @@ public class BotGenerator : MonoBehaviour
 
             Vector3 randomPosition = spawnPointList[randomNumber].position;
 
-            // Spawn Bot
-            Enemy character = BotPool.Spawn<Enemy>(randomPosition, Quaternion.identity);
-
-            character.index = index;
-            index++;
-
-            character.point = Random.Range(player.point, player.point + 4);
-
-            character.OnInit();
-
-            List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
-            randomNumber = Random.Range(0, weaponList.Count);
-            character.Equip(EquipmentType.Weapon, weaponList[randomNumber]);
-
-            List<Hat> hatList = EquipmentManager.instance.GetHatList();
-            randomNumber = Random.Range(0, hatList.Count);
-            character.Equip(EquipmentType.Hat, hatList[randomNumber]);
-
-            List<Pant> pantList = EquipmentManager.instance.GetPantList();
-            randomNumber = Random.Range(0, pantList.Count);
-            character.Equip(EquipmentType.Pant, pantList[randomNumber]);
-
-            List<Skin> skinList = EquipmentManager.instance.GetSkinList();
-            randomNumber = Random.Range(0, skinList.Count);
-            character.Equip(EquipmentType.Skin, skinList[randomNumber]);
-
-            characterInBattleAmount++;
+            SpawnBot(randomPosition);
         }
+    }
+
+    private void SpawnBot(Vector3 pos)
+    {
+        int randomNumber = 0;
+
+        // Spawn Bot
+        Enemy character = BotPool.Spawn<Enemy>(pos, Quaternion.identity);
+
+        character.index = index;
+        index++;
+
+        character.point = Random.Range(player.point, player.point + 4);
+
+        character.OnInit();
+
+        List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
+        randomNumber = Random.Range(0, weaponList.Count);
+        character.Equip(EquipmentType.Weapon, weaponList[randomNumber]);
+
+        List<Hat> hatList = EquipmentManager.instance.GetHatList();
+        randomNumber = Random.Range(0, hatList.Count);
+        character.Equip(EquipmentType.Hat, hatList[randomNumber]);
+
+        List<Pant> pantList = EquipmentManager.instance.GetPantList();
+        randomNumber = Random.Range(0, pantList.Count);
+        character.Equip(EquipmentType.Pant, pantList[randomNumber]);
+
+        List<Skin> skinList = EquipmentManager.instance.GetSkinList();
+        randomNumber = Random.Range(0, skinList.Count);
+        character.Equip(EquipmentType.Skin, skinList[randomNumber]);
+
+        characterInBattleAmount++;
     }
 
     private IEnumerator RemoveActivatedTransform(Transform target, float time)
@@ -120,26 +134,30 @@ public class BotGenerator : MonoBehaviour
         {
             for (int i = 0; i < spawnPointCollides.Length; i++)
             {
-                nearbySpawnPointsTransform.Add(Cache.GetSpawnpoint(spawnPointCollides[i]));
+                Transform spawnPoint = Cache.GetSpawnpoint(spawnPointCollides[i]);
+                nearbySpawnPointsTransform.Add(spawnPoint);
             }
         }
 
-        Transform nearestSpawnpoint = nearbySpawnPointsTransform[0];
-
-        float currentDistance = Vector3.Distance(targetTransform.position, nearestSpawnpoint.position);
-
-        for (int i = 0; i < nearbySpawnPointsTransform.Count; i++)
+        if (nearbySpawnPointsTransform.Count > 0)
         {
-            float newDistance = Vector3.Distance(targetTransform.position, nearbySpawnPointsTransform[i].position);
+            Transform nearestSpawnpoint = nearbySpawnPointsTransform[0];
 
-            if (newDistance < currentDistance)
+            float currentDistance = Vector3.Distance(targetTransform.position, nearestSpawnpoint.position);
+
+            for (int i = 0; i < nearbySpawnPointsTransform.Count; i++)
             {
-                currentDistance = newDistance;
-                nearestSpawnpoint = nearbySpawnPointsTransform[i];
-            }
-        }
+                float newDistance = Vector3.Distance(targetTransform.position, nearbySpawnPointsTransform[i].position);
 
-        nearbySpawnPointsTransform.Remove(nearestSpawnpoint);
+                if (newDistance < currentDistance)
+                {
+                    currentDistance = newDistance;
+                    nearestSpawnpoint = nearbySpawnPointsTransform[i];
+                }
+            }
+
+            nearbySpawnPointsTransform.Remove(nearestSpawnpoint);
+        }
 
         return nearbySpawnPointsTransform;
     }

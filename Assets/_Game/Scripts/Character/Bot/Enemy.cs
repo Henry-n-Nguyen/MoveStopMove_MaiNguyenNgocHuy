@@ -191,7 +191,8 @@ public class Enemy : AbstractCharacter
         BotPool.Despawn(this);
         GamePlayManager.instance.aliveCharacterAmount--;
         BotGenerator.instance.characterInBattleAmount--;
-        BotGenerator.instance.SpawnBot(1);
+        BotGenerator.instance.SpawnBots(1);
+        UIManager.instance.GetUI<Ingame>().UpdateCounter();
     }
 
     public void IsTargeted(bool isTargeted)
