@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: 298084086148243267}
   - component: {fileID: 165950087849121376}
   - component: {fileID: 4633023433629315244}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Enormous Booster
   m_TagString: Untagged
   m_Icon: {fileID: 0}

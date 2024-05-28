@@ -16,6 +16,8 @@ public class Lose : UICanvas
 
     private void OnInit()
     {
+        BotPool.Collect();
+
         earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
         rankText.text = "#" + GamePlayManager.instance.aliveCharacterAmount.ToString();

@@ -146,6 +146,8 @@ public class WeaponShop : UICanvas
 
     public void ReturnHome()
     {
+        NonDisplayWeapon(index);
+
         UIManager.instance.CloseDirectly<WeaponShop>();
 
         UIManager.instance.OpenUI<MainMenu>();

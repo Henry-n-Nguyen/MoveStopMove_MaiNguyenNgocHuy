@@ -15,6 +15,8 @@ public class Win : UICanvas
 
     private void OnInit()
     {
+        BotPool.Collect();
+
         earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
         GamePlayManager.instance.currentGamePlayState = GamePlayState.Win;

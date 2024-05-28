@@ -118,7 +118,7 @@ GameObject:
   - component: {fileID: -6104053799204802710}
   - component: {fileID: 8998825017432295726}
   - component: {fileID: 1934932699517489734}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Speed Booster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
