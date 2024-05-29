@@ -13,20 +13,22 @@ public class Settings : UICanvas
 
     private void OnInit()
     {
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
+        GamePlayManager.instance.ChangeState(GamePlayState.None);
     }
 
     public void ResumeGame()
     {
+        GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
+
         UIManager.instance.CloseDirectly<Settings>();
 
         UIManager.instance.OpenUI<DynamicJoyStick>();
-        UIManager.instance.OpenUI<Ingame>();
     }
 
     public void ReturnHome()
     {
         UIManager.instance.CloseDirectly<Settings>();
+        UIManager.instance.CloseDirectly<Ingame>();
 
         UIManager.instance.OpenUI<MainMenu>();
     }

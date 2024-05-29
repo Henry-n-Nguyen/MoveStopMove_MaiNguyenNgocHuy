@@ -41,7 +41,7 @@ public class WeaponShop : UICanvas
 
     private void OnInit()
     {
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.Shop;
+        StartCoroutine(Loading(3f));
 
         index = 0;
 
@@ -144,15 +144,6 @@ public class WeaponShop : UICanvas
         }
     }
 
-    public void ReturnHome()
-    {
-        NonDisplayWeapon(index);
-
-        UIManager.instance.CloseDirectly<WeaponShop>();
-
-        UIManager.instance.OpenUI<MainMenu>();
-    }
-
     public void Buy()
     {
         UserData data = UserDataManager.instance.userData;
@@ -180,5 +171,23 @@ public class WeaponShop : UICanvas
         UserDataManager.instance.Save();
 
         OnChanges();
+    }
+    
+    public void ReturnHome()
+    {
+        NonDisplayWeapon(index);
+
+        UIManager.instance.CloseDirectly<WeaponShop>();
+
+        UIManager.instance.OpenUI<MainMenu>();
+    }
+
+    private IEnumerator Loading(float time)
+    {
+        UIManager.instance.OpenUI<Loading>();
+
+        yield return new WaitForSeconds(time);
+
+        UIManager.instance.CloseDirectly<Loading>();
     }
 }

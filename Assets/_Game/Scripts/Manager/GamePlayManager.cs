@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
+using System;
 
 public class GamePlayManager : MonoBehaviour
 {
@@ -29,39 +30,24 @@ public class GamePlayManager : MonoBehaviour
     private void Start()
     {
         OnInit();
-        OnLoading();
-    }
-
-    private void OnLoading()
-    {
-        currentGamePlayState = GamePlayState.None;
-
-        StartCoroutine(LoadingGame(5f));
     }
 
     public void OnInit()
     {
-        aliveCharacterAmount = characterAmount;
         data = UserDataManager.instance.userData;
 
+        ChangeState(GamePlayState.None);
+
+        aliveCharacterAmount = characterAmount;
+
         coinToEarn = 0;
-    }
 
-    private IEnumerator LoadingGame(float time)
-    {
-        UIManager.instance.OpenUI<Loading>();
-
-        BotGenerator.instance.SpawnPlayer();
-
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseDirectly<Loading>();
         UIManager.instance.OpenUI<MainMenu>();
     }
 
     public void WinGame()
     {
-        coinToEarn = player.point * 10;
+        coinToEarn = player.point * 12;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
@@ -72,7 +58,7 @@ public class GamePlayManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        currentGamePlayState = GamePlayState.Win;
+        ChangeState(GamePlayState.None);
 
         player.OnInit();
         player.Win();
@@ -83,7 +69,7 @@ public class GamePlayManager : MonoBehaviour
 
     public void LoseGame()
     {
-        coinToEarn = player.point * 10;
+        coinToEarn = player.point * 12;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
@@ -94,11 +80,27 @@ public class GamePlayManager : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
 
-        currentGamePlayState = GamePlayState.Lose;
-
         player.OnInit();
 
         UIManager.instance.CloseAll();
         UIManager.instance.OpenUI<Lose>();
+    }
+
+    public event Action OnAliveCharacterAmountChanged;
+
+    public void CharacterDied()
+    {
+        aliveCharacterAmount--;
+
+        OnAliveCharacterAmountChanged?.Invoke();
+    }
+
+    public event Action OnUIChanged;
+
+    public void ChangeState(GamePlayState state)
+    {
+        currentGamePlayState = state;
+
+        OnUIChanged?.Invoke();
     }
 }

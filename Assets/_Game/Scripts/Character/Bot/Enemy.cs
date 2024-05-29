@@ -121,7 +121,7 @@ public class Enemy : AbstractCharacter
 
         agent.SetDestination(characterTransform.position);
 
-        if (IsOnPause())
+        if (isOnPause)
         {
             desPointSet = false;
             return;
@@ -188,11 +188,11 @@ public class Enemy : AbstractCharacter
     private IEnumerator DespawnEnemy(float time)
     {
         yield return new WaitForSeconds(time);
+
         BotPool.Despawn(this);
-        GamePlayManager.instance.aliveCharacterAmount--;
-        BotGenerator.instance.characterInBattleAmount--;
+        GamePlayManager.instance.CharacterDied();
+
         BotGenerator.instance.SpawnBots(1);
-        UIManager.instance.GetUI<Ingame>().UpdateCounter();
     }
 
     public void IsTargeted(bool isTargeted)

@@ -50,7 +50,9 @@ public class CostumeShop : UICanvas
 
     private void OnInit()
     {
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.Shop;
+        StartCoroutine(Loading(3f));
+
+        GamePlayManager.instance.ChangeState(GamePlayState.Shop);
 
         CameraManager.instance.TurnOnCamera(CameraState.CostumeShop);
 
@@ -425,17 +427,6 @@ public class CostumeShop : UICanvas
         OnCategoryIsSelected();
     }
 
-    public void ReturnHome()
-    {
-        if (!isEquippedSpecial) GamePlayManager.instance.player.DeEquipSpecial();
-        data.isSpecialEquipped = isEquippedSpecial;
-        UserDataManager.instance.Save();
-
-        UIManager.instance.CloseDirectly<CostumeShop>();
-
-        UIManager.instance.OpenUI<MainMenu>();
-    }
-
     public void Buy()
     {
         if (data.coin >= price)
@@ -524,5 +515,25 @@ public class CostumeShop : UICanvas
         }
 
         OnClick();
+    }
+    
+    public void ReturnHome()
+    {
+        if (!isEquippedSpecial) GamePlayManager.instance.player.DeEquipSpecial();
+        data.isSpecialEquipped = isEquippedSpecial;
+        UserDataManager.instance.Save();
+
+        UIManager.instance.CloseDirectly<CostumeShop>();
+
+        UIManager.instance.OpenUI<MainMenu>();
+    }
+
+    private IEnumerator Loading(float time)
+    {
+        UIManager.instance.OpenUI<Loading>();
+
+        yield return new WaitForSeconds(time);
+
+        UIManager.instance.CloseDirectly<Loading>();
     }
 }

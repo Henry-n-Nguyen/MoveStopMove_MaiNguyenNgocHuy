@@ -15,10 +15,11 @@ public class MainMenu : UICanvas
 
     private void OnInit()
     {
+        StartCoroutine(Loading(3f));
+
         coinText.text = UserDataManager.instance.userData.coin.ToString();
 
         GamePlayManager.instance.OnInit();
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.MainMenu;
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
 
         BotGenerator.instance.SpawnPlayer();
@@ -45,5 +46,14 @@ public class MainMenu : UICanvas
         UIManager.instance.CloseDirectly<MainMenu>();
 
         UIManager.instance.OpenUI<CostumeShop>();
+    }
+
+    private IEnumerator Loading(float time)
+    {
+        UIManager.instance.OpenUI<Loading>();
+
+        yield return new WaitForSeconds(time);
+
+        UIManager.instance.CloseDirectly<Loading>();
     }
 }

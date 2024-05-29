@@ -49,7 +49,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Bool variables
     protected bool isDead;
-    protected bool isIngame;
+    protected bool isOnPause = true;
+    protected bool isInShop;
     [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
@@ -82,13 +83,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void Update()
     {
-        targetScript.enabled = !IsOnPause();
         isReadyToAttack = IsReadyToAttack();
-
-        if (IsOnPause())
-        {
-            ChangeState(new IdleState());
-        }
 
         if (currentState != null)
         {
@@ -112,6 +107,9 @@ public abstract class AbstractCharacter : MonoBehaviour
         OnScaleRatioChanges();
 
         ChangeState(new IdleState());
+
+        GamePlayManager.instance.OnUIChanged += IsOnPause;
+        GamePlayManager.instance.OnUIChanged += IsInShop;
     }
 
     public void OnScaleRatioChanges()
@@ -271,18 +269,28 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Public function
 
-    public bool IsOnPause()
+    public void IsOnPause()
     {
         GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
 
-        return gamePlayState != GamePlayState.Ingame;
+        if (gamePlayState != GamePlayState.Ingame)
+        {
+            isOnPause = true;
+            targetScript.enabled = false;
+            ChangeState(new IdleState());
+        }
+        else
+        {
+            isOnPause = false;
+            targetScript.enabled = true;
+        }
     }
 
-    public bool IsOnShop()
+    public void IsInShop()
     {
         GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
 
-        return gamePlayState == GamePlayState.Shop;
+        isInShop = gamePlayState == GamePlayState.Shop;
     }
 
     public virtual void Moving()
