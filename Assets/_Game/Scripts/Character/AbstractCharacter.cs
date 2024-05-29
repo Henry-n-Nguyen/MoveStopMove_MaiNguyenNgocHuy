@@ -102,9 +102,15 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         targetsInRange.Clear();
 
-        radarObject.radius = attackRange;
+        scaleRatio = 1f;
+        moveSpeed = 5f;
+        attackRange = 7.5f;
 
         OnScaleRatioChanges();
+
+        OnPointChange();
+
+        radarObject.radius = attackRange;
 
         ChangeState(new IdleState());
 
