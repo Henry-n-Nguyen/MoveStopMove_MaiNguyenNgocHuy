@@ -166,6 +166,11 @@ public class Player : AbstractCharacter
         }
     }
 
+    public void Revive()
+    {
+        isDead = false;
+    }
+
     public override void Dancing()
     {
         base.Dancing();
