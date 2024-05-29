@@ -30,11 +30,22 @@ public class BotGenerator : MonoBehaviour
         instance = this;
     }
 
+    private void Start()
+    {
+        OnInit();
+    }
+
+    private void OnInit()
+    {
+        GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
+    }
+
     public void SpawnPlayer()
     {
         if (player != null)
         {
             player.OnInit();
+            BotPool.Collect();
         }
         else
         {
@@ -124,7 +135,7 @@ public class BotGenerator : MonoBehaviour
         activatedTransform.Remove(target);
     }
 
-    public List<Transform> FindNearbySpawnPoints(Transform targetTransform)
+    private List<Transform> FindNearbySpawnPoints(Transform targetTransform)
     {
         List<Transform> nearbySpawnPointsTransform = new List<Transform>();
 
@@ -160,5 +171,10 @@ public class BotGenerator : MonoBehaviour
         }
 
         return nearbySpawnPointsTransform;
+    }
+
+    private void ReduceCharacterInBattle()
+    {
+        characterInBattleAmount--;
     }
 }

@@ -7,11 +7,6 @@ public class Loading : UICanvas
 {
     private void OnEnable()
     {
-        OnInit();
-    }
-
-    private void OnInit()
-    {
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.Loading;
+        destroyOnClose = true;
     }
 }

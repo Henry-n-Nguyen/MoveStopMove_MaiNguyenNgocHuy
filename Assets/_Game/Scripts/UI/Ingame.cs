@@ -17,7 +17,9 @@ public class Ingame : UICanvas
 
     private void OnInit()
     {
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.Ingame;
+        StartCoroutine(Loading(3f));
+
+        GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
 
         aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
@@ -42,8 +44,18 @@ public class Ingame : UICanvas
     public void OpenSettings()
     {
         UIManager.instance.CloseDirectly<DynamicJoyStick>();
-        UIManager.instance.CloseDirectly<Ingame>();
 
         UIManager.instance.OpenUI<Settings>();
+    }
+
+    private IEnumerator Loading(float time)
+    {
+        UIManager.instance.OpenUI<Loading>();
+
+        yield return new WaitForSeconds(time);
+
+        UIManager.instance.CloseDirectly<Loading>();
+
+        GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
     }
 }

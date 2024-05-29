@@ -22,7 +22,7 @@ public class Lose : UICanvas
 
         rankText.text = "#" + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
-        GamePlayManager.instance.currentGamePlayState = GamePlayState.Lose;
+        GamePlayManager.instance.currentGamePlayState = GamePlayState.None;
 
         CameraManager.instance.TurnOnCamera(CameraState.Lose);
     }

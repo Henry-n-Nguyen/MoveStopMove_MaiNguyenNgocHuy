@@ -34,6 +34,8 @@ public class Player : AbstractCharacter
 
         if (data.isSpecialEquipped)
         {
+            int equippedWeaponId = data.equippedWeaponId;
+            Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
             int equippedSpecialId = data.equippedSpecialId;
             Equip(EquipmentType.Special, EquipmentManager.instance.GetSpecialById(equippedSpecialId));
         }
@@ -96,12 +98,12 @@ public class Player : AbstractCharacter
     {
         base.StopMoving();
 
-        if (IsOnShop())
+        if (isInShop)
         {
             ChangeState(new DanceState());
         }
 
-        if (IsOnPause())
+        if (isOnPause)
         {
             return;
         }
@@ -168,7 +170,7 @@ public class Player : AbstractCharacter
     {
         base.Dancing();
 
-        if (!IsOnShop())
+        if (!isInShop)
         {
             ChangeState(new IdleState());
         }
