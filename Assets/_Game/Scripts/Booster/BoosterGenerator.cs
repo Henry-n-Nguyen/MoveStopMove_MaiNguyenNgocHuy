@@ -33,7 +33,7 @@ public class BoosterGenerator : MonoBehaviour
         OnInit();
     }
 
-    private void OnInit()
+    public void OnInit()
     {
         playerTransform = GamePlayManager.instance.playerTransform;
     }

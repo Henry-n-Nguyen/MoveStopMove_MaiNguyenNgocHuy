@@ -36,6 +36,8 @@ public class GamePlayManager : MonoBehaviour
 
     public void OnInit()
     {
+        StopAllCoroutines();
+
         data = UserDataManager.instance.userData;
 
         isDiedBefore = false;

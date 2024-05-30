@@ -22,6 +22,8 @@ public abstract class AbstractBullet : MonoBehaviour
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
 
+    private bool isSpecialLaunch = false;
+
     private void OnEnable()
     {
         OnInit();
@@ -29,7 +31,14 @@ public abstract class AbstractBullet : MonoBehaviour
 
     private void Update()
     {
-        Launch();
+        if (isSpecialLaunch)
+        {
+            SpecialLaunch();
+        }
+        else
+        {
+            Launch();
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -66,6 +75,8 @@ public abstract class AbstractBullet : MonoBehaviour
 
     protected virtual void OnInit()
     {
+        isSpecialLaunch = owner.isBoosted;
+
         attackRange = owner.GetAttackRange();
         scaleRatio = owner.GetScaleParametters();
 
@@ -79,6 +90,18 @@ public abstract class AbstractBullet : MonoBehaviour
 
     }
 
+    protected void SpecialLaunch()
+    {
+        float distance = Time.deltaTime * speed * 2f;
+
+        bulletTransform.position += bulletTransform.forward * distance;
+        attackRange -= (distance / 2); // Double bullet exist time
+        scaleRatio += distance; // Increase Scale over time
+        bulletTransform.localScale = Vector3.one * scaleRatio;
+
+        if (attackRange <= 0) Despawn();
+    }
+
     public void Spawn()
     {
         bulletTransform.position = owner.GetAttackPoint().position;
@@ -90,11 +113,22 @@ public abstract class AbstractBullet : MonoBehaviour
 
     public void Despawn()
     {
+        if (isSpecialLaunch)
+        {
+            if (attackRange > 0 )
+            {
+                return;
+            }
+        }
+
         bulletGameObject.SetActive(false);
         bulletTransform.localPosition = Vector3.zero;
 
         OnBulletSpawn?.Invoke();
     }
 
-    
+    public void SpecialBuff()
+    {
+        scaleRatio += Time.deltaTime;
+    }
 }

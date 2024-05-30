@@ -42,7 +42,7 @@ public class Revive : UICanvas
 
         GamePlayManager.instance.player.Revive();
 
-        UIManager.instance.CloseDirectly<Revive>();
+        UIManager.instance.CloseUI<Revive>(0);
 
         UIManager.instance.OpenUI<DynamicJoyStick>();
     }

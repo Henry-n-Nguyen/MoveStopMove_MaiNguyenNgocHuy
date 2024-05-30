@@ -24,7 +24,7 @@ public class Win : UICanvas
 
     public void ReturnHome()
     {
-        UIManager.instance.CloseDirectly<Win>();
+        UIManager.instance.CloseUI<Win>(0.5f);
 
         UIManager.instance.OpenUI<MainMenu>();
     }

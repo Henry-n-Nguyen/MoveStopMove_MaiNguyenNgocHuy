@@ -47,6 +47,8 @@ public class Enemy : AbstractCharacter
     {
         base.OnInit();
 
+        StopAllCoroutines();
+
         desPointSet = false;
 
         isDetectedTarget = false;

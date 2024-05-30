@@ -29,7 +29,7 @@ public class Lose : UICanvas
 
     public void ReturnHome()
     {
-        UIManager.instance.CloseDirectly<Lose>();
+        UIManager.instance.CloseUI<Lose>(0.5f);
 
         UIManager.instance.OpenUI<MainMenu>();
     }
