@@ -22,6 +22,8 @@ public class GamePlayManager : MonoBehaviour
 
     private UserData data;
 
+    private bool isDiedBefore = false;
+
     private void Awake()
     {
         instance = this;
@@ -35,6 +37,8 @@ public class GamePlayManager : MonoBehaviour
     public void OnInit()
     {
         data = UserDataManager.instance.userData;
+
+        isDiedBefore = false;
 
         ChangeState(GamePlayState.None);
 
@@ -73,7 +77,16 @@ public class GamePlayManager : MonoBehaviour
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
-        StartCoroutine(LoseGame(2.5f));
+        if (isDiedBefore)
+        {
+            StartCoroutine(LoseGame(2.5f));
+        }
+        else
+        {
+            isDiedBefore = true;
+
+            StartCoroutine(Revive(2.5f));
+        }
     }
 
     private IEnumerator LoseGame(float time)
@@ -86,6 +99,16 @@ public class GamePlayManager : MonoBehaviour
         UIManager.instance.OpenUI<Lose>();
     }
 
+    private IEnumerator Revive(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        UIManager.instance.CloseDirectly<DynamicJoyStick>();
+        UIManager.instance.OpenUI<Revive>();
+    }
+
+
+    // Event Action
     public event Action OnAliveCharacterAmountChanged;
 
     public void CharacterDied()

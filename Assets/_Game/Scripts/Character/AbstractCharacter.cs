@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Drawing;
 using UnityEngine.AI;
 using HuySpace;
+using System;
 
 public abstract class AbstractCharacter : MonoBehaviour
 {
@@ -83,8 +84,6 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void Update()
     {
-        isReadyToAttack = IsReadyToAttack();
-
         if (currentState != null)
         {
             currentState.OnExecute(this);
@@ -98,13 +97,21 @@ public abstract class AbstractCharacter : MonoBehaviour
             ClearBoost();
         }
 
+        isReadyToAttack = true;
+
         isDead = false;
 
         targetsInRange.Clear();
 
-        radarObject.radius = attackRange;
+        scaleRatio = 1f;
+        moveSpeed = 5f;
+        attackRange = 7.5f;
 
         OnScaleRatioChanges();
+
+        OnPointChange();
+
+        radarObject.radius = attackRange;
 
         ChangeState(new IdleState());
 
@@ -293,6 +300,21 @@ public abstract class AbstractCharacter : MonoBehaviour
         isInShop = gamePlayState == GamePlayState.Shop;
     }
 
+    public void IsReadyToAttack()
+    {
+        if (BulletManager.instance.IsBulletActivated(this.index))
+        {
+            this.weapon.Despawn();
+            isReadyToAttack = false;
+        }
+        else
+        {
+            this.weapon.Spawn();
+            isReadyToAttack = true;
+        }
+    }
+
+    // State Function
     public virtual void Moving()
     {
         ChangeAnim(Constant.TRIGGER_RUN);
@@ -301,19 +323,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     public virtual void StopMoving()
     {
         ChangeAnim(Constant.TRIGGER_IDLE);
-    }
-
-    public bool IsReadyToAttack()
-    {
-        if (BulletManager.instance.IsBulletActivated(this.index)) { 
-            this.weapon.Despawn();
-            return false;
-        }
-        else
-        {
-            this.weapon.Spawn();
-            return true;
-        }
     }
     
     public virtual void ReadyToAttack()
@@ -339,6 +348,8 @@ public abstract class AbstractCharacter : MonoBehaviour
         ParticleSystem VFX = Instantiate(hitVFX, characterTransform);
         ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
         VFXcolor.color = skinMeshRenderer.materials[0].color;
+
+        BulletManager.instance.Despawn(characterScript);
 
         ChangeAnim(Constant.TRIGGER_DEAD);
     }

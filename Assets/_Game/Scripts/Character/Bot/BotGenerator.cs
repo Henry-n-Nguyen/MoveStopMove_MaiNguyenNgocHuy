@@ -32,16 +32,20 @@ public class BotGenerator : MonoBehaviour
 
     private void Start()
     {
+        GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
+
         OnInit();
     }
 
     private void OnInit()
     {
-        GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
+        StopAllCoroutines();
     }
 
     public void SpawnPlayer()
     {
+        OnInit();
+
         if (player != null)
         {
             player.OnInit();
