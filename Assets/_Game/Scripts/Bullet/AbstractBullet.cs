@@ -12,6 +12,8 @@ public abstract class AbstractBullet : MonoBehaviour
     [SerializeField] protected Transform bulletTransform;
     [SerializeField] protected Transform meshTransform;
 
+    public event Action OnBulletSpawn;
+
     public int id;
 
     public AbstractCharacter owner;
@@ -68,6 +70,8 @@ public abstract class AbstractBullet : MonoBehaviour
         scaleRatio = owner.GetScaleParametters();
 
         bulletTransform.localScale = Vector3.one * scaleRatio;
+
+        OnBulletSpawn += owner.IsReadyToAttack;
     }
 
     protected virtual void Launch()
@@ -80,11 +84,17 @@ public abstract class AbstractBullet : MonoBehaviour
         bulletTransform.position = owner.GetAttackPoint().position;
         bulletTransform.rotation = owner.characterTransform.rotation;
         bulletGameObject.SetActive(true);
+
+        OnBulletSpawn?.Invoke();
     }
 
     public void Despawn()
     {
         bulletGameObject.SetActive(false);
         bulletTransform.localPosition = Vector3.zero;
+
+        OnBulletSpawn?.Invoke();
     }
+
+    
 }

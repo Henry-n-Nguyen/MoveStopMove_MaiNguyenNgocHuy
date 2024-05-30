@@ -282,5 +282,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joyStickHolder: {fileID: 1714748971250087518}
+  joyStickTransform: {fileID: 1714748972352257912}
   splittedjoyStick: {fileID: 1714748970486625609}
   joyStick: {fileID: 1714748971581862914}

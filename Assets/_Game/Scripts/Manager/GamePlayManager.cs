@@ -107,6 +107,8 @@ public class GamePlayManager : MonoBehaviour
         UIManager.instance.OpenUI<Revive>();
     }
 
+
+    // Event Action
     public event Action OnAliveCharacterAmountChanged;
 
     public void CharacterDied()

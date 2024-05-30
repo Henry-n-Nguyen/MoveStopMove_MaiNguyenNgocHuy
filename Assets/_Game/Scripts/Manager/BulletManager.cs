@@ -38,6 +38,14 @@ public class BulletManager : MonoBehaviour
         }
     }
 
+    public void Despawn(AbstractCharacter character)
+    {
+        if (activatedBullets.ContainsKey(character.index))
+        {
+            activatedBullets[character.index].Despawn();
+        }
+    }
+
     // Check bullet is loaded yet
     public bool IsBulletLoaded(int index)
     {

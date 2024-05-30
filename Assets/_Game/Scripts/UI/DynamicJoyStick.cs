@@ -10,6 +10,7 @@ public class DynamicJoyStick : UICanvas
     public static DynamicJoyStick instance;
 
     [SerializeField] private GameObject joyStickHolder;
+    [SerializeField] private Transform joyStickTransform;
     [SerializeField] private Image splittedjoyStick;
     [SerializeField] private Image joyStick;
 
@@ -44,7 +45,7 @@ public class DynamicJoyStick : UICanvas
     {
         if (!isPressed)
         {
-            joyStickHolder.transform.position = Input.mousePosition;
+            joyStickTransform.position = Input.mousePosition;
         }
 
         if (Input.GetMouseButtonDown(0))
