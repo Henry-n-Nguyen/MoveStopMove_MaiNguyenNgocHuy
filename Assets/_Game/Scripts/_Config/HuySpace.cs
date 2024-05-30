@@ -27,8 +27,7 @@ namespace HuySpace
 
     public enum BoostType
     {
-        CoinBoost,
-        SpeedBoost,
+        HugeBulletBoost,
         EnormousBoost
     }
 

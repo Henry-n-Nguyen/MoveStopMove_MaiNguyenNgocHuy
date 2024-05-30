@@ -8,6 +8,6 @@ public class SpeedBooster : AbstractBooster
     {
         base.TriggerBoost(character);
 
-        character.SpeedUp(2.5f);
+        character.HugeBulletEnhance(2.5f);
     }
 }

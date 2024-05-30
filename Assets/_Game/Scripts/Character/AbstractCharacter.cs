@@ -69,6 +69,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Boost Variables
     public bool isBoosted;
+    public bool isHugeBulletBoosted;
 
     protected List<BoostType> boostedType = new List<BoostType>();
 
@@ -368,16 +369,19 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         AbstractCharacter closestEnemy = null;
 
-        float minDistance = 0f;
+        float minDistance = Mathf.Infinity;
 
         for (int i = 0; i < targetsInRange.Count; i++)
         {
-            float distance = Vector3.Distance(characterTransform.position, targetsInRange[i].characterTransform.position);
+            AbstractCharacter target = targetsInRange[i];
+            Vector3 targetPosition = target.characterTransform.position;
 
-            if (minDistance < distance)
+            float distanceSq = Vector3.SqrMagnitude(characterTransform.position - targetPosition);
+
+            if (distanceSq < minDistance)
             {
-                minDistance = distance;
-                closestEnemy = targetsInRange[i];
+                minDistance = distanceSq;
+                closestEnemy = target;
             }
         }
 
@@ -395,11 +399,12 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Boost
-    public void SpeedUp(float multiply) 
+    public void HugeBulletEnhance(float multiply) 
     {
         isBoosted = true;
+        isHugeBulletBoosted = true;
 
-        boostedType.Add(BoostType.SpeedBoost);
+        boostedType.Add(BoostType.HugeBulletBoost);
 
         tempSpeed = moveSpeed;
         moveSpeed *= multiply;
@@ -433,7 +438,7 @@ public abstract class AbstractCharacter : MonoBehaviour
                     
                     break;
 
-                case BoostType.SpeedBoost: 
+                case BoostType.HugeBulletBoost: 
                     moveSpeed = tempSpeed; 
                     agent.speed = moveSpeed * 0.67f; 
                     
@@ -448,7 +453,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Getter
-
     public float GetAttackRange()
     {
         return attackRange;

@@ -2,6 +2,7 @@ using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.EditorCoroutines.Editor;
 using UnityEngine;
 
 public class Ingame : UICanvas
@@ -17,7 +18,9 @@ public class Ingame : UICanvas
 
     private void OnInit()
     {
-        StartCoroutine(Loading(3f));
+        StopAllCoroutines();
+
+        StartCoroutine(Loading(4f));
 
         GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
 
@@ -43,7 +46,7 @@ public class Ingame : UICanvas
 
     public void OpenSettings()
     {
-        UIManager.instance.CloseDirectly<DynamicJoyStick>();
+        UIManager.instance.CloseUI<DynamicJoyStick>(0);
 
         UIManager.instance.OpenUI<Settings>();
     }
@@ -54,7 +57,7 @@ public class Ingame : UICanvas
 
         yield return new WaitForSeconds(time);
 
-        UIManager.instance.CloseDirectly<Loading>();
+        UIManager.instance.CloseUI<Loading>(0);
 
         GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
     }

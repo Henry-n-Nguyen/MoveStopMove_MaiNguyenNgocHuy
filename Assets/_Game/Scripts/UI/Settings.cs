@@ -13,11 +13,15 @@ public class Settings : UICanvas
 
     private void OnInit()
     {
+        Time.timeScale = 0.0f;
+
         GamePlayManager.instance.ChangeState(GamePlayState.None);
     }
 
     public void ResumeGame()
     {
+        Time.timeScale = 1.0f;
+
         GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
 
         UIManager.instance.CloseDirectly<Settings>();
@@ -27,6 +31,8 @@ public class Settings : UICanvas
 
     public void ReturnHome()
     {
+        Time.timeScale = 1.0f;
+
         UIManager.instance.CloseDirectly<Settings>();
         UIManager.instance.CloseDirectly<Ingame>();
 
