@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using UnityEngine.WSA;
 
 public abstract class AbstractBullet : MonoBehaviour
 {
@@ -18,7 +15,7 @@ public abstract class AbstractBullet : MonoBehaviour
 
     public AbstractCharacter owner;
 
-    protected float speed = 6f;
+    protected float speed = 12f;
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
 

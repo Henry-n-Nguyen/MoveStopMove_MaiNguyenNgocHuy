@@ -33,9 +33,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected Transform characterLeftHand;
     [SerializeField] protected Transform characterNeck;
 
-    [Header("VFX")]
-    [SerializeField] protected ParticleSystem hitVFX;
-
     // Statitics
     [Header("Public")]
     public Transform characterTransform;
@@ -68,14 +65,18 @@ public abstract class AbstractCharacter : MonoBehaviour
     private string currentAnimName;
 
     // Boost Variables
-    public bool isBoosted;
-    public bool isHugeBulletBoosted;
+    [HideInInspector] public bool isBoosted;
+    [HideInInspector] public bool isHugeBulletBoosted;
 
     protected List<BoostType> boostedType = new List<BoostType>();
 
     protected float tempScaleRatio;
     protected float tempSpeed;
     protected float tempAttackRange;
+
+    private event Action IsBoosted;
+    
+    private ParticleSystem boostedAura = null;
 
     // Function
     private void Start()
@@ -346,7 +347,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Dead()
     {
-        ParticleSystem VFX = Instantiate(hitVFX, characterTransform);
+        ParticleSystem VFX = Instantiate(ParticleManager.instance.hitVFX, characterTransform);
         ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
         VFXcolor.color = skinMeshRenderer.materials[0].color;
 
@@ -399,6 +400,26 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Boost
+    public void CheckBoost()
+    {
+        if (isBoosted)
+        {
+            if (boostedAura == null)
+            {
+                ParticleSystem aura = Instantiate(ParticleManager.instance.boostedVFX, characterTransform);
+                boostedAura = aura;
+            }
+            else
+            {
+                boostedAura.gameObject.SetActive(true);
+            }
+        }
+        else
+        {
+            boostedAura.gameObject.SetActive(false);
+        }
+    }
+
     public void HugeBulletEnhance(float multiply) 
     {
         isBoosted = true;
@@ -450,6 +471,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         isBoosted = false;
         boostedType.Clear();
+        CheckBoost();
     }
 
     // Getter

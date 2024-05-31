@@ -61,4 +61,10 @@ namespace HuySpace
         EquipButton,
         EquippedButton
     }
+
+    public enum ParticleType
+    {
+        HitVFX,
+        BoostedVFX
+    }
 }

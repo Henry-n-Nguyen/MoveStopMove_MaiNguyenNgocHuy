@@ -226,17 +226,24 @@ MonoBehaviour:
   characterHip: {fileID: 7502528297446423031}
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
-  hitVFX: {fileID: 3110220322836238196, guid: 85085b50dbf6935408e67ac516381d34, type: 3}
   characterTransform: {fileID: 3308923855994619669}
   index: 1
   point: 0
   isReadyToAttack: 0
   targetsInRange: []
   isBoosted: 0
+  isHugeBulletBoosted: 0
   targetedMark: {fileID: 5905830706655812610}
   desPoint: {x: 0, y: 0, z: 0}
   desPointSet: 0
   desPointRange: 15
+  characterLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  boosterLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  target: {fileID: 0}
 --- !u!114 &7040531013573885074
 MonoBehaviour:
   m_ObjectHideFlags: 0

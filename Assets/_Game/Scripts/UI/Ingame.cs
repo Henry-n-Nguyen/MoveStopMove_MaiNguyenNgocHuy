@@ -2,12 +2,12 @@ using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using Unity.EditorCoroutines.Editor;
 using UnityEngine;
 
 public class Ingame : UICanvas
 {
     [SerializeField] private TextMeshProUGUI aliveCharacterText;
+    [SerializeField] private GameObject helpToMovePart;
 
     private int temporaryAliveCharacter;
 
@@ -22,7 +22,10 @@ public class Ingame : UICanvas
 
         StartCoroutine(Loading(4f));
 
+        helpToMovePart.SetActive(true);
+
         GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
+        GamePlayManager.instance.OnPlayerTouchScreen += NonDisplayHelpToMovePart;
 
         aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
@@ -42,6 +45,11 @@ public class Ingame : UICanvas
     {
         aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
         if (GamePlayManager.instance.aliveCharacterAmount == 1) GamePlayManager.instance.WinGame();
+    }
+
+    public void NonDisplayHelpToMovePart()
+    {
+        helpToMovePart.SetActive(false);
     }
 
     public void OpenSettings()

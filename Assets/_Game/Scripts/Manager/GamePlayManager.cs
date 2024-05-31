@@ -128,4 +128,11 @@ public class GamePlayManager : MonoBehaviour
 
         OnUIChanged?.Invoke();
     }
+
+    public event Action OnPlayerTouchScreen;
+
+    public void OnTouch()
+    {
+        OnPlayerTouchScreen?.Invoke();
+    }
 }

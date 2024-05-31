@@ -5,6 +5,13 @@ using UnityEngine.AI;
 
 public class Enemy : AbstractCharacter
 {
+    private enum BotType
+    {
+        AgressiveBot, // Find and positive attack characters around him
+        PatrolBot, // Just chilling in his patrol progress
+    }
+
+
     [Header("Pre-Setup")]
     [SerializeField] private GameObject targetedMark;
 
@@ -13,9 +20,18 @@ public class Enemy : AbstractCharacter
     [SerializeField] private bool desPointSet;
     [SerializeField] private float desPointRange;
 
+    [Header("BotType")]
+    [SerializeField] private BotType typeOfBot;
+    [SerializeField] private LayerMask characterLayer;
+
+    [Header("Target")]
+    [SerializeField] private AbstractCharacter target = null;
+
+    // Private variables
     private bool isDetectedTarget;
     private float patrolingTimer = 0;
     private float idlingTimer = 0;
+
 
     private void OnTriggerEnter(Collider other)
     {
@@ -54,6 +70,13 @@ public class Enemy : AbstractCharacter
         isDetectedTarget = false;
 
         agent.speed = moveSpeed * 0.67f;
+
+        RandomTypeOfBot();
+    }
+
+    private void RandomTypeOfBot() {
+        // Random type of this bot
+        typeOfBot = (BotType)Random.Range(0, 2);
     }
 
     public override void Moving()
@@ -87,7 +110,22 @@ public class Enemy : AbstractCharacter
                 patrolingTimer = 0;
             }
 
-            agent.SetDestination(desPoint);
+            if (typeOfBot == BotType.AgressiveBot)
+            {
+                if (target == null || target.enabled == false)
+                {
+                    SearchDesPoint();
+                    agent.SetDestination(desPoint);
+                }
+                else
+                {
+                    agent.SetDestination(desPoint);
+                }
+            }
+            else
+            {
+                agent.SetDestination(desPoint);
+            }
         }
 
         Vector3 distanceToDesPoint = characterTransform.position - desPoint;
@@ -104,19 +142,65 @@ public class Enemy : AbstractCharacter
 
     private void SearchDesPoint()
     {
+        switch (typeOfBot)
+        {
+            case BotType.AgressiveBot:
+                Agressive();
+                break;
+
+            case BotType.PatrolBot:
+                Patrol();
+                break;
+        }
+
+        desPointSet = true;
+    }
+
+    private void Agressive()
+    {
+        float minDistance = Mathf.Infinity;
+
+        Collider[] characterCollides = Physics.OverlapSphere(characterTransform.position, 40f, characterLayer);
+
+        if (characterCollides.Length > 0)
+        {
+            for (int i = 0; i < characterCollides.Length; i++)
+            {
+                AbstractCharacter foundedTarget = Cache.GetCharacter(characterCollides[i]);
+
+                if (foundedTarget.index != index)
+                {
+                    float currentDistanceSq = Vector3.SqrMagnitude(characterTransform.position - foundedTarget.characterTransform.position);
+
+                    if (currentDistanceSq < minDistance)
+                    {
+                        desPoint = foundedTarget.characterTransform.position;
+                        target = foundedTarget;
+                    }
+                }
+            }
+        }
+        else
+        {
+            Patrol();
+        }
+    }
+
+    private void Patrol()
+    {
         // create random point in a walkRadius
         Vector3 randomDirection = Random.insideUnitSphere * desPointRange;
 
         // reference point was created to current tranform and find random point with it
         randomDirection += characterTransform.position;
         NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, desPointRange, 1);
-        
+
         // return result
         desPoint = hit.position;
-
-        desPointSet = true;
     }
 
+
+    // State Methods
     public override void StopMoving()
     {
         base .StopMoving();
