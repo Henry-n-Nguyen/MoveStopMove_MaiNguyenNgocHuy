@@ -1103,4 +1103,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bb215128267d3fe44998161187f24806, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  earnCoinText: {fileID: 0}
+  earnCoinText: {fileID: 1706680559349978544}

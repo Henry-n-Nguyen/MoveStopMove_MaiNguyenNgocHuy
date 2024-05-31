@@ -30,7 +30,13 @@ public abstract class AbstractBooster : MonoBehaviour
         if (other.CompareTag(Constant.TAG_CHARACTER))
         {
             AbstractCharacter character = Cache.GetCharacter(other);
-            if (!character.isBoosted) TriggerBoost(character);
+
+            if (!character.isBoosted)
+            {
+                TriggerBoost(character);
+                character.CheckBoost();
+            }
+
             Despawn();
         }
     }

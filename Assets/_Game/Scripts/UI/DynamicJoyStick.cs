@@ -11,8 +11,9 @@ public class DynamicJoyStick : UICanvas
 
     [SerializeField] private GameObject joyStickHolder;
     [SerializeField] private Transform joyStickTransform;
-    [SerializeField] private Image splittedjoyStick;
     [SerializeField] private Image joyStick;
+
+    private bool isTouchedBefore = false;
 
     private bool isPressed;
     public bool IsPressed => isPressed;
@@ -31,8 +32,7 @@ public class DynamicJoyStick : UICanvas
     {
         isPressed = false;
 
-        splittedjoyStick.enabled = false;
-        joyStick.color = new Color(joyStick.color.r, joyStick.color.g, joyStick.color.b, 0f);
+        isTouchedBefore = false;
     }
 
     // Update is called once per frame
@@ -50,10 +50,14 @@ public class DynamicJoyStick : UICanvas
 
         if (Input.GetMouseButtonDown(0))
         {
-            isPressed = true;
+            if (!isTouchedBefore)
+            {
+                isTouchedBefore = true;
 
-            splittedjoyStick.enabled = true;
-            joyStick.color = new Color(joyStick.color.r, joyStick.color.g, joyStick.color.b, 1f);
+                GamePlayManager.instance.OnTouch();
+            }
+
+            isPressed = true;
         }
         else if (Input.GetMouseButtonUp(0))
         {

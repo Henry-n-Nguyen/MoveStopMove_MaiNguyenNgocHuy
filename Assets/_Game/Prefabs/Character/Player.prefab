@@ -263,6 +263,7 @@ MonoBehaviour:
   isReadyToAttack: 0
   targetsInRange: []
   isBoosted: 0
+  isHugeBulletBoosted: 0
   playerInput: {fileID: 7033175576109326437}
   moveAction:
     m_Name: Move
