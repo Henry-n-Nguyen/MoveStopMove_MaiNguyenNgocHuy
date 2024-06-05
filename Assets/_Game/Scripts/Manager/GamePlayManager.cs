@@ -14,8 +14,6 @@ public class GamePlayManager : MonoBehaviour
 
     [HideInInspector] public Player player;
 
-    [HideInInspector] public Transform playerTransform;
-
     [HideInInspector] public int aliveCharacterAmount;
 
     [HideInInspector] public int coinToEarn;

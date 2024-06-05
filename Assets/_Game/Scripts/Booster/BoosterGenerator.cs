@@ -15,13 +15,14 @@ public class BoosterGenerator : MonoBehaviour
     [SerializeField] private Transform holder;
 
     [Header("References")]
-    [SerializeField] private Transform playerTransform;
+    [SerializeField] private AbstractCharacter player;
 
     [SerializeField] private LayerMask spawnPointLayer;
 
     private AbstractBooster createdBooster;
 
     public List<Transform> activatedTransform = new List<Transform>();
+    public List<Transform> inActivatedTransform = new List<Transform>();
 
     private void Awake()
     {
@@ -35,18 +36,7 @@ public class BoosterGenerator : MonoBehaviour
 
     public void OnInit()
     {
-        playerTransform = GamePlayManager.instance.playerTransform;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        //TEST
-        if (isSpawn)
-        {
-            SpawnBooster(1);
-            isSpawn = false;
-        }
+        player = GamePlayManager.instance.player;
     }
 
     public void SpawnBooster(int quantity)
@@ -55,26 +45,24 @@ public class BoosterGenerator : MonoBehaviour
 
         if (createdBooster != null) createdBooster.Despawn();
 
-        List<Transform> spawnPointList = FindNearbySpawnPoints(playerTransform);
+        inActivatedTransform.Clear();
+        inActivatedTransform = FindNearbySpawnPoints(player.characterTransform);
 
-        if (spawnPointList.Count > quantity)
+        if (inActivatedTransform.Count > quantity)
         {
             int randomNumber = 0;
 
             for (int i = 0; i < quantity; i++)
             {
                 // Pick random position that not in activated position list
-                randomNumber = Random.Range(0, spawnPointList.Count);
+                randomNumber = Random.Range(0, inActivatedTransform.Count);
 
-                while (activatedTransform.Count > 0 && activatedTransform.IndexOf(spawnPointList[randomNumber]) != -1)
-                {
-                    randomNumber = Random.Range(0, spawnPointList.Count);
-                }
+                activatedTransform.Add(inActivatedTransform[randomNumber]);
+                StartCoroutine(RemoveActivatedTransform(inActivatedTransform[randomNumber], 15f));
 
-                activatedTransform.Add(spawnPointList[randomNumber]);
-                StartCoroutine(RemoveActivatedTransform(spawnPointList[randomNumber], 15f));
+                Vector3 randomPosition = inActivatedTransform[randomNumber].position;
 
-                Vector3 randomPosition = spawnPointList[randomNumber].position;
+                inActivatedTransform.Remove(inActivatedTransform[randomNumber]);
 
                 // Spawn Booster
                 randomNumber = Random.Range(0, prefabs.Count);
@@ -92,6 +80,7 @@ public class BoosterGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
+        inActivatedTransform.Add(target);
         yield return new WaitForSeconds(2f);
         SpawnBooster(1);
     }

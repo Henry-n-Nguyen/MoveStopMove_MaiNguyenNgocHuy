@@ -26,7 +26,7 @@ public class BoomerangBullet : AbstractBullet
         else if (attackRange <= 0)
         {
             float gap = Vector3.Distance(owner.characterTransform.position, bulletTransform.position); 
-            if (gap > 0.1f)
+            if (gap > 0.3f)
             {
                 // Return faster than before 50%
                 bulletTransform.position += (owner.characterTransform.position - bulletTransform.position).normalized * distance * 1.5f;

@@ -123,9 +123,4 @@ public abstract class AbstractBullet : MonoBehaviour
 
         OnBulletSpawn?.Invoke();
     }
-
-    public void SpecialBuff()
-    {
-        scaleRatio += Time.deltaTime;
-    }
 }
