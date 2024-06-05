@@ -54,7 +54,6 @@ public class BotGenerator : MonoBehaviour
             player = createdPlayer;
 
             GamePlayManager.instance.player = player;
-            GamePlayManager.instance.playerTransform = player.transform;
 
             CameraFollow.instance.target = player.transform;
 

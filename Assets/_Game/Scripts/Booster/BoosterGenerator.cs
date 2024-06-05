@@ -15,7 +15,7 @@ public class BoosterGenerator : MonoBehaviour
     [SerializeField] private Transform holder;
 
     [Header("References")]
-    [SerializeField] private Transform playerTransform;
+    [SerializeField] private AbstractCharacter player;
 
     [SerializeField] private LayerMask spawnPointLayer;
 
@@ -35,7 +35,7 @@ public class BoosterGenerator : MonoBehaviour
 
     public void OnInit()
     {
-        playerTransform = GamePlayManager.instance.playerTransform;
+        player = GamePlayManager.instance.player;
     }
 
     // Update is called once per frame
@@ -55,7 +55,7 @@ public class BoosterGenerator : MonoBehaviour
 
         if (createdBooster != null) createdBooster.Despawn();
 
-        List<Transform> spawnPointList = FindNearbySpawnPoints(playerTransform);
+        List<Transform> spawnPointList = FindNearbySpawnPoints(player.characterTransform);
 
         if (spawnPointList.Count > quantity)
         {
