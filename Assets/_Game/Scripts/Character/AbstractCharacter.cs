@@ -41,8 +41,13 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public int point = 0;
 
+    protected float rawMoveSpeed = 5f;
     protected float moveSpeed = 5f;
+
+    protected float rawAttackRange = 7.5f;
     protected float attackRange = 7.5f;
+
+    protected float rawScaleRatio = 1f;
     protected float scaleRatio = 1f;
 
     // Bool variables
@@ -105,9 +110,9 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         targetsInRange.Clear();
 
-        scaleRatio = 1f;
-        moveSpeed = 5f;
-        attackRange = 7.5f;
+        scaleRatio = rawScaleRatio;
+        moveSpeed = rawMoveSpeed;
+        attackRange = rawAttackRange;
 
         OnScaleRatioChanges();
 
@@ -124,8 +129,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     public void OnScaleRatioChanges()
     {
         characterTransform.localScale = Vector3.one * scaleRatio;
-        moveSpeed *= scaleRatio;
-        attackRange *= scaleRatio;
+        moveSpeed = rawMoveSpeed * scaleRatio;
+        attackRange = rawAttackRange * scaleRatio;
     }
 
     public void OnPointChange()
@@ -461,7 +466,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
                 case BoostType.HugeBulletBoost: 
                     moveSpeed = tempSpeed; 
-                    agent.speed = moveSpeed * 0.67f; 
+                    agent.speed = moveSpeed * 0.67f;
                     
                     break;
             }
@@ -470,6 +475,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         OnScaleRatioChanges();
 
         isBoosted = false;
+        isHugeBulletBoosted = false;
         boostedType.Clear();
         CheckBoost();
     }

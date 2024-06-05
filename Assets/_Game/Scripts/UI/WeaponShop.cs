@@ -31,12 +31,20 @@ public class WeaponShop : UICanvas
 
     private List<Item> activeWeaponImages = new List<Item>();
 
+    private UserData data;
+
     private int index;
     private int price;
 
     private void OnEnable()
     {
+        OnSetUp();
         OnInit();
+    }
+
+    private void OnSetUp()
+    {
+        data = UserDataManager.instance.userData;
     }
 
     private void OnInit()

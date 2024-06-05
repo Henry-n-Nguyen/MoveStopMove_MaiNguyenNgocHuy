@@ -72,7 +72,7 @@ public abstract class AbstractBullet : MonoBehaviour
 
     protected virtual void OnInit()
     {
-        isSpecialLaunch = owner.isBoosted;
+        isSpecialLaunch = owner.isHugeBulletBoosted;
 
         attackRange = owner.GetAttackRange();
         scaleRatio = owner.GetScaleParametters();
