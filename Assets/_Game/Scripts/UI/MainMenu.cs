@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using HuySpace;
 using TMPro;
 
 public class MainMenu : UICanvas
 {
     [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private Image levelIcon;
 
     private void OnEnable()
     {
@@ -18,6 +20,10 @@ public class MainMenu : UICanvas
         StartCoroutine(Loading(3f));
 
         coinText.text = UserDataManager.instance.userData.coin.ToString();
+
+        levelIcon.sprite = LevelManager.instance.GetLevelIcon(UserDataManager.instance.userData.currentLevel);
+
+        LevelManager.instance.SpawnMap();
 
         GamePlayManager.instance.OnInit();
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);

@@ -14,6 +14,8 @@ public class UserData
     public List<int> skinIdList = new List<int>();
     public List<int> specialIdList = new List<int>();
 
+    public int currentLevel = 0;
+
     public bool isSpecialEquipped;
     public int equippedSpecialId = 0;
 

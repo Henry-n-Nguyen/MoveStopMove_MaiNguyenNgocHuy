@@ -45,7 +45,6 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public int point = 0;
 
-
     protected float moveSpeed = 5f;
     protected float attackRange = 7.5f;
     protected float scaleRatio = 1f;
@@ -144,17 +143,17 @@ public abstract class AbstractCharacter : MonoBehaviour
 
                 break;
             case 7: 
-                scaleRatio = 1.25f; 
+                scaleRatio = 1.21f; 
                 OnScaleRatioChanges();
 
                 break;
             case 15: 
-                scaleRatio = 1.5f; 
+                scaleRatio = 1.33f; 
                 OnScaleRatioChanges();
 
                 break;
             case 24: 
-                scaleRatio = 1.9f; 
+                scaleRatio = 1.5f; 
                 OnScaleRatioChanges();
 
                 break;
@@ -381,6 +380,13 @@ public abstract class AbstractCharacter : MonoBehaviour
         for (int i = 0; i < targetsInRange.Count; i++)
         {
             AbstractCharacter target = targetsInRange[i];
+
+            if (target.IsDead)
+            {
+                targetsInRange.RemoveAt(i);
+                continue;
+            }
+
             Vector3 targetPosition = target.characterTransform.position;
 
             float distanceSq = Vector3.SqrMagnitude(characterTransform.position - targetPosition);
@@ -401,7 +407,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         if (closestEnemy != null)
         {
-            characterTransform.forward = (closestEnemy.characterTransform.position - characterTransform.position).normalized;
+            Vector3 targetDir = (closestEnemy.characterTransform.position - characterTransform.position).normalized;
+            if (targetDir != Vector3.zero) characterTransform.forward = targetDir;
         }
     }
 
@@ -447,7 +454,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         tempScaleRatio = scaleRatio;
         tempSpeed = moveSpeed;
         tempAttackRange = attackRange;
-        scaleRatio *= 1.5f;
+        scaleRatio = 1.8f;
         OnScaleRatioChanges();
     }
 
@@ -500,5 +507,10 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform GetAttackPoint()
     {
         return attackPoint;
+    }
+
+    public float GetMovementSpeed()
+    {
+        return moveSpeed;
     }
 }

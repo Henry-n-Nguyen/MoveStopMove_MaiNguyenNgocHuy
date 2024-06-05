@@ -26,6 +26,11 @@ public class UserDataManager : MonoBehaviour
         }
     }
 
+    private void OnApplicationQuit()
+    {
+        Save();
+    }
+
     public void Load()
     {
         player.LoadDataFromUserData();

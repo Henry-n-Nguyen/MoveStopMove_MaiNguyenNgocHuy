@@ -9,25 +9,30 @@ public class CameraFollow : MonoBehaviour
 
     private Vector3 offset;
 
-    public Transform target;
+    public Player target = null;
 
     [SerializeField] private Transform cameraTransform;
-    [SerializeField] private float smoothTime = 0.25f;
-
-    private Vector3 _currentVelocity = Vector3.zero;
+    [SerializeField] private float zoomSpeed;
     
     private void Awake()
     {
         instance = this;
-
-        OnInit();
     }
 
     void LateUpdate()
     {
-        Vector3 targetPosition = target.position + offset;
+        MoveCameraFollowTarget();
+    }
 
-        cameraTransform.position = Vector3.SmoothDamp(cameraTransform.position, targetPosition, ref _currentVelocity, smoothTime);
+    private void MoveCameraFollowTarget()
+    {
+        if (target != null)
+        {
+            Vector3 targetPosition = target.characterTransform.position + offset * target.GetScaleParametters();
+            zoomSpeed = target.GetMovementSpeed();
+
+            cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, zoomSpeed * Time.deltaTime);
+        }
     }
 
     public void OnInit()

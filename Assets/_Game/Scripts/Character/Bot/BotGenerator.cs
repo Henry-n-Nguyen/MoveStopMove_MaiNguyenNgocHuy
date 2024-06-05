@@ -16,7 +16,7 @@ public class BotGenerator : MonoBehaviour
 
     [SerializeField] private LayerMask spawnPointLayer;
 
-    [HideInInspector] public Player player = null;
+    public Player player = null;
 
     // Private variables
     private int index = 1;
@@ -24,6 +24,7 @@ public class BotGenerator : MonoBehaviour
     public int characterInBattleAmount = 1;
 
     private List<Transform> activatedTransform = new List<Transform>();
+    private List<Transform> inActivatedTransform = new List<Transform>();
 
     private void Awake()
     {
@@ -55,7 +56,8 @@ public class BotGenerator : MonoBehaviour
 
             GamePlayManager.instance.player = player;
 
-            CameraFollow.instance.target = player.transform;
+            CameraFollow.instance.target = player;
+            CameraFollow.instance.OnInit();
 
             UserDataManager.instance.player = player;
         }
@@ -63,14 +65,15 @@ public class BotGenerator : MonoBehaviour
 
     public void SpawnBots(int quantity)
     {
-        List<Transform> spawnPointList = FindNearbySpawnPoints(player.transform);
+        inActivatedTransform.Clear();
+        inActivatedTransform = FindNearbySpawnPoints(player.transform);
 
-        if (spawnPointList.Count == 0)
+        if (inActivatedTransform.Count == 0)
         {
             return;
         }
 
-        if (quantity >= spawnPointList.Count) quantity = spawnPointList.Count;
+        if (quantity >= inActivatedTransform.Count) quantity = inActivatedTransform.Count;
 
         int randomNumber = 0;
 
@@ -79,17 +82,14 @@ public class BotGenerator : MonoBehaviour
             if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
 
             // Pick randomly spawnPoint to spawn Bots
-            randomNumber = Random.Range(0, spawnPointList.Count);
+            randomNumber = Random.Range(0, inActivatedTransform.Count);
 
-            while (activatedTransform.Count > 0 && activatedTransform.IndexOf(spawnPointList[randomNumber]) != -1)
-            {
-                randomNumber = Random.Range(0, spawnPointList.Count);
-            }
+            activatedTransform.Add(inActivatedTransform[randomNumber]);
+            StartCoroutine(RemoveActivatedTransform(inActivatedTransform[randomNumber], 5f));
 
-            activatedTransform.Add(spawnPointList[randomNumber]);
-            StartCoroutine(RemoveActivatedTransform(spawnPointList[randomNumber], 5f));
+            Vector3 randomPosition = inActivatedTransform[randomNumber].position;
 
-            Vector3 randomPosition = spawnPointList[randomNumber].position;
+            inActivatedTransform.Remove(inActivatedTransform[randomNumber]);
 
             SpawnBot(randomPosition);
         }
@@ -132,6 +132,7 @@ public class BotGenerator : MonoBehaviour
     {
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
+        inActivatedTransform.Add(target);
     }
 
     private List<Transform> FindNearbySpawnPoints(Transform targetTransform)
