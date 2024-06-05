@@ -42,6 +42,7 @@ public class CostumeShop : UICanvas
 
     [HideInInspector] public int id;
     [HideInInspector] public int price;
+    [HideInInspector] public Item itemOnClicked = null;
 
     private void OnEnable()
     {

@@ -9,6 +9,7 @@ public class Item : MonoBehaviour
     [SerializeField] private GameObject itemGameObject;
 
     [SerializeField] private Button button;
+    [SerializeField] private GameObject buttonBorder;
 
     public Image icon;
 
@@ -29,6 +30,9 @@ public class Item : MonoBehaviour
 
     public void OnImageClick()
     {
+        if (costumeShopScript.itemOnClicked != null) costumeShopScript.itemOnClicked.OnClickedAnotherItem();
+        OnClickedItem();
+
         switch (equipmentType)
         {
             case EquipmentType.Hat:
@@ -36,11 +40,15 @@ public class Item : MonoBehaviour
                 costumeShopScript.id = id;
                 costumeShopScript.price = 800;
 
+                costumeShopScript.itemOnClicked = this;
+
                 break;
             case EquipmentType.Skin:
                 player.Equip(equipmentType, EquipmentManager.instance.GetSkinById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 500;
+
+                costumeShopScript.itemOnClicked = this;
 
                 break;
             case EquipmentType.Pant:
@@ -48,13 +56,16 @@ public class Item : MonoBehaviour
                 costumeShopScript.id = id;
                 costumeShopScript.price = 400;
 
+                costumeShopScript.itemOnClicked = this;
+
                 break;
             case EquipmentType.Special:
                 player.DeEquipSpecial();
                 player.Equip(equipmentType, EquipmentManager.instance.GetSpecialById(id));
-
                 costumeShopScript.id = id;
                 costumeShopScript.price = 5000;
+
+                costumeShopScript.itemOnClicked = this;
 
                 break;
         }
@@ -70,5 +81,16 @@ public class Item : MonoBehaviour
     public void Despawn()
     {
         itemGameObject.SetActive(false);
+    }
+
+    public void OnClickedItem()
+    {
+        buttonBorder.SetActive(true);
+    }
+
+    public void OnClickedAnotherItem()
+    {
+        buttonBorder.SetActive(false);
+
     }
 }
