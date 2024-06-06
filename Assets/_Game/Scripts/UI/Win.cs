@@ -23,6 +23,8 @@ public class Win : UICanvas
 
         earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
+        GamePlayManager.instance.player.OnInit();
+
         CameraManager.instance.TurnOnCamera(CameraState.Win);
     }
 

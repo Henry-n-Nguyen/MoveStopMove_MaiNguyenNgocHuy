@@ -19,11 +19,11 @@ public class Player : AbstractCharacter
         LoadDataFromUserData();
 
         characterTransform.position = Vector3.zero;
-        Rotate(Direct.Forward);
+
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
 
-        point = 0;
-        scaleRatio = 1f;
+        Rotate(Direct.Forward);
+
 
         isDetectedTarget = false;
     }

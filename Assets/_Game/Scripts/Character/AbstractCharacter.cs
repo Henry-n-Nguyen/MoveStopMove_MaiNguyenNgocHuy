@@ -5,6 +5,7 @@ using System.Drawing;
 using UnityEngine.AI;
 using HuySpace;
 using System;
+using UnityEngine.UIElements;
 
 public abstract class AbstractCharacter : MonoBehaviour
 {
@@ -81,8 +82,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     protected float tempScaleRatio;
     protected float tempSpeed;
     protected float tempAttackRange;
-
-    private event Action IsBoosted;
     
     private ParticleSystem boostedAura = null;
 
@@ -90,6 +89,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     private void Start()
     {
         OnInit();
+        SubscribeEvent();
     }
 
     private void Update()
@@ -100,12 +100,20 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
+    public void SubscribeEvent()
+    {
+        GamePlayManager.instance.OnUIChanged += IsOnPause;
+        GamePlayManager.instance.OnUIChanged += IsInShop;
+    }
+
     public virtual void OnInit()
     {
         if (isBoosted)
         {
             ClearBoost();
         }
+
+        point = 0;
 
         isReadyToAttack = true;
 
@@ -119,14 +127,11 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         OnScaleRatioChanges();
 
-        OnPointChange();
+        OnPointChanges();
 
         radarObject.radius = attackRange;
 
         ChangeState(new IdleState());
-
-        GamePlayManager.instance.OnUIChanged += IsOnPause;
-        GamePlayManager.instance.OnUIChanged += IsInShop;
     }
 
     public void OnScaleRatioChanges()
@@ -136,7 +141,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         attackRange = RAW_ATTACK_RANGE * scaleRatio;
     }
 
-    public void OnPointChange()
+    public void OnPointChanges()
     {
         switch (point)
         {
@@ -285,7 +290,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Public function
-
     public void IsOnPause()
     {
         GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
@@ -324,7 +328,6 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    // State Function
     public virtual void Moving()
     {
         ChangeAnim(Constant.TRIGGER_RUN);
