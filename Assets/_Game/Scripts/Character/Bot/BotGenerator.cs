@@ -105,9 +105,10 @@ public class BotGenerator : MonoBehaviour
         character.index = index;
         index++;
 
-        character.point = Random.Range(player.point, player.point + 4);
-
         character.OnInit();
+
+        character.point = Random.Range(player.point, player.point + 4);
+        character.OnPointChange();
 
         List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
         randomNumber = Random.Range(0, weaponList.Count);

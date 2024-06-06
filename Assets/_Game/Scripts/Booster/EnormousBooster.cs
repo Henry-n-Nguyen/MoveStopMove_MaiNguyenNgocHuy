@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
 public class EnormousBooster : AbstractBooster
 {
@@ -8,6 +9,16 @@ public class EnormousBooster : AbstractBooster
     {
         base.TriggerBoost(character);
 
-        character.EnormousEnhance();
+        EnormousEnhance(character);
+    }
+
+    private void EnormousEnhance(AbstractCharacter character)
+    {
+        character.isBoosted = true;
+
+        character.boostedType.Add(BoostType.EnormousBoost);
+
+        character.scaleRatio = 1.8f;
+        character.OnScaleRatioChanges();
     }
 }

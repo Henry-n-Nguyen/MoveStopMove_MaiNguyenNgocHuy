@@ -610,11 +610,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 072d3c7aead31dd44be03afb81e4aab8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  levelIcons: []
+  levelIcons:
+  - {fileID: 21300000, guid: 7b0115fc83873764f81f36d0ac8e7103, type: 3}
+  - {fileID: 21300000, guid: 001cc463e6ca442479350ce0c478e248, type: 3}
+  - {fileID: 21300000, guid: 805cb7ce29553114a91cd8eca1863cc5, type: 3}
   mapPrefabs:
   - {fileID: 8130812699361206494, guid: 63056797d8514534cb64cca98c9968d5, type: 3}
-  - {fileID: 987210255732017188, guid: 1066d0d957beb3949a9ce6ca1801a65e, type: 3}
-  - {fileID: 5872953438700598499, guid: 9bd36f6c869343748878f5968cd91e6a, type: 3}
+  - {fileID: 8130812699361206494, guid: 63056797d8514534cb64cca98c9968d5, type: 3}
+  - {fileID: 8130812699361206494, guid: 63056797d8514534cb64cca98c9968d5, type: 3}
   mapHolder: {fileID: 600261488}
   currentLevel: -1
 --- !u!1 &963194225
@@ -722,6 +725,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 182e54282bc136e4a9281ba5400ff5ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  offset: {x: 0, y: 0, z: 0}
   target: {fileID: 0}
   cameraTransform: {fileID: 963194228}
   zoomSpeed: 1

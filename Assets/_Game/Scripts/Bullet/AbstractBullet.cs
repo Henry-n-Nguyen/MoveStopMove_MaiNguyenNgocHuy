@@ -74,8 +74,8 @@ public abstract class AbstractBullet : MonoBehaviour
     {
         isSpecialLaunch = owner.isHugeBulletBoosted;
 
-        attackRange = owner.GetAttackRange();
-        scaleRatio = owner.GetScaleParametters();
+        attackRange = owner.attackRange;
+        scaleRatio = owner.scaleRatio;
 
         bulletTransform.localScale = Vector3.one * scaleRatio;
 

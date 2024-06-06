@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
 public class HugeBulletBooster : AbstractBooster
 {
@@ -8,6 +9,14 @@ public class HugeBulletBooster : AbstractBooster
     {
         base.TriggerBoost(character);
 
-        character.HugeBulletEnhance(2.5f);
+        HugeBulletEnhance(character);
+    }
+
+    public void HugeBulletEnhance(AbstractCharacter character)
+    {
+        character.isBoosted = true;
+        character.isHugeBulletBoosted = true;
+
+        character.boostedType.Add(BoostType.HugeBulletBoost);
     }
 }
