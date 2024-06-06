@@ -28,7 +28,8 @@ namespace HuySpace
     public enum BoostType
     {
         HugeBulletBoost,
-        EnormousBoost
+        EnormousBoost,
+        None = -1
     }
 
     public enum CameraState

@@ -15,10 +15,11 @@ public class EnormousBooster : AbstractBooster
     private void EnormousEnhance(AbstractCharacter character)
     {
         character.isBoosted = true;
+        character.boostedType = BoostType.EnormousBoost;
 
-        character.boostedType.Add(BoostType.EnormousBoost);
+        character.CheckBoost();
 
-        character.scaleRatio = 1.8f;
+        character.scaleRatio = 1.64f;
         character.OnScaleRatioChanges();
     }
 }
