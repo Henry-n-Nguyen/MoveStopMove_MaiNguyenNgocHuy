@@ -5,12 +5,17 @@ using System.Drawing;
 using UnityEngine.AI;
 using HuySpace;
 using System;
+using UnityEngine.UIElements;
 
 public abstract class AbstractCharacter : MonoBehaviour
 {
     protected const float RAW_MOVE_SPEED = 5f;
     protected const float RAW_ATTACK_RANGE = 7.5f;
     protected const float RAW_SCALE = 1f;
+
+    public float RawMoveSpeed => RAW_MOVE_SPEED;
+    public float RawAttackRange => RAW_ATTACK_RANGE;
+    public float RawScale => RAW_SCALE;
 
     // Editor
     [Header("SetUp-References")]
@@ -42,12 +47,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform characterTransform;
 
     public int index;
-
     public int point = 0;
 
-    protected float moveSpeed = 5f;
-    protected float attackRange = 7.5f;
-    protected float scaleRatio = 1f;
+    public float moveSpeed = 5f;
+    public float attackRange = 7.5f;
+    public float scaleRatio = 1f;
 
 
     // Bool variables
@@ -57,7 +61,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
-    public bool IsDead => isDead;
+    [HideInInspector] public bool IsDead => isDead;
 
     // List target
     public List<AbstractCharacter> targetsInRange = new List<AbstractCharacter>();
@@ -73,13 +77,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     [HideInInspector] public bool isBoosted;
     [HideInInspector] public bool isHugeBulletBoosted;
 
-    protected List<BoostType> boostedType = new List<BoostType>();
+    [HideInInspector] public List<BoostType> boostedType = new List<BoostType>();
 
     protected float tempScaleRatio;
     protected float tempSpeed;
     protected float tempAttackRange;
-
-    private event Action IsBoosted;
     
     private ParticleSystem boostedAura = null;
 
@@ -87,6 +89,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     private void Start()
     {
         OnInit();
+        SubscribeEvent();
     }
 
     private void Update()
@@ -97,12 +100,20 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
+    public void SubscribeEvent()
+    {
+        GamePlayManager.instance.OnUIChanged += IsOnPause;
+        GamePlayManager.instance.OnUIChanged += IsInShop;
+    }
+
     public virtual void OnInit()
     {
         if (isBoosted)
         {
             ClearBoost();
         }
+
+        point = 0;
 
         isReadyToAttack = true;
 
@@ -116,14 +127,11 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         OnScaleRatioChanges();
 
-        OnPointChange();
+        OnPointChanges();
 
         radarObject.radius = attackRange;
 
         ChangeState(new IdleState());
-
-        GamePlayManager.instance.OnUIChanged += IsOnPause;
-        GamePlayManager.instance.OnUIChanged += IsInShop;
     }
 
     public void OnScaleRatioChanges()
@@ -133,7 +141,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         attackRange = RAW_ATTACK_RANGE * scaleRatio;
     }
 
-    public void OnPointChange()
+    public void OnPointChanges()
     {
         switch (point)
         {
@@ -143,17 +151,17 @@ public abstract class AbstractCharacter : MonoBehaviour
 
                 break;
             case 7: 
-                scaleRatio = 1.21f; 
+                scaleRatio = 1.22f; 
                 OnScaleRatioChanges();
 
                 break;
             case 15: 
-                scaleRatio = 1.33f; 
+                scaleRatio = 1.4f; 
                 OnScaleRatioChanges();
 
                 break;
             case 24: 
-                scaleRatio = 1.5f; 
+                scaleRatio = 1.55f; 
                 OnScaleRatioChanges();
 
                 break;
@@ -282,7 +290,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Public function
-
     public void IsOnPause()
     {
         GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
@@ -321,7 +328,6 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    // State Function
     public virtual void Moving()
     {
         ChangeAnim(Constant.TRIGGER_RUN);
@@ -417,6 +423,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         if (isBoosted)
         {
+            tempScaleRatio = scaleRatio;
+
             if (boostedAura == null)
             {
                 ParticleSystem aura = Instantiate(ParticleManager.instance.boostedVFX, characterTransform);
@@ -433,52 +441,9 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    public void HugeBulletEnhance(float multiply) 
-    {
-        isBoosted = true;
-        isHugeBulletBoosted = true;
-
-        boostedType.Add(BoostType.HugeBulletBoost);
-
-        tempSpeed = moveSpeed;
-        moveSpeed *= multiply;
-        agent.speed = moveSpeed * 0.67f;
-    }
-
-    public void EnormousEnhance()
-    {
-        isBoosted = true;
-
-        boostedType.Add(BoostType.EnormousBoost);
-
-        tempScaleRatio = scaleRatio;
-        tempSpeed = moveSpeed;
-        tempAttackRange = attackRange;
-        scaleRatio = 1.8f;
-        OnScaleRatioChanges();
-    }
-
     private void ClearBoost()
     {
-        for (int i = 0; i < boostedType.Count; i++)
-        {
-            switch (boostedType[i])
-            {
-                case BoostType.EnormousBoost:
-                    scaleRatio = tempScaleRatio;
-                    moveSpeed = tempSpeed; 
-                    agent.speed = moveSpeed * 0.67f;
-                    attackRange = tempAttackRange;
-                    
-                    break;
-
-                case BoostType.HugeBulletBoost: 
-                    moveSpeed = tempSpeed; 
-                    agent.speed = moveSpeed * 0.67f;
-                    
-                    break;
-            }
-        }
+        scaleRatio = tempScaleRatio;
 
         OnScaleRatioChanges();
 
@@ -489,15 +454,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Getter
-    public float GetAttackRange()
-    {
-        return attackRange;
-    }
-
-    public float GetScaleParametters()
-    {
-        return scaleRatio;
-    }
 
     public int GetWeaponId()
     {
@@ -507,10 +463,5 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform GetAttackPoint()
     {
         return attackPoint;
-    }
-
-    public float GetMovementSpeed()
-    {
-        return moveSpeed;
     }
 }

@@ -54,7 +54,7 @@ public abstract class AbstractBullet : MonoBehaviour
                 character.ChangeState(new DeadState());
 
                 owner.point++;
-                owner.OnPointChange();
+                owner.OnPointChanges();
                 owner.targetsInRange.Remove(character);
 
                 Despawn();
@@ -74,8 +74,8 @@ public abstract class AbstractBullet : MonoBehaviour
     {
         isSpecialLaunch = owner.isHugeBulletBoosted;
 
-        attackRange = owner.GetAttackRange();
-        scaleRatio = owner.GetScaleParametters();
+        attackRange = owner.attackRange;
+        scaleRatio = owner.scaleRatio;
 
         bulletTransform.localScale = Vector3.one * scaleRatio;
 
@@ -92,7 +92,7 @@ public abstract class AbstractBullet : MonoBehaviour
         float distance = Time.deltaTime * speed * 2f;
 
         bulletTransform.position += bulletTransform.forward * distance;
-        attackRange -= (distance / 2); // Double bullet exist time
+        attackRange -= distance; // Double bullet exist time
         scaleRatio += distance; // Increase Scale over time
         bulletTransform.localScale = Vector3.one * scaleRatio;
 

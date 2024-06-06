@@ -33,10 +33,10 @@ public class BotGenerator : MonoBehaviour
 
     private void Start()
     {
-        OnInit();
+        SubscribeEvent();
     }
 
-    private void OnInit()
+    private void SubscribeEvent()
     {
         GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
     }
@@ -51,6 +51,8 @@ public class BotGenerator : MonoBehaviour
         else
         {
             Player createdPlayer = Instantiate(playerPrefab, characterHolder);
+
+            createdPlayer.LoadDataFromUserData();
 
             player = createdPlayer;
 
@@ -105,9 +107,10 @@ public class BotGenerator : MonoBehaviour
         character.index = index;
         index++;
 
-        character.point = Random.Range(player.point, player.point + 4);
-
         character.OnInit();
+
+        character.point = Random.Range(player.point, player.point + 4);
+        character.OnPointChanges();
 
         List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
         randomNumber = Random.Range(0, weaponList.Count);

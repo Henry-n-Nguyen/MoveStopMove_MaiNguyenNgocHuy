@@ -22,6 +22,8 @@ public class Lose : UICanvas
 
         rankText.text = "#" + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
+        GamePlayManager.instance.player.OnInit();
+
         GamePlayManager.instance.ChangeState(GamePlayState.None);
 
         CameraManager.instance.TurnOnCamera(CameraState.Lose);

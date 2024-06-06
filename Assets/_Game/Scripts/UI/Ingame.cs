@@ -11,9 +11,20 @@ public class Ingame : UICanvas
 
     private int temporaryAliveCharacter;
 
+    private void Start()
+    {
+        SubscribeEvent();
+    }
+
     private void OnEnable()
     {
         OnInit();
+    }
+
+    private void SubscribeEvent()
+    {
+        GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
+        GamePlayManager.instance.OnPlayerTouchScreen += NonDisplayHelpToMovePart;
     }
 
     private void OnInit()
@@ -23,9 +34,6 @@ public class Ingame : UICanvas
         StartCoroutine(Loading(4f));
 
         helpToMovePart.SetActive(true);
-
-        GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
-        GamePlayManager.instance.OnPlayerTouchScreen += NonDisplayHelpToMovePart;
 
         aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
 
