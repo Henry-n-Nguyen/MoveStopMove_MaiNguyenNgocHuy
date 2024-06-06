@@ -423,8 +423,6 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         if (isBoosted)
         {
-            tempScaleRatio = scaleRatio;
-
             if (boostedAura == null)
             {
                 ParticleSystem aura = Instantiate(ParticleManager.instance.boostedVFX, characterTransform);
@@ -443,8 +441,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     private void ClearBoost()
     {
-        scaleRatio = tempScaleRatio;
-        OnScaleRatioChanges();
+        OnPointChanges();
 
         isBoosted = false;
         isHugeBulletBoosted = false;

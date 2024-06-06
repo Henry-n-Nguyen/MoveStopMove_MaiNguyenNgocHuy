@@ -32,7 +32,7 @@ public class CameraFollow : MonoBehaviour
         {
             Vector3 targetPosition = target.characterTransform.position + offset * (target.attackRange / target.RawAttackRange);
 
-            zoomSpeed = target.moveSpeed;
+            zoomSpeed = target.moveSpeed - 1f;
 
             cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPosition, zoomSpeed * Time.deltaTime);
         }
