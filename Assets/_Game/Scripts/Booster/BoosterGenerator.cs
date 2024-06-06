@@ -37,14 +37,14 @@ public class BoosterGenerator : MonoBehaviour
     public void OnInit()
     {
         player = GamePlayManager.instance.player;
+
+        StopAllCoroutines();
+
+        if (createdBooster != null) createdBooster.Despawn();
     }
 
     public void SpawnBooster(int quantity)
     {
-        CancelInvoke();
-
-        if (createdBooster != null) createdBooster.Despawn();
-
         inActivatedTransform.Clear();
         inActivatedTransform = FindNearbySpawnPoints(player.characterTransform);
 

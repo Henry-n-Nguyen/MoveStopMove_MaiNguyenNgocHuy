@@ -17,6 +17,8 @@ public class HugeBulletBooster : AbstractBooster
         character.isBoosted = true;
         character.isHugeBulletBoosted = true;
 
-        character.boostedType.Add(BoostType.HugeBulletBoost);
+        character.boostedType = BoostType.HugeBulletBoost;
+
+        character.CheckBoost();
     }
 }

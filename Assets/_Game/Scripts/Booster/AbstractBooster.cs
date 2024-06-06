@@ -34,7 +34,6 @@ public abstract class AbstractBooster : MonoBehaviour
             if (!character.isBoosted)
             {
                 TriggerBoost(character);
-                character.CheckBoost();
             }
 
             Despawn();

@@ -77,7 +77,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     [HideInInspector] public bool isBoosted;
     [HideInInspector] public bool isHugeBulletBoosted;
 
-    [HideInInspector] public List<BoostType> boostedType = new List<BoostType>();
+    [HideInInspector] public BoostType boostedType;
 
     protected float tempScaleRatio;
     protected float tempSpeed;
@@ -145,23 +145,23 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         switch (point)
         {
-            case 3: 
-                scaleRatio = 1.1f; 
+            case int x when x >= 24:
+                scaleRatio = 1.48f; 
                 OnScaleRatioChanges();
 
                 break;
-            case 7: 
-                scaleRatio = 1.22f; 
+            case int x when x >= 15: 
+                scaleRatio = 1.36f; 
                 OnScaleRatioChanges();
 
                 break;
-            case 15: 
-                scaleRatio = 1.4f; 
+            case int x when x >= 7: 
+                scaleRatio = 1.24f; 
                 OnScaleRatioChanges();
 
                 break;
-            case 24: 
-                scaleRatio = 1.55f; 
+            case int x when x >= 3: 
+                scaleRatio = 1.12f; 
                 OnScaleRatioChanges();
 
                 break;
@@ -444,12 +444,11 @@ public abstract class AbstractCharacter : MonoBehaviour
     private void ClearBoost()
     {
         scaleRatio = tempScaleRatio;
-
         OnScaleRatioChanges();
 
         isBoosted = false;
         isHugeBulletBoosted = false;
-        boostedType.Clear();
+        boostedType = BoostType.None;
         CheckBoost();
     }
 

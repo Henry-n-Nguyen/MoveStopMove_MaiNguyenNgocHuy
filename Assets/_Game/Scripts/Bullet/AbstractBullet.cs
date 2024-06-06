@@ -92,7 +92,7 @@ public abstract class AbstractBullet : MonoBehaviour
         float distance = Time.deltaTime * speed * 2f;
 
         bulletTransform.position += bulletTransform.forward * distance;
-        attackRange -= distance; // Double bullet exist time
+        attackRange -= (distance / 2); // Double bullet exist time
         scaleRatio += distance; // Increase Scale over time
         bulletTransform.localScale = Vector3.one * scaleRatio;
 
