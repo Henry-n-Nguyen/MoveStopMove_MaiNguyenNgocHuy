@@ -29,8 +29,6 @@ public class Ingame : UICanvas
 
     private void OnInit()
     {
-        StopAllCoroutines();
-
         StartCoroutine(Loading(4f));
 
         helpToMovePart.SetActive(true);
@@ -40,6 +38,11 @@ public class Ingame : UICanvas
         CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
 
         StartCoroutine(SpawnBoosterAfterTime(15f));
+    }
+
+    private void OnDisable()
+    {
+        StopAllCoroutines();
     }
 
     private IEnumerator SpawnBoosterAfterTime(float time)

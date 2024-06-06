@@ -81,6 +81,7 @@ public class BoosterGenerator : MonoBehaviour
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
         inActivatedTransform.Add(target);
+        createdBooster.Despawn();
         yield return new WaitForSeconds(2f);
         SpawnBooster(1);
     }
