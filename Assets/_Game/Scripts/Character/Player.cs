@@ -21,12 +21,13 @@ public class Player : AbstractCharacter
 
         LoadDataFromUserData();
 
+        ChangeName("You");
+
         characterTransform.position = Vector3.zero;
 
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
 
         Rotate(Direct.Forward);
-
 
         isDetectedTarget = false;
     }

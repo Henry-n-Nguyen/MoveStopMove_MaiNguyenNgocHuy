@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Constant : MonoBehaviour
+public class Constant
 {
     // Input Action Constants
     public const string INPUT_ACTION_MOVING = "Moving";

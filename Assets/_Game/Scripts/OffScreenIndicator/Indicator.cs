@@ -7,8 +7,10 @@ using UnityEngine.UI;
 public class Indicator : MonoBehaviour
 {
     [SerializeField] private IndicatorType indicatorType;
-    private Image indicatorImage;
-    private Text pointText;
+    [SerializeField] private Image cursorImage;
+    [SerializeField] private Image indicatorImage;
+    [SerializeField] private Text pointText;
+    [SerializeField] private Text nameText;
 
     /// <summary>
     /// Gets if the game object is active in hierarchy.
@@ -32,19 +34,23 @@ public class Indicator : MonoBehaviour
         }
     }
 
-    void Awake()
-    {
-        indicatorImage = transform.GetComponent<Image>();
-        pointText = transform.GetComponentInChildren<Text>();
-    }
-
     /// <summary>
     /// Sets the image color for the indicator.
     /// </summary>
     /// <param name="color"></param>
     public void SetImageColor(Color color)
     {
+        if (cursorImage != null) 
+        { 
+            cursorImage.color = color; 
+        }
+
         indicatorImage.color = color;
+        
+        if (nameText != null)
+        {
+            nameText.color = color;
+        }
     }
 
     /// <summary>
@@ -54,6 +60,11 @@ public class Indicator : MonoBehaviour
     public void SetPointText(float value)
     {
         pointText.text = value >= 0 ? Mathf.Floor(value) + "" : "";
+    }
+
+    public void SetNameText(string value) 
+    {
+        if (nameText != null) nameText.text = value;
     }
 
     /// <summary>

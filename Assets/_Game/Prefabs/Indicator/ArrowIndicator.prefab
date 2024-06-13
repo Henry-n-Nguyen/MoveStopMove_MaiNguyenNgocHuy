@@ -90,6 +90,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   indicatorType: 1
+  cursorImage: {fileID: 11403194}
+  indicatorImage: {fileID: 7473362851634804337}
+  pointText: {fileID: 114019096506200994}
+  nameText: {fileID: 0}
 --- !u!1 &1086876969492358
 GameObject:
   m_ObjectHideFlags: 0
