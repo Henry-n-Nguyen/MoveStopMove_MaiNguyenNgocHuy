@@ -16,6 +16,10 @@ public class BotGenerator : MonoBehaviour
 
     [SerializeField] private LayerMask spawnPointLayer;
 
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentDataSO equipmentDataSO;
+
+    [Header("Player")]
     public Player player = null;
 
     // Private variables
@@ -85,13 +89,13 @@ public class BotGenerator : MonoBehaviour
 
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, inActivatedTransform.Count);
+            Transform targetTransform = inActivatedTransform[randomNumber];
+            inActivatedTransform.Remove(targetTransform);
 
-            activatedTransform.Add(inActivatedTransform[randomNumber]);
-            StartCoroutine(RemoveActivatedTransform(inActivatedTransform[randomNumber], 5f));
+            activatedTransform.Add(targetTransform);
+            StartCoroutine(RemoveActivatedTransform(targetTransform, 5f));
 
-            Vector3 randomPosition = inActivatedTransform[randomNumber].position;
-
-            inActivatedTransform.Remove(inActivatedTransform[randomNumber]);
+            Vector3 randomPosition = targetTransform.position;
 
             SpawnBot(randomPosition);
         }
@@ -112,19 +116,19 @@ public class BotGenerator : MonoBehaviour
         character.point = Random.Range(player.point, player.point + 4);
         character.OnPointChanges();
 
-        List<Weapon> weaponList = EquipmentManager.instance.GetWeaponList();
+        List<Weapon> weaponList = equipmentDataSO.GetWeaponList();
         randomNumber = Random.Range(0, weaponList.Count);
         character.Equip(EquipmentType.Weapon, weaponList[randomNumber]);
 
-        List<Hat> hatList = EquipmentManager.instance.GetHatList();
+        List<Hat> hatList = equipmentDataSO.GetHatList();
         randomNumber = Random.Range(0, hatList.Count);
         character.Equip(EquipmentType.Hat, hatList[randomNumber]);
 
-        List<Pant> pantList = EquipmentManager.instance.GetPantList();
+        List<Pant> pantList = equipmentDataSO.GetPantList();
         randomNumber = Random.Range(0, pantList.Count);
         character.Equip(EquipmentType.Pant, pantList[randomNumber]);
 
-        List<Skin> skinList = EquipmentManager.instance.GetSkinList();
+        List<Skin> skinList = equipmentDataSO.GetSkinList();
         randomNumber = Random.Range(0, skinList.Count);
         character.Equip(EquipmentType.Skin, skinList[randomNumber]);
 

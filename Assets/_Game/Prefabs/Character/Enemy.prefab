@@ -226,23 +226,26 @@ MonoBehaviour:
   characterHip: {fileID: 7502528297446423031}
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
+  particleDataSO: {fileID: 11400000, guid: 7885d4fe5c553364bba33acc227a921f, type: 2}
   characterTransform: {fileID: 3308923855994619669}
   index: 1
   point: 0
+  moveSpeed: 5
+  attackRange: 7.5
+  scaleRatio: 1
   isReadyToAttack: 0
   targetsInRange: []
   isBoosted: 0
   isHugeBulletBoosted: 0
+  boostedType: 0
   targetedMark: {fileID: 5905830706655812610}
   desPoint: {x: 0, y: 0, z: 0}
   desPointSet: 0
   desPointRange: 15
+  typeOfBot: 0
   characterLayer:
     serializedVersion: 2
     m_Bits: 512
-  boosterLayer:
-    serializedVersion: 2
-    m_Bits: 0
   target: {fileID: 0}
 --- !u!114 &7040531013573885074
 MonoBehaviour:

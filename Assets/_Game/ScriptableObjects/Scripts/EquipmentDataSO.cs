@@ -1,40 +1,44 @@
-using HuySpace;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using UnityEngine;
-using UnityEngine.UI;
+using HuySpace;
+using Unity.VisualScripting;
 
-public class EquipmentManager : MonoBehaviour
+[CreateAssetMenu(menuName = "EquipmentDataSO")]
+public class EquipmentDataSO : ScriptableObject
 {
-    public static EquipmentManager instance;
+    private Dictionary<EquipmentType, List<Sprite>> equipmentSpriteList = new Dictionary<EquipmentType, List<Sprite>>();
 
-    public Dictionary<EquipmentType, List<Sprite>> equipmentSpriteList = new Dictionary<EquipmentType, List<Sprite>>();
+    [SerializeField] private List<Weapon> weaponList;
+    [SerializeField] private List<Sprite> weaponSpriteList;
 
-    [SerializeField] private List<Weapon> weaponList = new List<Weapon>();
-    [SerializeField] private List<Sprite> weaponSpriteList = new List<Sprite>();
+    [SerializeField] private List<Hat> hatList;
+    [SerializeField] private List<Sprite> hatSpriteList;
 
-    [SerializeField] private List<Hat> hatList = new List<Hat>();
-    [SerializeField] private List<Sprite> hatSpriteList = new List<Sprite>();
+    [SerializeField] private List<Skin> skinList;
+    [SerializeField] private List<Sprite> skinSpriteList;
 
-    [SerializeField] private List<Skin> skinList = new List<Skin>();
-    [SerializeField] private List<Sprite> skinSpriteList = new List<Sprite>();
+    [SerializeField] private List<Pant> pantList;
+    [SerializeField] private List<Sprite> pantSpriteList;
 
-    [SerializeField] private List<Pant> pantList = new List<Pant>();
-    [SerializeField] private List<Sprite> pantSpriteList = new List<Sprite>();
+    [SerializeField] private List<Special> specialList;
+    [SerializeField] private List<Sprite> specialSpriteList;
 
-    [SerializeField] private List<Special> specialList = new List<Special>();
-    [SerializeField] private List<Sprite> specialSpriteList = new List<Sprite>();
-
-    private void Awake()
+    public List<Sprite> GetEquipmentSpriteListByType(EquipmentType type)
     {
-        instance = this;
+        if (!equipmentSpriteList.ContainsKey(type))
+        {
+            switch (type)
+            {
+                case EquipmentType.Weapon: equipmentSpriteList.Add(type, weaponSpriteList); break;
+                case EquipmentType.Hat: equipmentSpriteList.Add(type, hatSpriteList); break;
+                case EquipmentType.Skin: equipmentSpriteList.Add(type, skinSpriteList); break;
+                case EquipmentType.Pant: equipmentSpriteList.Add(type, pantSpriteList); break;
+                case EquipmentType.Special: equipmentSpriteList.Add(type, specialSpriteList); break;
+            }
+        }
 
-        equipmentSpriteList[EquipmentType.Weapon] = weaponSpriteList;
-        equipmentSpriteList[EquipmentType.Hat] = hatSpriteList;
-        equipmentSpriteList[EquipmentType.Skin] = skinSpriteList;
-        equipmentSpriteList[EquipmentType.Pant] = pantSpriteList;
-        equipmentSpriteList[EquipmentType.Special] = specialSpriteList;
+        return equipmentSpriteList[type];
     }
 
     // Weapon

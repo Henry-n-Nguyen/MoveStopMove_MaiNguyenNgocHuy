@@ -42,6 +42,9 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected Transform characterLeftHand;
     [SerializeField] protected Transform characterNeck;
 
+    [Header("VFX/ParticleDataSO")]
+    [SerializeField] protected ParticleDataSO particleDataSO;
+
     // Statitics
     [Header("Public")]
     public Transform characterTransform;
@@ -358,7 +361,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Dead()
     {
-        ParticleSystem VFX = Instantiate(ParticleManager.instance.hitVFX, characterTransform);
+        ParticleSystem VFX = Instantiate(particleDataSO.GetParticle(ParticleType.HitVFX), characterTransform);
         ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
         VFXcolor.color = skinMeshRenderer.materials[0].color;
 
@@ -425,7 +428,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         {
             if (boostedAura == null)
             {
-                ParticleSystem aura = Instantiate(ParticleManager.instance.boostedVFX, characterTransform);
+                ParticleSystem aura = Instantiate(particleDataSO.GetParticle(ParticleType.BoostedVFX), characterTransform);
                 boostedAura = aura;
             }
             else
