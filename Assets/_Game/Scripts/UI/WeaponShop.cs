@@ -26,6 +26,9 @@ public class WeaponShop : UICanvas
     [SerializeField] private GameObject notificationPrefab;
     [SerializeField] private GameObject notificationHolder;
 
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentDataSO equipmentDataSO;
+
     // In Editor
     private List<Sprite> weaponImages = new List<Sprite>();
 
@@ -55,7 +58,7 @@ public class WeaponShop : UICanvas
 
         OnChanges();
 
-        weaponImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Weapon];
+        weaponImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Weapon);
 
         DisplayWeapon(index);
     }

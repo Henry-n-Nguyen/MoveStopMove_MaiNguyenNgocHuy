@@ -213,6 +213,7 @@ MonoBehaviour:
   itemGameObject: {fileID: 7375404139536270228}
   button: {fileID: 940620683071046612}
   buttonBorder: {fileID: 310060187043442268}
+  equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
   icon: {fileID: 6531649458411339263}
   id: 0
   costumeShopScript: {fileID: 0}

@@ -56,13 +56,13 @@ public class BoosterGenerator : MonoBehaviour
             {
                 // Pick random position that not in activated position list
                 randomNumber = Random.Range(0, inActivatedTransform.Count);
+                Transform targetTransform = inActivatedTransform[randomNumber];
+                inActivatedTransform.Remove(targetTransform);
 
-                activatedTransform.Add(inActivatedTransform[randomNumber]);
-                StartCoroutine(RemoveActivatedTransform(inActivatedTransform[randomNumber], 15f));
+                activatedTransform.Add(targetTransform);
+                StartCoroutine(RemoveActivatedTransform(targetTransform, 15f));
 
-                Vector3 randomPosition = inActivatedTransform[randomNumber].position;
-
-                inActivatedTransform.Remove(inActivatedTransform[randomNumber]);
+                Vector3 randomPosition = targetTransform.position;
 
                 // Spawn Booster
                 randomNumber = Random.Range(0, prefabs.Count);

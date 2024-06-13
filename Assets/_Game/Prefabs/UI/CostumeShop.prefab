@@ -2718,9 +2718,11 @@ MonoBehaviour:
   equippedButton: {fileID: 1682419533020755830}
   notificationPrefab: {fileID: 2477340916152008256, guid: 7a0c3ad2406ad844cbeeabe955f71807, type: 3}
   notificationHolder: {fileID: 2359589434333523722}
+  equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
   currentShopState: 0
   id: 0
   price: 0
+  itemOnClicked: {fileID: 0}
 --- !u!1 &5617176006751804163
 GameObject:
   m_ObjectHideFlags: 0

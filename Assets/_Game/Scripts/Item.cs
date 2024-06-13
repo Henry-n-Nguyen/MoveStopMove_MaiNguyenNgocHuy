@@ -6,11 +6,16 @@ using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
+    [Header("References")]
     [SerializeField] private GameObject itemGameObject;
 
     [SerializeField] private Button button;
     [SerializeField] private GameObject buttonBorder;
 
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentDataSO equipmentDataSO;
+
+    [Header("Icon")]
     public Image icon;
 
     [HideInInspector] public int id;
@@ -36,7 +41,7 @@ public class Item : MonoBehaviour
         switch (equipmentType)
         {
             case EquipmentType.Hat:
-                player.Equip(equipmentType, EquipmentManager.instance.GetHatById(id));
+                player.Equip(equipmentType, equipmentDataSO.GetHatById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 800;
 
@@ -44,7 +49,7 @@ public class Item : MonoBehaviour
 
                 break;
             case EquipmentType.Skin:
-                player.Equip(equipmentType, EquipmentManager.instance.GetSkinById(id));
+                player.Equip(equipmentType, equipmentDataSO.GetSkinById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 500;
 
@@ -52,7 +57,7 @@ public class Item : MonoBehaviour
 
                 break;
             case EquipmentType.Pant:
-                player.Equip(equipmentType, EquipmentManager.instance.GetPantById(id));
+                player.Equip(equipmentType, equipmentDataSO.GetPantById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 400;
 
@@ -61,7 +66,7 @@ public class Item : MonoBehaviour
                 break;
             case EquipmentType.Special:
                 player.DeEquipSpecial();
-                player.Equip(equipmentType, EquipmentManager.instance.GetSpecialById(id));
+                player.Equip(equipmentType, equipmentDataSO.GetSpecialById(id));
                 costumeShopScript.id = id;
                 costumeShopScript.price = 5000;
 

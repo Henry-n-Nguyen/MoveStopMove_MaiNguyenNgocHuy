@@ -33,6 +33,9 @@ public class CostumeShop : UICanvas
     [SerializeField] private GameObject notificationPrefab;
     [SerializeField] private GameObject notificationHolder;
 
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentDataSO equipmentDataSO;
+
     // In Editor
     [HideInInspector] public CostumeShopState currentShopState;
 
@@ -198,7 +201,7 @@ public class CostumeShop : UICanvas
                     ActiveState(currentShopState);
                 }
                 else {
-                    List<Sprite> skinImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Skin];
+                    List<Sprite> skinImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Skin);
                     for (int i = 0; i < skinImages.Count; i++)
                     {
                         Item createdItem = Instantiate(costumePrefab, content);
@@ -226,7 +229,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    List<Sprite> hatImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Hat];
+                    List<Sprite> hatImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Hat);
 
                     for (int i = 0; i < hatImages.Count; i++)
                     {
@@ -255,7 +258,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    List<Sprite> pantImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Pant];
+                    List<Sprite> pantImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Pant);
 
                     for (int i = 0; i < pantImages.Count; i++)
                     {
@@ -284,7 +287,7 @@ public class CostumeShop : UICanvas
                 }
                 else
                 {
-                    List<Sprite> specialImages = EquipmentManager.instance.equipmentSpriteList[EquipmentType.Special];
+                    List<Sprite> specialImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Special);
 
                     for (int i = 0; i < specialImages.Count; i++)
                     {

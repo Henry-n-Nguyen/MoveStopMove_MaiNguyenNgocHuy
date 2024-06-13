@@ -2502,6 +2502,7 @@ MonoBehaviour:
   equippedButton: {fileID: 319863718867899152}
   notificationPrefab: {fileID: 2477340916152008256, guid: 7a0c3ad2406ad844cbeeabe955f71807, type: 3}
   notificationHolder: {fileID: 7829830780899316963}
+  equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
 --- !u!1 &9181912648141551537
 GameObject:
   m_ObjectHideFlags: 0

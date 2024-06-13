@@ -256,6 +256,7 @@ MonoBehaviour:
   characterHip: {fileID: 7502528297446423031}
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
+  particleDataSO: {fileID: 11400000, guid: 7885d4fe5c553364bba33acc227a921f, type: 2}
   characterTransform: {fileID: 3308923855994619669}
   index: 0
   point: 0
@@ -266,7 +267,7 @@ MonoBehaviour:
   targetsInRange: []
   isBoosted: 0
   isHugeBulletBoosted: 0
-  boostedType: 
+  boostedType: 0
   playerInput: {fileID: 7033175576109326437}
   moveAction:
     m_Name: Move
@@ -277,6 +278,7 @@ MonoBehaviour:
     m_Interactions: 
     m_SingletonActionBindings: []
     m_Flags: 0
+  equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
 --- !u!114 &5132354933558497253
 MonoBehaviour:
   m_ObjectHideFlags: 0

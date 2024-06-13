@@ -10,6 +10,9 @@ public class Player : AbstractCharacter
 
     [SerializeField] private InputAction moveAction;
 
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentDataSO equipmentDataSO;
+
     private bool isDetectedTarget;
 
     public override void OnInit()
@@ -35,23 +38,23 @@ public class Player : AbstractCharacter
         if (data.isSpecialEquipped)
         {
             int equippedWeaponId = data.equippedWeaponId;
-            Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
+            Equip(EquipmentType.Weapon, equipmentDataSO.GetWeaponById(equippedWeaponId));
             int equippedSpecialId = data.equippedSpecialId;
-            Equip(EquipmentType.Special, EquipmentManager.instance.GetSpecialById(equippedSpecialId));
+            Equip(EquipmentType.Special, equipmentDataSO.GetSpecialById(equippedSpecialId));
         }
         else
         {
             int equippedWeaponId = data.equippedWeaponId;
-            Equip(EquipmentType.Weapon, EquipmentManager.instance.GetWeaponById(equippedWeaponId));
+            Equip(EquipmentType.Weapon, equipmentDataSO.GetWeaponById(equippedWeaponId));
 
             int equippedHatId = data.equippedHatId;
-            Equip(EquipmentType.Hat, EquipmentManager.instance.GetHatById(equippedHatId));
+            Equip(EquipmentType.Hat, equipmentDataSO.GetHatById(equippedHatId));
 
             int equippedPantId = data.equippedPantId;
-            Equip(EquipmentType.Pant, EquipmentManager.instance.GetPantById(equippedPantId));
+            Equip(EquipmentType.Pant, equipmentDataSO.GetPantById(equippedPantId));
 
             int equippedSkinId = data.equippedSkinId;
-            Equip(EquipmentType.Skin, EquipmentManager.instance.GetSkinById(equippedSkinId));
+            Equip(EquipmentType.Skin, equipmentDataSO.GetSkinById(equippedSkinId));
         }
     }
 
