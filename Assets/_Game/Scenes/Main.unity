@@ -1384,6 +1384,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
+  nameDataSO: {fileID: 11400000, guid: 5be09fb8811157642a7986ba7ebe37c9, type: 2}
   player: {fileID: 0}
   characterInBattleAmount: 0
 --- !u!1 &2111676906

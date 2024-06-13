@@ -19,6 +19,9 @@ public class BotGenerator : MonoBehaviour
     [Header("EquipmentDataSO")]
     [SerializeField] private EquipmentDataSO equipmentDataSO;
 
+    [Header("NameDataSO")]
+    [SerializeField] private NameDataSO nameDataSO;
+
     [Header("Player")]
     public Player player = null;
 
@@ -115,6 +118,8 @@ public class BotGenerator : MonoBehaviour
 
         character.point = Random.Range(player.point, player.point + 4);
         character.OnPointChanges();
+
+        character.ChangeName(nameDataSO.GetRandomName());
 
         List<Weapon> weaponList = equipmentDataSO.GetWeaponList();
         randomNumber = Random.Range(0, weaponList.Count);

@@ -50,6 +50,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform characterTransform;
 
     public int index;
+    public string characterName = "?";
     public int point = 0;
 
     public float moveSpeed = 5f;
@@ -228,6 +229,8 @@ public abstract class AbstractCharacter : MonoBehaviour
                 skinMeshRenderer.material = skin.material;
                 break;
         }
+
+        targetScript.TargetColor = skinMeshRenderer.materials[0].color;
     } // For skin
 
     public void Equip(EquipmentType equipmentType, Pant pant)
@@ -282,6 +285,13 @@ public abstract class AbstractCharacter : MonoBehaviour
                 break;
         }
     } // For special
+
+    public void ChangeName(string value)
+    {
+        characterName = value;
+
+        targetScript.TargetName = characterName;
+    }
 
     public virtual void DeEquipSpecial()
     {
