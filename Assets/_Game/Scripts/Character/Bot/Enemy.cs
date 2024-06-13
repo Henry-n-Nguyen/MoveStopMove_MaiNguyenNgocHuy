@@ -72,6 +72,8 @@ public class Enemy : AbstractCharacter
         agent.speed = moveSpeed * 0.67f;
 
         RandomTypeOfBot();
+
+        IsTargeted(false);
     }
 
     private void RandomTypeOfBot() {
@@ -278,7 +280,7 @@ public class Enemy : AbstractCharacter
         BotPool.Despawn(this);
         GamePlayManager.instance.CharacterDied();
 
-        BotGenerator.instance.SpawnBots(1);
+        BotGenerator.instance.SpawnBots();
     }
 
     public void IsTargeted(bool isTargeted)

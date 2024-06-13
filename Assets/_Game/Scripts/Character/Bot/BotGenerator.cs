@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
-using System.Linq;
 
 public class BotGenerator : MonoBehaviour
 {
@@ -27,6 +26,8 @@ public class BotGenerator : MonoBehaviour
 
     // Private variables
     private int index = 1;
+
+    public int characterInQueueToSpawn;
 
     public int characterInBattleAmount = 1;
 
@@ -72,7 +73,7 @@ public class BotGenerator : MonoBehaviour
         }
     }
 
-    public void SpawnBots(int quantity)
+    public void SpawnBots()
     {
         inActivatedTransform.Clear();
         inActivatedTransform = FindNearbySpawnPoints(player.transform);
@@ -82,11 +83,12 @@ public class BotGenerator : MonoBehaviour
             return;
         }
 
-        if (quantity >= inActivatedTransform.Count) quantity = inActivatedTransform.Count;
+        if (characterInQueueToSpawn >= inActivatedTransform.Count) characterInQueueToSpawn = inActivatedTransform.Count;
 
         int randomNumber = 0;
 
-        for (int i = 0; i < quantity; i++)
+        //for (int i = 0; i < quantity; i++)
+        while (characterInQueueToSpawn > 0)
         {
             if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
 
@@ -96,7 +98,7 @@ public class BotGenerator : MonoBehaviour
             inActivatedTransform.Remove(targetTransform);
 
             activatedTransform.Add(targetTransform);
-            StartCoroutine(RemoveActivatedTransform(targetTransform, 5f));
+            StartCoroutine(RemoveActivatedTransform(targetTransform, 10f));
 
             Vector3 randomPosition = targetTransform.position;
 
@@ -138,6 +140,7 @@ public class BotGenerator : MonoBehaviour
         character.Equip(EquipmentType.Skin, skinList[randomNumber]);
 
         characterInBattleAmount++;
+        characterInQueueToSpawn--;
     }
 
     private IEnumerator RemoveActivatedTransform(Transform target, float time)
@@ -151,7 +154,7 @@ public class BotGenerator : MonoBehaviour
     {
         List<Transform> nearbySpawnPointsTransform = new List<Transform>();
 
-        Collider[] spawnPointCollides = Physics.OverlapSphere(targetTransform.position, 60f, spawnPointLayer);
+        Collider[] spawnPointCollides = Physics.OverlapSphere(targetTransform.position, 65f, spawnPointLayer);
 
         if (spawnPointCollides.Length > 0)
         {
@@ -188,5 +191,6 @@ public class BotGenerator : MonoBehaviour
     private void ReduceCharacterInBattle()
     {
         characterInBattleAmount--;
+        characterInQueueToSpawn++;
     }
 }

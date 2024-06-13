@@ -343,16 +343,31 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Moving()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         ChangeAnim(Constant.TRIGGER_RUN);
     }
 
     public virtual void StopMoving()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         ChangeAnim(Constant.TRIGGER_IDLE);
     }
     
     public virtual void ReadyToAttack()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         if (isReadyToAttack)
         {
             ChangeAnim(Constant.TRIGGER_ATTACK);
@@ -378,15 +393,30 @@ public abstract class AbstractCharacter : MonoBehaviour
         BulletManager.instance.Despawn(characterScript);
 
         ChangeAnim(Constant.TRIGGER_DEAD);
+
+        if (isBoosted)
+        {
+            ClearBoost();
+        }
     }
 
     public virtual void Dancing()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         ChangeAnim(Constant.TRIGGER_DANCE_SHOP);
     }
 
     public virtual void Win()
     {
+        if (isDead)
+        {
+            return;
+        }
+
         ChangeAnim(Constant.TRIGGER_WIN);
     }
 
@@ -436,6 +466,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     {
         if (isBoosted)
         {
+            tempScaleRatio = scaleRatio;
+
             if (boostedAura == null)
             {
                 ParticleSystem aura = Instantiate(particleDataSO.GetParticle(ParticleType.BoostedVFX), characterTransform);
@@ -452,9 +484,10 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    private void ClearBoost()
+    protected void ClearBoost()
     {
-        OnPointChanges();
+        scaleRatio = tempScaleRatio;
+        OnScaleRatioChanges();
 
         isBoosted = false;
         isHugeBulletBoosted = false;

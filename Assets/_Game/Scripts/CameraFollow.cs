@@ -44,10 +44,4 @@ public class CameraFollow : MonoBehaviour
         distanceToTarget = Vector3.SqrMagnitude(offset);
         cameraTransform.rotation = Quaternion.Euler(Vector3.right * 45);
     }
-
-    public void EndLevel()
-    {
-        offset = Vector3.up * 5 + Vector3.forward * 18;
-        cameraTransform.rotation = Quaternion.Euler(Vector3.up * 180);
-    }
 }

@@ -173,6 +173,12 @@ public class Player : AbstractCharacter
     public void Revive()
     {
         isDead = false;
+
+        isReadyToAttack = true;
+
+        targetsInRange.Clear();
+
+        ChangeState(new IdleState());
     }
 
     public override void Dancing()

@@ -229,6 +229,7 @@ MonoBehaviour:
   particleDataSO: {fileID: 11400000, guid: 7885d4fe5c553364bba33acc227a921f, type: 2}
   characterTransform: {fileID: 3308923855994619669}
   index: 1
+  characterName: '?'
   point: 0
   moveSpeed: 5
   attackRange: 7.5
@@ -260,6 +261,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetColor: {r: 0, g: 1, b: 0.1565237, a: 1}
+  targetName: 
   target: {fileID: 1114765874217409983}
   needBoxIndicator: 1
   needArrowIndicator: 1
