@@ -18,6 +18,8 @@ public class GamePlayManager : MonoBehaviour
 
     [HideInInspector] public int coinToEarn;
 
+    public int startCharacterAmount = 8;
+
     private UserData data;
 
     private bool isDiedBefore = false;
@@ -30,6 +32,8 @@ public class GamePlayManager : MonoBehaviour
     private void Start()
     {
         OnInit();
+
+        StartGame();
     }
 
     public void OnInit()
@@ -46,6 +50,14 @@ public class GamePlayManager : MonoBehaviour
 
         coinToEarn = 0;
 
+        BotGenerator.instance.characterInQueueToSpawn = startCharacterAmount;
+        BotGenerator.instance.characterInBattleAmount = 1;
+
+        BoosterGenerator.instance.OnInit();
+    }
+
+    private void StartGame()
+    {
         UIManager.instance.OpenUI<MainMenu>();
     }
 

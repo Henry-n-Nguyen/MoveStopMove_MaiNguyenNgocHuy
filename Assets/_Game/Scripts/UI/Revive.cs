@@ -31,15 +31,11 @@ public class Revive : UICanvas
     {
         timer = 5.5f;
 
-        GamePlayManager.instance.ChangeState(GamePlayState.None);
-
-        CameraManager.instance.TurnOnCamera(CameraState.Lose);
+        CameraManager.instance.TurnOnCamera(CameraState.Revive);
     }
 
     public void WatchAd()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
-
         GamePlayManager.instance.player.Revive();
 
         UIManager.instance.CloseUI<Revive>(0);

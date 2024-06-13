@@ -38,7 +38,8 @@ namespace HuySpace
         CostumeShop,
         MainMenu,
         Win,
-        Lose
+        Lose,
+        Revive
     }
 
     public enum GamePlayState
