@@ -52,4 +52,9 @@ public class LevelManager : MonoBehaviour
     {
         return levelIcons[level];
     }
+
+    public int GetCurentMaxLevel()
+    {
+        return mapPrefabs.Count;
+    }
 }

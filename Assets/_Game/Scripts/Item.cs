@@ -6,6 +6,12 @@ using UnityEngine.UI;
 
 public class Item : MonoBehaviour
 {
+    // Default prices
+    public const int HAT_PRICE = 800;
+    public const int SKIN_PRICE = 500;
+    public const int PANT_PRICE = 400;
+    public const int SPECIAL_PRICE = 5000;
+
     [Header("References")]
     [SerializeField] private GameObject itemGameObject;
 
@@ -43,7 +49,7 @@ public class Item : MonoBehaviour
             case EquipmentType.Hat:
                 player.Equip(equipmentType, equipmentDataSO.GetHatById(id));
                 costumeShopScript.id = id;
-                costumeShopScript.price = 800;
+                costumeShopScript.price = HAT_PRICE;
 
                 costumeShopScript.itemOnClicked = this;
 
@@ -51,7 +57,7 @@ public class Item : MonoBehaviour
             case EquipmentType.Skin:
                 player.Equip(equipmentType, equipmentDataSO.GetSkinById(id));
                 costumeShopScript.id = id;
-                costumeShopScript.price = 500;
+                costumeShopScript.price = SKIN_PRICE;
 
                 costumeShopScript.itemOnClicked = this;
 
@@ -59,7 +65,7 @@ public class Item : MonoBehaviour
             case EquipmentType.Pant:
                 player.Equip(equipmentType, equipmentDataSO.GetPantById(id));
                 costumeShopScript.id = id;
-                costumeShopScript.price = 400;
+                costumeShopScript.price = PANT_PRICE;
 
                 costumeShopScript.itemOnClicked = this;
 
@@ -68,7 +74,7 @@ public class Item : MonoBehaviour
                 player.DeEquipSpecial();
                 player.Equip(equipmentType, equipmentDataSO.GetSpecialById(id));
                 costumeShopScript.id = id;
-                costumeShopScript.price = 5000;
+                costumeShopScript.price = SPECIAL_PRICE;
 
                 costumeShopScript.itemOnClicked = this;
 

@@ -8,6 +8,8 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance;
 
+    private const int COIN_CONVERT_RATE = 12;
+
     [SerializeField] private int characterAmount;
 
     [HideInInspector] public GamePlayState currentGamePlayState;
@@ -15,14 +17,19 @@ public class GamePlayManager : MonoBehaviour
     [HideInInspector] public Player player;
 
     [HideInInspector] public int aliveCharacterAmount;
+    [HideInInspector] public int startCharacterAmount = 8;
 
+    // Coin
     [HideInInspector] public int coinToEarn;
 
-    public int startCharacterAmount = 8;
-
+    // private
     private UserData data;
-
     private bool isDiedBefore = false;
+
+    // Event
+    public event Action OnAliveCharacterAmountChanged;
+    public event Action OnUIChanged;
+    public event Action OnPlayerTouchScreen;
 
     private void Awake()
     {
@@ -63,14 +70,14 @@ public class GamePlayManager : MonoBehaviour
 
     public void WinGame()
     {
-        coinToEarn = player.point * 12;
+        coinToEarn = player.point * COIN_CONVERT_RATE;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
-        StartCoroutine(WinGame(2.5f));
+        StartCoroutine(TriggerWinStateAfterTime(2.5f));
     }
 
-    private IEnumerator WinGame(float time)
+    private IEnumerator TriggerWinStateAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
@@ -85,23 +92,23 @@ public class GamePlayManager : MonoBehaviour
 
     public void LoseGame()
     {
-        coinToEarn = player.point * 12;
+        coinToEarn = player.point * COIN_CONVERT_RATE;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
         if (isDiedBefore)
         {
-            StartCoroutine(LoseGame(2.5f));
+            StartCoroutine(TriggerLoseStateAfterTime(2.5f));
         }
         else
         {
             isDiedBefore = true;
 
-            StartCoroutine(Revive(2.5f));
+            StartCoroutine(TriggerReviveStateAfterTime(2.5f));
         }
     }
 
-    private IEnumerator LoseGame(float time)
+    private IEnumerator TriggerLoseStateAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
@@ -111,7 +118,7 @@ public class GamePlayManager : MonoBehaviour
         UIManager.instance.OpenUI<Lose>();
     }
 
-    private IEnumerator Revive(float time)
+    private IEnumerator TriggerReviveStateAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
@@ -121,8 +128,6 @@ public class GamePlayManager : MonoBehaviour
 
 
     // Event Action
-    public event Action OnAliveCharacterAmountChanged;
-
     public void CharacterDied()
     {
         aliveCharacterAmount--;
@@ -130,16 +135,12 @@ public class GamePlayManager : MonoBehaviour
         OnAliveCharacterAmountChanged?.Invoke();
     }
 
-    public event Action OnUIChanged;
-
     public void ChangeState(GamePlayState state)
     {
         currentGamePlayState = state;
 
         OnUIChanged?.Invoke();
     }
-
-    public event Action OnPlayerTouchScreen;
 
     public void OnTouch()
     {

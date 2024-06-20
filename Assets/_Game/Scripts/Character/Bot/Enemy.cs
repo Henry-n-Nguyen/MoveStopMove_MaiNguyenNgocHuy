@@ -5,6 +5,10 @@ using UnityEngine.AI;
 
 public class Enemy : AbstractCharacter
 {
+    private const float AGENT_SPEED_CONVERT_RATE = 0.67f;
+    private const float IDLE_TIME = 0.5f;
+    private const float PATROL_TIME = 5f;
+
     private enum BotType
     {
         AgressiveBot, // Find and positive attack characters around him
@@ -69,7 +73,7 @@ public class Enemy : AbstractCharacter
 
         isDetectedTarget = false;
 
-        agent.speed = moveSpeed * 0.67f;
+        agent.speed = moveSpeed * AGENT_SPEED_CONVERT_RATE;
 
         RandomTypeOfBot();
 
@@ -106,7 +110,7 @@ public class Enemy : AbstractCharacter
         {
             patrolingTimer += Time.deltaTime;
 
-            if (patrolingTimer > 5f)
+            if (patrolingTimer > PATROL_TIME)
             {
                 desPointSet = false;
                 patrolingTimer = 0;
@@ -162,7 +166,8 @@ public class Enemy : AbstractCharacter
     {
         float minDistance = Mathf.Infinity;
 
-        Collider[] characterCollides = Physics.OverlapSphere(characterTransform.position, 40f, characterLayer);
+        float distanceToDetectTargetCharacter = 40f;
+        Collider[] characterCollides = Physics.OverlapSphere(characterTransform.position, distanceToDetectTargetCharacter, characterLayer);
 
         if (characterCollides.Length > 0)
         {
@@ -230,7 +235,7 @@ public class Enemy : AbstractCharacter
         {
             idlingTimer += Time.deltaTime;
 
-            if (idlingTimer > 0.5f)
+            if (idlingTimer > IDLE_TIME)
             {
                 SearchDesPoint();
 
@@ -267,13 +272,13 @@ public class Enemy : AbstractCharacter
 
             base.Dead();
 
-            StartCoroutine(DespawnEnemy(2.5f));
+            StartCoroutine(DespawnEnemyAfterTime(2.5f));
 
             isDead = true;
         }
     }
 
-    private IEnumerator DespawnEnemy(float time)
+    private IEnumerator DespawnEnemyAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 

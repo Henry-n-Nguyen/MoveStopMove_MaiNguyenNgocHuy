@@ -7,7 +7,11 @@ using UnityEngine.UI;
 
 public class WeaponShop : UICanvas
 {
-    const string TRIGGER_FLYTEXT = "fly";
+    // Default prices
+    private const int PRICE_LVL_GROW = 500;
+
+    // Trigger
+    private const string TRIGGER_FLYTEXT = "fly";
 
     [Header("Pre")]
     [SerializeField] private Item weaponPrefab;
@@ -73,7 +77,7 @@ public class WeaponShop : UICanvas
         {
             ChangeButton(ButtonType.BuyButton);
 
-            price = ((index + 1) * 500);
+            price = ((index + 1) * PRICE_LVL_GROW);
             priceText.text = price.ToString();
         }
         else
