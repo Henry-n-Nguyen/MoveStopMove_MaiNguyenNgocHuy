@@ -16,6 +16,7 @@ public class BoomerangBullet : AbstractBullet
         // Spin bullet
         meshTransform.rotation = Quaternion.Euler(meshTransform.rotation.eulerAngles + Vector3.down * Time.deltaTime * speed * 180f);
 
+        // Throw bullet
         float distance = speed * Time.deltaTime;
 
         if (attackRange > 0)

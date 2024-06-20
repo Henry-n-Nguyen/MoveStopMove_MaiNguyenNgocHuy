@@ -6,9 +6,11 @@ using UnityEngine;
 
 public class Revive : UICanvas
 {
+    private const float WAITING_TIME = 5.5f;
+
     [SerializeField] private TextMeshProUGUI counterText;
 
-    private float timer = 5.5f;
+    private float timer;
 
     private void OnEnable()
     {
@@ -29,7 +31,7 @@ public class Revive : UICanvas
 
     private void OnInit()
     {
-        timer = 5.5f;
+        timer = WAITING_TIME;
 
         CameraManager.instance.TurnOnCamera(CameraState.Revive);
     }

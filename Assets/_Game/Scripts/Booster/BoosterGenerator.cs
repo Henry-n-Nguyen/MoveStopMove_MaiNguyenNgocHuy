@@ -40,7 +40,11 @@ public class BoosterGenerator : MonoBehaviour
 
         StopAllCoroutines();
 
-        if (createdBooster != null) createdBooster.Despawn();
+        if (createdBooster != null)
+        {
+            createdBooster.Despawn();
+            createdBooster = null;
+        }
     }
 
     public void SpawnBooster(int quantity)
@@ -56,11 +60,12 @@ public class BoosterGenerator : MonoBehaviour
             {
                 // Pick random position that not in activated position list
                 randomNumber = Random.Range(0, inActivatedTransform.Count);
+
                 Transform targetTransform = inActivatedTransform[randomNumber];
                 inActivatedTransform.Remove(targetTransform);
 
                 activatedTransform.Add(targetTransform);
-                StartCoroutine(RemoveActivatedTransform(targetTransform, 15f));
+                StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 15f));
 
                 Vector3 randomPosition = targetTransform.position;
 
@@ -76,12 +81,13 @@ public class BoosterGenerator : MonoBehaviour
         }
     }
 
-    private IEnumerator RemoveActivatedTransform(Transform target, float time)
+    private IEnumerator DeActiveTargetTransformAfterTime(Transform target, float time)
     {
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
         inActivatedTransform.Add(target);
         createdBooster.Despawn();
+        createdBooster = null;
         yield return new WaitForSeconds(2f);
         SpawnBooster(1);
     }
@@ -90,7 +96,8 @@ public class BoosterGenerator : MonoBehaviour
     {
         List<Transform> nearbySpawnPoints = new List<Transform>();
 
-        Collider[] spawnPointsInRange = Physics.OverlapSphere(targetTransform.position, 50f, spawnPointLayer);
+        float distanceToDetectTargetObject = 65f;
+        Collider[] spawnPointsInRange = Physics.OverlapSphere(targetTransform.position, distanceToDetectTargetObject, spawnPointLayer);
 
         if (spawnPointsInRange.Length > 0)
         {

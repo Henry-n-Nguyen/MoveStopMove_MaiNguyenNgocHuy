@@ -17,7 +17,7 @@ public abstract class AbstractBooster : MonoBehaviour
         anim.ResetTrigger(TRIGGER_SPAWN);
         anim.SetTrigger(TRIGGER_SPAWN);
 
-        StartCoroutine(SelfDestroy(15f));
+        StartCoroutine(SelfDestroyAfterTime(15f));
     }
 
     private void OnTriggerEnter(Collider other)
@@ -55,7 +55,7 @@ public abstract class AbstractBooster : MonoBehaviour
         Destroy(boosterGameObject);
     }
 
-    private IEnumerator SelfDestroy(float time)
+    private IEnumerator SelfDestroyAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
         Despawn();

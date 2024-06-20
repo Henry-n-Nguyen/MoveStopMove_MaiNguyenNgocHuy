@@ -5,6 +5,8 @@ using HuySpace;
 
 public class EnormousBooster : AbstractBooster
 {
+    private const float ENORMOUS_BUFF_STAT = 1.64f;
+
     protected override void TriggerBoost(AbstractCharacter character)
     {
         base.TriggerBoost(character);
@@ -19,7 +21,7 @@ public class EnormousBooster : AbstractBooster
 
         character.CheckBoost();
 
-        character.scaleRatio = 1.64f;
+        character.scaleRatio = ENORMOUS_BUFF_STAT;
         character.OnScaleRatioChanges();
     }
 }

@@ -94,11 +94,12 @@ public class BotGenerator : MonoBehaviour
 
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, inActivatedTransform.Count);
+
             Transform targetTransform = inActivatedTransform[randomNumber];
             inActivatedTransform.Remove(targetTransform);
 
             activatedTransform.Add(targetTransform);
-            StartCoroutine(RemoveActivatedTransform(targetTransform, 10f));
+            StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 10f));
 
             Vector3 randomPosition = targetTransform.position;
 
@@ -143,7 +144,7 @@ public class BotGenerator : MonoBehaviour
         characterInQueueToSpawn--;
     }
 
-    private IEnumerator RemoveActivatedTransform(Transform target, float time)
+    private IEnumerator DeActiveTargetTransformAfterTime(Transform target, float time)
     {
         yield return new WaitForSeconds(time);
         activatedTransform.Remove(target);
@@ -154,7 +155,8 @@ public class BotGenerator : MonoBehaviour
     {
         List<Transform> nearbySpawnPointsTransform = new List<Transform>();
 
-        Collider[] spawnPointCollides = Physics.OverlapSphere(targetTransform.position, 65f, spawnPointLayer);
+        float distanceToDetectTargetObject = 65f;
+        Collider[] spawnPointCollides = Physics.OverlapSphere(targetTransform.position, distanceToDetectTargetObject, spawnPointLayer);
 
         if (spawnPointCollides.Length > 0)
         {
