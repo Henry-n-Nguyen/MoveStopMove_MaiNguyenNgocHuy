@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using TMPro;
+using UnityEngine;
 using UnityEngine.UI;
 
 /// <summary>
@@ -9,8 +10,8 @@ public class Indicator : MonoBehaviour
     [SerializeField] private IndicatorType indicatorType;
     [SerializeField] private Image cursorImage;
     [SerializeField] private Image indicatorImage;
-    [SerializeField] private Text pointText;
-    [SerializeField] private Text nameText;
+    [SerializeField] private TextMeshProUGUI pointText;
+    [SerializeField] private TextMeshProUGUI nameText;
 
     /// <summary>
     /// Gets if the game object is active in hierarchy.

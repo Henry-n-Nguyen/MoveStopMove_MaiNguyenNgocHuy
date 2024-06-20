@@ -21,9 +21,19 @@ public abstract class AbstractBullet : MonoBehaviour
 
     private bool isSpecialLaunch = false;
 
+    private void Start()
+    {
+        SubcribeEvent();
+    }
+
     private void OnEnable()
     {
         OnInit();
+    }
+
+    private void SubcribeEvent()
+    {
+        OnBulletSpawn += owner.IsReadyToAttack;
     }
 
     private void Update()
@@ -79,7 +89,7 @@ public abstract class AbstractBullet : MonoBehaviour
 
         bulletTransform.localScale = Vector3.one * scaleRatio;
 
-        OnBulletSpawn += owner.IsReadyToAttack;
+        
     }
 
     protected virtual void Launch()
@@ -105,7 +115,7 @@ public abstract class AbstractBullet : MonoBehaviour
         bulletTransform.rotation = owner.characterTransform.rotation;
         bulletGameObject.SetActive(true);
 
-        OnBulletSpawn?.Invoke();
+        OnBulletSpawned();
     }
 
     public void Despawn()
@@ -121,6 +131,11 @@ public abstract class AbstractBullet : MonoBehaviour
         bulletGameObject.SetActive(false);
         bulletTransform.localPosition = Vector3.zero;
 
+        OnBulletSpawned();
+    }
+
+    private void OnBulletSpawned()
+    {
         OnBulletSpawn?.Invoke();
     }
 }
