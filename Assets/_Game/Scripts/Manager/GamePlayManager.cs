@@ -8,9 +8,10 @@ public class GamePlayManager : MonoBehaviour
 {
     public static GamePlayManager instance;
 
-    private const int COIN_CONVERT_RATE = 12;
+    private const int COIN_CONVERT_RATE = 20;
+    private const int COIN_BONUS = 100;
 
-    [SerializeField] private int characterAmount;
+    public int characterAmount;
 
     [HideInInspector] public GamePlayState currentGamePlayState;
 
@@ -70,7 +71,7 @@ public class GamePlayManager : MonoBehaviour
 
     public void WinGame()
     {
-        coinToEarn = player.point * COIN_CONVERT_RATE;
+        coinToEarn = player.point * COIN_CONVERT_RATE + COIN_BONUS;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 

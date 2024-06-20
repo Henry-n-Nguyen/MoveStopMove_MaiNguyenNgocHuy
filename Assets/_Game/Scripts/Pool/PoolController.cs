@@ -5,16 +5,14 @@ using UnityEngine.UIElements;
 
 public class PoolController : MonoBehaviour
 {
-    [Header("In-Code")]
-    [SerializeField] private int quantity;
-
     [Header("Pre-Setup")]
     [SerializeField] private Transform holder;
 
     [SerializeField] private Enemy prefab;
 
-    void Awake()
+    void Start()
     {
+        int quantity = GamePlayManager.instance.characterAmount;
         BotPool.Preload(prefab, quantity, holder);
     }
 }

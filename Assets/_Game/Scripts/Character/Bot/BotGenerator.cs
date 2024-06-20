@@ -84,11 +84,12 @@ public class BotGenerator : MonoBehaviour
         }
 
         if (characterInQueueToSpawn >= inActivatedTransform.Count) characterInQueueToSpawn = inActivatedTransform.Count;
+        int quantity = characterInQueueToSpawn;
 
         int randomNumber = 0;
 
         //for (int i = 0; i < quantity; i++)
-        while (characterInQueueToSpawn > 0)
+        for (int i = 0; i < quantity; i++)
         {
             if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
 
