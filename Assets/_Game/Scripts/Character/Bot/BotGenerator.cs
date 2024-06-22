@@ -34,6 +34,11 @@ public class BotGenerator : MonoBehaviour
     private List<Transform> activatedTransform = new List<Transform>();
     private List<Transform> inActivatedTransform = new List<Transform>();
 
+    private List<AbstractCharacter> createdCharacters = new List<AbstractCharacter>();
+
+    // Coroutines
+    private Coroutine deActiveTransformCoroutine;
+
     private void Awake()
     {
         instance = this;
@@ -63,6 +68,7 @@ public class BotGenerator : MonoBehaviour
             createdPlayer.LoadDataFromUserData();
 
             player = createdPlayer;
+            createdCharacters.Add(player);
 
             GamePlayManager.instance.player = player;
 
@@ -100,7 +106,7 @@ public class BotGenerator : MonoBehaviour
             inActivatedTransform.Remove(targetTransform);
 
             activatedTransform.Add(targetTransform);
-            StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 10f));
+            deActiveTransformCoroutine = StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 10f));
 
             Vector3 randomPosition = targetTransform.position;
 

@@ -240,6 +240,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937eeca91914a614bb23b2c81e912f60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  configSO: {fileID: 11400000, guid: e27180b88fdfc1640b66a4c21c84787b, type: 2}
   characterScript: {fileID: 4560287272006892595}
   targetScript: {fileID: 5132354933558497253}
   radarObject: {fileID: 7277379578229232064}
@@ -259,6 +260,7 @@ MonoBehaviour:
   particleDataSO: {fileID: 11400000, guid: 7885d4fe5c553364bba33acc227a921f, type: 2}
   characterTransform: {fileID: 3308923855994619669}
   index: 0
+  characterName: '?'
   point: 0
   moveSpeed: 5
   attackRange: 7.5
@@ -292,6 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetColor: {r: 0, g: 1, b: 0.074440956, a: 1}
+  targetName: 
   target: {fileID: 4560287272006892595}
   needBoxIndicator: 1
   needArrowIndicator: 1

@@ -4,7 +4,7 @@ using UnityEngine;
 using HuySpace;
 using Unity.VisualScripting;
 
-[CreateAssetMenu(menuName = "EquipmentDataSO")]
+[CreateAssetMenu(menuName = "SciptableObjects/Others/EquipmentDataSO")]
 public class EquipmentDataSO : ScriptableObject
 {
     private Dictionary<EquipmentType, List<Sprite>> equipmentSpriteList = new Dictionary<EquipmentType, List<Sprite>>();

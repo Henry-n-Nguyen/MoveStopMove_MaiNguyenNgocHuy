@@ -30,7 +30,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (target != null)
         {
-            Vector3 targetPosition = target.characterTransform.position + offset * (target.attackRange / target.RawAttackRange);
+            Vector3 targetPosition = target.characterTransform.position + offset * (target.attackRange / target.GetRawAttackRange());
 
             zoomSpeed = target.moveSpeed - 1f;
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
 using System;
+using UnityEditor;
 
 public class GamePlayManager : MonoBehaviour
 {
@@ -32,6 +33,13 @@ public class GamePlayManager : MonoBehaviour
     public event Action OnUIChanged;
     public event Action OnPlayerTouchScreen;
 
+    // Coroutines
+    private Coroutine triggerWin;
+    private Coroutine triggerLose;
+    private Coroutine triggerRevive;
+
+    private Coroutine delayCoroutine;
+
     private void Awake()
     {
         instance = this;
@@ -46,7 +54,9 @@ public class GamePlayManager : MonoBehaviour
 
     public void OnInit()
     {
-        StopAllCoroutines();
+        if (triggerWin != null) StopCoroutine(triggerWin);
+        if (triggerLose != null) StopCoroutine(triggerLose);
+        if (triggerLose != null) StopCoroutine(triggerRevive);
 
         data = UserDataManager.instance.userData;
 
@@ -75,7 +85,7 @@ public class GamePlayManager : MonoBehaviour
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
-        StartCoroutine(TriggerWinStateAfterTime(2.5f));
+        triggerWin = StartCoroutine(TriggerWinStateAfterTime(2.5f));
     }
 
     private IEnumerator TriggerWinStateAfterTime(float time)
@@ -99,13 +109,13 @@ public class GamePlayManager : MonoBehaviour
 
         if (isDiedBefore)
         {
-            StartCoroutine(TriggerLoseStateAfterTime(2.5f));
+            triggerLose = StartCoroutine(TriggerLoseStateAfterTime(2.5f));
         }
         else
         {
             isDiedBefore = true;
 
-            StartCoroutine(TriggerReviveStateAfterTime(2.5f));
+            triggerRevive = StartCoroutine(TriggerReviveStateAfterTime(2.5f));
         }
     }
 
@@ -138,9 +148,23 @@ public class GamePlayManager : MonoBehaviour
 
     public void ChangeState(GamePlayState state)
     {
+        if (delayCoroutine != null) StopCoroutine(delayCoroutine);
+
         currentGamePlayState = state;
 
         OnUIChanged?.Invoke();
+    }
+
+    public void ChangeStateAfterTime(GamePlayState state, float time)
+    {
+        delayCoroutine = StartCoroutine(DelayChangeStateTime(state, time));
+    }
+
+    private IEnumerator DelayChangeStateTime(GamePlayState state, float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        ChangeState(state);
     }
 
     public void OnTouch()

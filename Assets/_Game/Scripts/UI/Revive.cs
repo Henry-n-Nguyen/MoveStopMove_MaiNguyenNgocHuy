@@ -7,6 +7,10 @@ using UnityEngine;
 public class Revive : UICanvas
 {
     private const float WAITING_TIME = 5.5f;
+    private const float DELAY_CONTINUE_GAME_TIME = 1f;
+
+    // Coroutines
+    private Coroutine delayCoroutine;
 
     [SerializeField] private TextMeshProUGUI counterText;
 
@@ -33,11 +37,15 @@ public class Revive : UICanvas
     {
         timer = WAITING_TIME;
 
+        GamePlayManager.instance.ChangeState(GamePlayState.None);
+
         CameraManager.instance.TurnOnCamera(CameraState.Revive);
     }
 
     public void WatchAd()
     {
+        GamePlayManager.instance.ChangeStateAfterTime(GamePlayState.Ingame, DELAY_CONTINUE_GAME_TIME);
+
         GamePlayManager.instance.player.Revive();
 
         UIManager.instance.CloseUI<Revive>(0);

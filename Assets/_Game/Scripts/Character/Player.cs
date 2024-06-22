@@ -1,8 +1,11 @@
 using HuySpace;
 using System.Collections;
+using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
+using static UnityEngine.GraphicsBuffer;
 
 public class Player : AbstractCharacter
 {
@@ -107,11 +110,6 @@ public class Player : AbstractCharacter
             ChangeState(new DanceState());
         }
 
-        if (isOnPause)
-        {
-            return;
-        }
-
         if (targetsInRange.Count > 0)
         {
             TurnTowardClosestCharacter();
@@ -178,7 +176,35 @@ public class Player : AbstractCharacter
 
         targetsInRange.Clear();
 
+        IsInRangeOfAnyCharacter();
+
         ChangeState(new IdleState());
+    }
+
+    private void IsInRangeOfAnyCharacter()
+    {
+        List<AbstractCharacter> characterList = new List<AbstractCharacter>();
+        characterList.AddRange(BotPool.GetActivatedBotList());
+
+        if (characterList.Count > 0)
+        {
+            for (int i = 0; i < characterList.Count; i++)
+            {
+                AbstractCharacter foundedTarget = characterList[i];
+
+                float currentDistanceSq = Vector3.SqrMagnitude(characterTransform.position - foundedTarget.characterTransform.position);
+
+                if (currentDistanceSq <= foundedTarget.attackRange)
+                {
+                    foundedTarget.targetsInRange.Add(this);
+                }
+
+                if (currentDistanceSq <= attackRange)
+                {
+                    targetsInRange.Add(foundedTarget);
+                }
+            }
+        }
     }
 
     public override void Dancing()
