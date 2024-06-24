@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
 
-[CreateAssetMenu(menuName = "ParticleDataSO")]
+[CreateAssetMenu(menuName = "SciptableObjects/Others/ParticleDataSO")]
 public class ParticleDataSO : ScriptableObject
 {
     [SerializeField] private ParticleSystem[] particles;

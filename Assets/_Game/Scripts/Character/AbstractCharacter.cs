@@ -9,25 +9,8 @@ using UnityEngine.UIElements;
 
 public abstract class AbstractCharacter : MonoBehaviour
 {
-    // Scale mile-stones
-    protected const int LVL_1_AS_POINT = 3;
-    protected const int LVL_2_AS_POINT = 7;
-    protected const int LVL_3_AS_POINT = 15;
-    protected const int LVL_4_AS_POINT = 24; // Add more if needed...
-
-    protected const float SCALE_LVL_1 = 1.12f;
-    protected const float SCALE_LVL_2 = 1.24f;
-    protected const float SCALE_LVL_3 = 1.36f;
-    protected const float SCALE_LVL_4 = 1.48f; // Add more if needed...
-
-    // Raw stats
-    protected const float RAW_MOVE_SPEED = 5f;
-    protected const float RAW_ATTACK_RANGE = 7.5f;
-    protected const float RAW_SCALE = 1f;
-
-    public float RawMoveSpeed => RAW_MOVE_SPEED;
-    public float RawAttackRange => RAW_ATTACK_RANGE;
-    public float RawScale => RAW_SCALE;
+    [Header("Config")]
+    [SerializeField] protected CharacterConfigSO configSO;
 
     // Editor
     [Header("SetUp-References")]
@@ -37,9 +20,9 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected SphereCollider radarObject;
     [SerializeField] protected Transform attackPoint;
 
-    [SerializeField] protected NavMeshAgent agent;
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Animator anim;
+
 
     [Header("Equipment-References")]
     [SerializeField] protected Transform weaponHolder;
@@ -59,11 +42,14 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Statitics
     [Header("Public")]
+    [HideInInspector] public NavMeshAgent agent;
+
     public Transform characterTransform;
 
     public int index;
     public string characterName = "?";
     public int point = 0;
+    public int currentScaleLevel = 0;
 
     public float moveSpeed = 5f;
     public float attackRange = 7.5f;
@@ -89,16 +75,16 @@ public abstract class AbstractCharacter : MonoBehaviour
     private string currentAnimName;
 
     // Boost Variables
-    [HideInInspector] public bool isBoosted;
-    [HideInInspector] public bool isHugeBulletBoosted;
+    public bool isBoosted;
+    public bool isHugeBulletBoosted;
 
     [HideInInspector] public BoostType boostedType;
 
     protected float tempScaleRatio;
     protected float tempSpeed;
     protected float tempAttackRange;
-    
-    private ParticleSystem boostedAura = null;
+
+    private ParticleSystem boostedAura;
 
     // Function
     private void Start()
@@ -129,6 +115,7 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
 
         point = 0;
+        currentScaleLevel = 0;
 
         isReadyToAttack = true;
 
@@ -136,9 +123,9 @@ public abstract class AbstractCharacter : MonoBehaviour
 
         targetsInRange.Clear();
 
-        scaleRatio = RAW_SCALE;
-        moveSpeed = RAW_MOVE_SPEED;
-        attackRange = RAW_ATTACK_RANGE;
+        scaleRatio = configSO.RawScale;
+        moveSpeed = configSO.RawMoveSpeed;
+        attackRange = configSO.RawAttackRange;
 
         OnScaleRatioChanges();
 
@@ -152,34 +139,18 @@ public abstract class AbstractCharacter : MonoBehaviour
     public void OnScaleRatioChanges()
     {
         characterTransform.localScale = Vector3.one * scaleRatio;
-        moveSpeed = RAW_MOVE_SPEED * scaleRatio;
-        attackRange = RAW_ATTACK_RANGE * scaleRatio;
+        moveSpeed = configSO.RawMoveSpeed * scaleRatio;
+        attackRange = configSO.RawAttackRange * scaleRatio;
     }
 
     public void OnPointChanges()
     {
-        switch (point)
-        {
-            case int x when x >= LVL_4_AS_POINT:
-                scaleRatio = SCALE_LVL_4; 
-                OnScaleRatioChanges();
-
-                break;
-            case int x when x >= LVL_3_AS_POINT: 
-                scaleRatio = SCALE_LVL_3; 
-                OnScaleRatioChanges();
-
-                break;
-            case int x when x >= LVL_2_AS_POINT: 
-                scaleRatio = SCALE_LVL_2; 
-                OnScaleRatioChanges();
-
-                break;
-            case int x when x >= LVL_1_AS_POINT: 
-                scaleRatio = SCALE_LVL_1; 
-                OnScaleRatioChanges();
-
-                break;
+        if (currentScaleLevel < configSO.GetMaxScaleLevel()) {
+            if (point == configSO.GetLevelMilestone(currentScaleLevel))
+            {
+                scaleRatio = configSO.GetLevel2Scale(currentScaleLevel);
+                currentScaleLevel++;
+            }
         }
     }
 
@@ -398,7 +369,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Dead()
     {
-        ParticleSystem VFX = Instantiate(particleDataSO.GetParticle(ParticleType.HitVFX), characterTransform);
+        ParticleSystem VFX = ParticlePool.Play(ParticleType.HitVFX, characterTransform.position, Quaternion.identity);
         ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
         VFXcolor.color = skinMeshRenderer.materials[0].color;
 
@@ -483,17 +454,17 @@ public abstract class AbstractCharacter : MonoBehaviour
 
             if (boostedAura == null)
             {
-                ParticleSystem aura = Instantiate(particleDataSO.GetParticle(ParticleType.BoostedVFX), characterTransform);
+                ParticleSystem aura = ParticlePool.Attach(ParticleType.BoostedVFX, characterTransform);
                 boostedAura = aura;
             }
             else
             {
-                boostedAura.gameObject.SetActive(true);
+                boostedAura.Play();
             }
         }
         else
         {
-            boostedAura.gameObject.SetActive(false);
+            boostedAura.Stop();
         }
     }
 
@@ -517,5 +488,10 @@ public abstract class AbstractCharacter : MonoBehaviour
     public Transform GetAttackPoint()
     {
         return attackPoint;
+    }
+
+    public float GetRawAttackRange()
+    {
+        return configSO.RawAttackRange;
     }
 }

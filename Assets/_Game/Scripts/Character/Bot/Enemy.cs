@@ -5,37 +5,36 @@ using UnityEngine.AI;
 
 public class Enemy : AbstractCharacter
 {
-    private const float AGENT_SPEED_CONVERT_RATE = 0.67f;
-    private const float IDLE_TIME = 0.5f;
-    private const float PATROL_TIME = 5f;
-
     private enum BotType
     {
-        AgressiveBot, // Find and positive attack characters around him
+        AggressiveBot, // Find and positive attack characters around him
         PatrolBot, // Just chilling in his patrol progress
     }
 
+    [Header("Enemy Config")]
+    [SerializeField] private EnemyConfigSO[] enemyConfigSOs;
+    [HideInInspector] public EnemyConfigSO currentConfigSO = null;
 
     [Header("Pre-Setup")]
     [SerializeField] private GameObject targetedMark;
 
     [Header("Patroling")]
-    [SerializeField] private Vector3 desPoint;
-    [SerializeField] private bool desPointSet;
-    [SerializeField] private float desPointRange;
+    [HideInInspector] public Vector3 desPoint;
+    [HideInInspector] public bool desPointSet;
+    [HideInInspector] public float desPointRange;
 
     [Header("BotType")]
     [SerializeField] private BotType typeOfBot;
     [SerializeField] private LayerMask characterLayer;
 
     [Header("Target")]
-    [SerializeField] private AbstractCharacter target = null;
+    public AbstractCharacter target = null;
 
     // Private variables
     private bool isDetectedTarget;
-    private float patrolingTimer = 0;
     private float idlingTimer = 0;
 
+    private Coroutine despawnCoroutine = null;
 
     private void OnTriggerEnter(Collider other)
     {
@@ -67,15 +66,15 @@ public class Enemy : AbstractCharacter
     {
         base.OnInit();
 
-        StopAllCoroutines();
+        if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
 
         desPointSet = false;
 
         isDetectedTarget = false;
 
-        agent.speed = moveSpeed * AGENT_SPEED_CONVERT_RATE;
-
         RandomTypeOfBot();
+
+        agent.speed = moveSpeed * currentConfigSO.AgentSpeedConvertRate;
 
         IsTargeted(false);
     }
@@ -83,8 +82,11 @@ public class Enemy : AbstractCharacter
     private void RandomTypeOfBot() {
         // Random type of this bot
         typeOfBot = (BotType)Random.Range(0, 2);
+
+        currentConfigSO = enemyConfigSOs[(int) typeOfBot];
     }
 
+    // State Methods
     public override void Moving()
     {
         base.Moving();
@@ -96,62 +98,18 @@ public class Enemy : AbstractCharacter
                 agent.SetDestination(characterTransform.position);
 
                 desPointSet = false;
-                patrolingTimer = 0;
 
                 ChangeState(new AttackState());
             }
         }
-
-        if (!desPointSet)
-        {
-            ChangeState(new IdleState());
-        }
-        else
-        {
-            patrolingTimer += Time.deltaTime;
-
-            if (patrolingTimer > PATROL_TIME)
-            {
-                desPointSet = false;
-                patrolingTimer = 0;
-            }
-
-            if (typeOfBot == BotType.AgressiveBot)
-            {
-                if (target == null || target.enabled == false)
-                {
-                    SearchDesPoint();
-                    agent.SetDestination(desPoint);
-                }
-                else
-                {
-                    agent.SetDestination(desPoint);
-                }
-            }
-            else
-            {
-                agent.SetDestination(desPoint);
-            }
-        }
-
-        Vector3 distanceToDesPoint = characterTransform.position - desPoint;
-
-        if (distanceToDesPoint.magnitude < 1f) 
-        {
-            ChangeState(new IdleState());
-
-            desPointSet = false; 
-            patrolingTimer = 0;
-
-        }
     }
 
-    private void SearchDesPoint()
+    public void SearchDesPoint()
     {
         switch (typeOfBot)
         {
-            case BotType.AgressiveBot:
-                Agressive();
+            case BotType.AggressiveBot:
+                Aggressive();
                 break;
 
             case BotType.PatrolBot:
@@ -162,30 +120,22 @@ public class Enemy : AbstractCharacter
         desPointSet = true;
     }
 
-    private void Agressive()
+    private void Aggressive()
     {
         float minDistance = Mathf.Infinity;
 
-        float distanceToDetectTargetCharacter = 40f;
-        Collider[] characterCollides = Physics.OverlapSphere(characterTransform.position, distanceToDetectTargetCharacter, characterLayer);
+        List<AbstractCharacter> characterList = new List<AbstractCharacter>();
 
-        if (characterCollides.Length > 0)
+        characterList.AddRange(BotPool.GetActivatedBotList());
+        characterList.Remove(characterScript);
+        characterList.Add(GamePlayManager.instance.player);
+
+        if (characterList.Count > 0)
         {
-            for (int i = 0; i < characterCollides.Length; i++)
-            {
-                AbstractCharacter foundedTarget = Cache.GetCharacter(characterCollides[i]);
+            AbstractCharacter foundedTarget = characterList[Random.Range(0,characterList.Count)];
 
-                if (foundedTarget.index != index)
-                {
-                    float currentDistanceSq = Vector3.SqrMagnitude(characterTransform.position - foundedTarget.characterTransform.position);
-
-                    if (currentDistanceSq < minDistance)
-                    {
-                        desPoint = foundedTarget.characterTransform.position;
-                        target = foundedTarget;
-                    }
-                }
-            }
+            desPoint = foundedTarget.characterTransform.position;
+            target = foundedTarget;
         }
         else
         {
@@ -206,8 +156,6 @@ public class Enemy : AbstractCharacter
         desPoint = hit.position;
     }
 
-
-    // State Methods
     public override void StopMoving()
     {
         base .StopMoving();
@@ -235,14 +183,18 @@ public class Enemy : AbstractCharacter
         {
             idlingTimer += Time.deltaTime;
 
-            if (idlingTimer > IDLE_TIME)
+            if (idlingTimer > currentConfigSO.IdleTime)
             {
                 SearchDesPoint();
 
                 isDetectedTarget = false;
                 idlingTimer = 0;
 
-                ChangeState(new PatrolState());
+                switch (typeOfBot)
+                {
+                    case BotType.PatrolBot: ChangeState(new ePatrolState()); break;
+                    case BotType.AggressiveBot: ChangeState(new eAggressiveState()); break;
+                }
             }
         }
     }
@@ -272,9 +224,10 @@ public class Enemy : AbstractCharacter
 
             base.Dead();
 
-            StartCoroutine(DespawnEnemyAfterTime(2.5f));
-
             isDead = true;
+            GamePlayManager.instance.CharacterDied();
+
+            despawnCoroutine = StartCoroutine(DespawnEnemyAfterTime(2.5f));
         }
     }
 
@@ -283,9 +236,8 @@ public class Enemy : AbstractCharacter
         yield return new WaitForSeconds(time);
 
         BotPool.Despawn(this);
-        GamePlayManager.instance.CharacterDied();
 
-        BotGenerator.instance.SpawnBots();
+        BotGenerator.instance.AddSpawnQueue(1);
     }
 
     public void IsTargeted(bool isTargeted)

@@ -28,4 +28,9 @@ public static class BotPool
     {
         pool.Collect();
     }
+
+    public static List<Enemy> GetActivatedBotList()
+    {
+        return pool.actives;
+    }
 }

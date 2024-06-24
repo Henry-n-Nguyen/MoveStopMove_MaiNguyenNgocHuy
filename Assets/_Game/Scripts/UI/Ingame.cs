@@ -9,6 +9,9 @@ public class Ingame : UICanvas
     [SerializeField] private TextMeshProUGUI aliveCharacterText;
     [SerializeField] private GameObject helpToMovePart;
 
+    // Coroutines
+    private Coroutine spawnBoosterCoroutine;
+
     private int temporaryAliveCharacter;
 
     private void Start()
@@ -37,12 +40,12 @@ public class Ingame : UICanvas
 
         CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
 
-        StartCoroutine(SpawnBoosterAfterTime(15f));
+        spawnBoosterCoroutine = StartCoroutine(SpawnBoosterAfterTime(15f));
     }
 
     private void OnDisable()
     {
-        StopAllCoroutines();
+        StopCoroutine(spawnBoosterCoroutine);
     }
 
     private IEnumerator SpawnBoosterAfterTime(float time)

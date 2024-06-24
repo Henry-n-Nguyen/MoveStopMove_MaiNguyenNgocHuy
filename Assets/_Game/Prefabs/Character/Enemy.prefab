@@ -210,6 +210,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ea2800c6b38a4154b95f82b67ca4f286, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  configSO: {fileID: 11400000, guid: e27180b88fdfc1640b66a4c21c84787b, type: 2}
   characterScript: {fileID: 1114765874217409983}
   targetScript: {fileID: 7040531013573885074}
   radarObject: {fileID: 4938879143682981182}
@@ -231,6 +232,7 @@ MonoBehaviour:
   index: 1
   characterName: '?'
   point: 0
+  currentScaleLevel: 0
   moveSpeed: 5
   attackRange: 7.5
   scaleRatio: 1
@@ -239,6 +241,9 @@ MonoBehaviour:
   isBoosted: 0
   isHugeBulletBoosted: 0
   boostedType: 0
+  enemyConfigSOs:
+  - {fileID: 11400000, guid: e64f626a2443b8e4e8bef0e6435a80db, type: 2}
+  - {fileID: 11400000, guid: 8e72b7ec5d425714694eaa6b5c955ffe, type: 2}
   targetedMark: {fileID: 5905830706655812610}
   desPoint: {x: 0, y: 0, z: 0}
   desPointSet: 0

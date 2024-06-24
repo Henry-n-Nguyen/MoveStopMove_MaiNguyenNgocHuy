@@ -24,6 +24,9 @@ public class BoosterGenerator : MonoBehaviour
     public List<Transform> activatedTransform = new List<Transform>();
     public List<Transform> inActivatedTransform = new List<Transform>();
 
+    // Coroutines
+    private Coroutine deActiveTransformCouroutine;
+
     private void Awake()
     {
         instance = this;
@@ -38,7 +41,7 @@ public class BoosterGenerator : MonoBehaviour
     {
         player = GamePlayManager.instance.player;
 
-        StopAllCoroutines();
+        if (deActiveTransformCouroutine != null) StopCoroutine(deActiveTransformCouroutine);
 
         if (createdBooster != null)
         {
@@ -65,7 +68,7 @@ public class BoosterGenerator : MonoBehaviour
                 inActivatedTransform.Remove(targetTransform);
 
                 activatedTransform.Add(targetTransform);
-                StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 15f));
+                deActiveTransformCouroutine = StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 15f));
 
                 Vector3 randomPosition = targetTransform.position;
 
