@@ -14,7 +14,7 @@ public class PoolController : MonoBehaviour
     [Header("Particle")]
     public ParticleAmount[] Particle;
 
-    void Start()
+    void Awake()
     {
         int quantity = GamePlayManager.instance.characterAmount;
         BotPool.Preload(prefab, quantity, holder);

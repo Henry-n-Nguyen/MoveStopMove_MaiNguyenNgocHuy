@@ -12,7 +12,7 @@ public static class ParticlePool
     /// <summary>
     /// The Pool class represents the pool for a particular prefab.
     /// </summary>
-    class Pool
+    class pPool
     {
         Transform m_sRoot = null;
 
@@ -26,7 +26,7 @@ public static class ParticlePool
         int index;
 
         // Constructor
-        public Pool(ParticleSystem prefab, int initialQty, Transform parent)
+        public pPool(ParticleSystem prefab, int initialQty, Transform parent)
         {
 #if UNITY_EDITOR
             if (prefab.main.loop)
@@ -134,7 +134,7 @@ public static class ParticlePool
     //--------------------------------------------------------------------------------------------------
 
     // All of our pools
-    static Dictionary<int, Pool> pools = new Dictionary<int, Pool>();
+    static Dictionary<int, pPool> pools = new Dictionary<int, pPool>();
 
     /// <summary>
     /// Init our dictionary.
@@ -143,7 +143,7 @@ public static class ParticlePool
     {
         if (prefab != null && !pools.ContainsKey((int)type))
         {
-            pools[(int)type] = new Pool(prefab, qty, parent);
+            pools[(int)type] = new pPool(prefab, qty, parent);
         }
     }
 

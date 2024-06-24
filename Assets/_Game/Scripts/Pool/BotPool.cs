@@ -16,7 +16,7 @@ public static class BotPool
 
     public static T Spawn<T>(Vector3 pos, Quaternion rot) where T : Enemy
     {
-        return pool.Spawn(pos, rot) as T;
+        return pool.Spawn(pos, rot) as T;           
     }
 
     public static void Despawn(Enemy gameUnit)

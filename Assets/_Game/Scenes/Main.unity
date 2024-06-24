@@ -814,7 +814,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAmount: 50
-  startCharacterAmount: 7
+  startCharacterAmount: 6
   currentGamePlayState: 0
   player: {fileID: 0}
   aliveCharacterAmount: 0

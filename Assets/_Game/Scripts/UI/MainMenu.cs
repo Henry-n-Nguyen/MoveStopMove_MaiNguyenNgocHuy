@@ -28,6 +28,7 @@ public class MainMenu : UICanvas
         GamePlayManager.instance.OnInit();
         CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
 
+        BotGenerator.instance.OnInit();
         BotGenerator.instance.SpawnPlayer();
         BotGenerator.instance.AddSpawnQueue(GamePlayManager.instance.startCharacterAmount);
     }
