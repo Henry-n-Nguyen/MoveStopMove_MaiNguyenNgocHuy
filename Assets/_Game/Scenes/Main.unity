@@ -814,10 +814,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterAmount: 50
+  startCharacterAmount: 7
   currentGamePlayState: 0
   player: {fileID: 0}
   aliveCharacterAmount: 0
-  startCharacterAmount: 8
   coinToEarn: 0
 --- !u!1 &1406585580
 GameObject:

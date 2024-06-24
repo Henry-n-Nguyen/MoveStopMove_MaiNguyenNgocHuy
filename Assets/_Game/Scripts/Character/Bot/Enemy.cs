@@ -28,7 +28,7 @@ public class Enemy : AbstractCharacter
     [SerializeField] private LayerMask characterLayer;
 
     [Header("Target")]
-    [HideInInspector] public AbstractCharacter target = null;
+    public AbstractCharacter target = null;
 
     // Private variables
     private bool isDetectedTarget;
@@ -127,25 +127,15 @@ public class Enemy : AbstractCharacter
         List<AbstractCharacter> characterList = new List<AbstractCharacter>();
 
         characterList.AddRange(BotPool.GetActivatedBotList());
+        characterList.Remove(characterScript);
         characterList.Add(GamePlayManager.instance.player);
 
         if (characterList.Count > 0)
         {
-            for (int i = 0; i < characterList.Count; i++)
-            {
-                AbstractCharacter foundedTarget = characterList[i];
+            AbstractCharacter foundedTarget = characterList[Random.Range(0,characterList.Count)];
 
-                if (foundedTarget.index != index)
-                {
-                    float currentDistanceSq = Vector3.SqrMagnitude(characterTransform.position - foundedTarget.characterTransform.position);
-
-                    if (currentDistanceSq < minDistance)
-                    {
-                        desPoint = foundedTarget.characterTransform.position;
-                        target = foundedTarget;
-                    }
-                }
-            }
+            desPoint = foundedTarget.characterTransform.position;
+            target = foundedTarget;
         }
         else
         {
@@ -247,7 +237,7 @@ public class Enemy : AbstractCharacter
 
         BotPool.Despawn(this);
 
-        BotGenerator.instance.SpawnBots();
+        BotGenerator.instance.AddSpawnQueue(1);
     }
 
     public void IsTargeted(bool isTargeted)

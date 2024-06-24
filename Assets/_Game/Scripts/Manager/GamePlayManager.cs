@@ -13,13 +13,13 @@ public class GamePlayManager : MonoBehaviour
     private const int COIN_BONUS = 100;
 
     public int characterAmount;
+    public int startCharacterAmount = 7;
 
     [HideInInspector] public GamePlayState currentGamePlayState;
 
     [HideInInspector] public Player player;
 
     [HideInInspector] public int aliveCharacterAmount;
-    [HideInInspector] public int startCharacterAmount = 8;
 
     // Coin
     [HideInInspector] public int coinToEarn;

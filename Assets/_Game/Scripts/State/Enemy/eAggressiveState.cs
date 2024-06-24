@@ -31,17 +31,18 @@ public class eAggressiveState : IState<AbstractCharacter>
             if (patrolingTimer > bot.currentConfigSO.PatrolTime)
             {
                 bot.desPointSet = false;
-                patrolingTimer = 0;
-            }
-
-            if (bot.target == null || bot.target.enabled == false)
-            {
-                bot.SearchDesPoint();
-                bot.agent.SetDestination(bot.desPoint);
             }
             else
             {
-                bot.agent.SetDestination(bot.desPoint);
+                if (bot.target == null || bot.target.enabled == false)
+                {
+                    bot.SearchDesPoint();
+                    bot.agent.SetDestination(bot.desPoint);
+                }
+                else
+                {
+                    bot.agent.SetDestination(bot.desPoint);
+                }
             }
         }
 

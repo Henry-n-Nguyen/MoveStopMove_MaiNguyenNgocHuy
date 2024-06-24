@@ -27,6 +27,9 @@ public class BotGenerator : MonoBehaviour
     // Private variables
     private int index = 1;
 
+    private List<int> queueToSpawnBot = new List<int>();
+    private bool isSpawning = false;
+
     public int characterInQueueToSpawn;
 
     public int characterInBattleAmount = 1;
@@ -52,6 +55,16 @@ public class BotGenerator : MonoBehaviour
     private void SubscribeEvent()
     {
         GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
+    }
+
+    public void AddSpawnQueue(int quantity)
+    {
+        queueToSpawnBot.Add(quantity);
+
+        if (!isSpawning)
+        {
+            SpawnBots();
+        } 
     }
 
     public void SpawnPlayer()
@@ -81,6 +94,8 @@ public class BotGenerator : MonoBehaviour
 
     public void SpawnBots()
     {
+        isSpawning = true;
+
         inActivatedTransform.Clear();
         inActivatedTransform = FindNearbySpawnPoints(player.transform);
 
@@ -89,15 +104,18 @@ public class BotGenerator : MonoBehaviour
             return;
         }
 
-        if (characterInQueueToSpawn >= inActivatedTransform.Count) characterInQueueToSpawn = inActivatedTransform.Count;
-        int quantity = characterInQueueToSpawn;
+        int quantity = queueToSpawnBot[0];
+        queueToSpawnBot.RemoveAt(0);
 
         int randomNumber = 0;
 
         //for (int i = 0; i < quantity; i++)
         for (int i = 0; i < quantity; i++)
         {
-            if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount) continue;
+            if (characterInBattleAmount >= GamePlayManager.instance.aliveCharacterAmount || characterInBattleAmount > 8)
+            {
+                continue;
+            }
 
             // Pick randomly spawnPoint to spawn Bots
             randomNumber = Random.Range(0, inActivatedTransform.Count);
@@ -112,6 +130,8 @@ public class BotGenerator : MonoBehaviour
 
             SpawnBot(randomPosition);
         }
+
+        if (queueToSpawnBot.Count > 0) SpawnBots();
     }
 
     private void SpawnBot(Vector3 pos)
@@ -148,7 +168,7 @@ public class BotGenerator : MonoBehaviour
         character.Equip(EquipmentType.Skin, skinList[randomNumber]);
 
         characterInBattleAmount++;
-        characterInQueueToSpawn--;
+        isSpawning = false;
     }
 
     private IEnumerator DeActiveTargetTransformAfterTime(Transform target, float time)

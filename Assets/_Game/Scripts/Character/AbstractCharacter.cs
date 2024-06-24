@@ -75,8 +75,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     private string currentAnimName;
 
     // Boost Variables
-    [HideInInspector] public bool isBoosted;
-    [HideInInspector] public bool isHugeBulletBoosted;
+    public bool isBoosted;
+    public bool isHugeBulletBoosted;
 
     [HideInInspector] public BoostType boostedType;
 
