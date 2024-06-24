@@ -66,6 +66,7 @@ namespace HuySpace
 
     public enum ParticleType
     {
+        None = -1,
         HitVFX,
         BoostedVFX
     }

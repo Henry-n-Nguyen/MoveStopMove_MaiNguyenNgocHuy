@@ -20,9 +20,9 @@ public abstract class AbstractCharacter : MonoBehaviour
     [SerializeField] protected SphereCollider radarObject;
     [SerializeField] protected Transform attackPoint;
 
-    [SerializeField] protected NavMeshAgent agent;
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Animator anim;
+
 
     [Header("Equipment-References")]
     [SerializeField] protected Transform weaponHolder;
@@ -42,6 +42,8 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     // Statitics
     [Header("Public")]
+    [HideInInspector] public NavMeshAgent agent;
+
     public Transform characterTransform;
 
     public int index;
@@ -81,8 +83,8 @@ public abstract class AbstractCharacter : MonoBehaviour
     protected float tempScaleRatio;
     protected float tempSpeed;
     protected float tempAttackRange;
-    
-    private ParticleSystem boostedAura = null;
+
+    private ParticleSystem boostedAura;
 
     // Function
     private void Start()
@@ -367,7 +369,7 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public virtual void Dead()
     {
-        ParticleSystem VFX = Instantiate(particleDataSO.GetParticle(ParticleType.HitVFX), characterTransform);
+        ParticleSystem VFX = ParticlePool.Play(ParticleType.HitVFX, characterTransform.position, Quaternion.identity);
         ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
         VFXcolor.color = skinMeshRenderer.materials[0].color;
 
@@ -452,17 +454,17 @@ public abstract class AbstractCharacter : MonoBehaviour
 
             if (boostedAura == null)
             {
-                ParticleSystem aura = Instantiate(particleDataSO.GetParticle(ParticleType.BoostedVFX), characterTransform);
+                ParticleSystem aura = ParticlePool.Attach(ParticleType.BoostedVFX, characterTransform);
                 boostedAura = aura;
             }
             else
             {
-                boostedAura.gameObject.SetActive(true);
+                boostedAura.Play();
             }
         }
         else
         {
-            boostedAura.gameObject.SetActive(false);
+            boostedAura.Stop();
         }
     }
 

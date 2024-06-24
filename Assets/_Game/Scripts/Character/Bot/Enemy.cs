@@ -7,32 +7,31 @@ public class Enemy : AbstractCharacter
 {
     private enum BotType
     {
-        AgressiveBot, // Find and positive attack characters around him
+        AggressiveBot, // Find and positive attack characters around him
         PatrolBot, // Just chilling in his patrol progress
     }
 
     [Header("Enemy Config")]
     [SerializeField] private EnemyConfigSO[] enemyConfigSOs;
-    private EnemyConfigSO currentConfigSO = null;
+    [HideInInspector] public EnemyConfigSO currentConfigSO = null;
 
     [Header("Pre-Setup")]
     [SerializeField] private GameObject targetedMark;
 
     [Header("Patroling")]
-    [SerializeField] private Vector3 desPoint;
-    [SerializeField] private bool desPointSet;
-    [SerializeField] private float desPointRange;
+    [HideInInspector] public Vector3 desPoint;
+    [HideInInspector] public bool desPointSet;
+    [HideInInspector] public float desPointRange;
 
     [Header("BotType")]
     [SerializeField] private BotType typeOfBot;
     [SerializeField] private LayerMask characterLayer;
 
     [Header("Target")]
-    [SerializeField] private AbstractCharacter target = null;
+    [HideInInspector] public AbstractCharacter target = null;
 
     // Private variables
     private bool isDetectedTarget;
-    private float patrolingTimer = 0;
     private float idlingTimer = 0;
 
     private Coroutine despawnCoroutine = null;
@@ -99,62 +98,18 @@ public class Enemy : AbstractCharacter
                 agent.SetDestination(characterTransform.position);
 
                 desPointSet = false;
-                patrolingTimer = 0;
 
                 ChangeState(new AttackState());
             }
         }
-
-        if (!desPointSet)
-        {
-            ChangeState(new IdleState());
-        }
-        else
-        {
-            patrolingTimer += Time.deltaTime;
-
-            if (patrolingTimer > currentConfigSO.PatrolTime)
-            {
-                desPointSet = false;
-                patrolingTimer = 0;
-            }
-
-            if (typeOfBot == BotType.AgressiveBot)
-            {
-                if (target == null || target.enabled == false)
-                {
-                    SearchDesPoint();
-                    agent.SetDestination(desPoint);
-                }
-                else
-                {
-                    agent.SetDestination(desPoint);
-                }
-            }
-            else
-            {
-                agent.SetDestination(desPoint);
-            }
-        }
-
-        Vector3 distanceToDesPoint = characterTransform.position - desPoint;
-
-        if (distanceToDesPoint.magnitude < 1f) 
-        {
-            ChangeState(new IdleState());
-
-            desPointSet = false; 
-            patrolingTimer = 0;
-
-        }
     }
 
-    private void SearchDesPoint()
+    public void SearchDesPoint()
     {
         switch (typeOfBot)
         {
-            case BotType.AgressiveBot:
-                Agressive();
+            case BotType.AggressiveBot:
+                Aggressive();
                 break;
 
             case BotType.PatrolBot:
@@ -165,7 +120,7 @@ public class Enemy : AbstractCharacter
         desPointSet = true;
     }
 
-    private void Agressive()
+    private void Aggressive()
     {
         float minDistance = Mathf.Infinity;
 
@@ -245,7 +200,11 @@ public class Enemy : AbstractCharacter
                 isDetectedTarget = false;
                 idlingTimer = 0;
 
-                ChangeState(new PatrolState());
+                switch (typeOfBot)
+                {
+                    case BotType.PatrolBot: ChangeState(new ePatrolState()); break;
+                    case BotType.AggressiveBot: ChangeState(new eAggressiveState()); break;
+                }
             }
         }
     }
