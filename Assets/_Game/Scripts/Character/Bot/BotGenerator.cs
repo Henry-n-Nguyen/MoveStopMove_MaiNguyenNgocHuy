@@ -45,6 +45,7 @@ public class BotGenerator : MonoBehaviour
     private void Start()
     {
         SubscribeEvent();
+        OnInit();
     }
 
     private void SubscribeEvent()
@@ -54,7 +55,15 @@ public class BotGenerator : MonoBehaviour
 
     public void OnInit()
     {
+        activatedTransform.Clear();
+        inActivatedTransform.Clear();
+        queueToSpawnBot.Clear();
 
+        index = 1;
+
+        isSpawning = false;
+
+        characterInBattleAmount = 1;
     }
 
     public void AddSpawnQueue(int quantity)

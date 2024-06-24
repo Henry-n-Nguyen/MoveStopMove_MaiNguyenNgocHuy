@@ -7,7 +7,6 @@ using static UnityEngine.ParticleSystem;
 public class PoolController : MonoBehaviour
 {
     [Header("Pre-Setup")]
-    [SerializeField] private List<Pool> Pools = new List<Pool>();
     [SerializeField] private Transform holder;
 
     [SerializeField] private Enemy prefab;
