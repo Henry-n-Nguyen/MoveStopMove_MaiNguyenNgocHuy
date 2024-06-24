@@ -21,9 +21,6 @@ public class BotGenerator : MonoBehaviour
     [Header("NameDataSO")]
     [SerializeField] private NameDataSO nameDataSO;
 
-    [Header("Player")]
-    public Player player = null;
-
     // Private variables
     private int index = 1;
 
@@ -36,8 +33,6 @@ public class BotGenerator : MonoBehaviour
 
     private List<Transform> activatedTransform = new List<Transform>();
     private List<Transform> inActivatedTransform = new List<Transform>();
-
-    private List<AbstractCharacter> createdCharacters = new List<AbstractCharacter>();
 
     // Coroutines
     private Coroutine deActiveTransformCoroutine;
@@ -57,6 +52,11 @@ public class BotGenerator : MonoBehaviour
         GamePlayManager.instance.OnAliveCharacterAmountChanged += ReduceCharacterInBattle;
     }
 
+    public void OnInit()
+    {
+
+    }
+
     public void AddSpawnQueue(int quantity)
     {
         queueToSpawnBot.Add(quantity);
@@ -69,9 +69,9 @@ public class BotGenerator : MonoBehaviour
 
     public void SpawnPlayer()
     {
-        if (player != null)
+        if (GamePlayManager.instance.player != null)
         {
-            player.OnInit();
+            GamePlayManager.instance.player.OnInit();
             BotPool.Collect();
         }
         else
@@ -80,15 +80,10 @@ public class BotGenerator : MonoBehaviour
 
             createdPlayer.LoadDataFromUserData();
 
-            player = createdPlayer;
-            createdCharacters.Add(player);
+            GamePlayManager.instance.player = createdPlayer;
 
-            GamePlayManager.instance.player = player;
-
-            CameraFollow.instance.target = player;
+            CameraFollow.instance.target = GamePlayManager.instance.player;
             CameraFollow.instance.OnInit();
-
-            UserDataManager.instance.player = player;
         }
     }
 
@@ -97,7 +92,7 @@ public class BotGenerator : MonoBehaviour
         isSpawning = true;
 
         inActivatedTransform.Clear();
-        inActivatedTransform = FindNearbySpawnPoints(player.transform);
+        inActivatedTransform = FindNearbySpawnPoints(GamePlayManager.instance.player.characterTransform);
 
         if (inActivatedTransform.Count == 0)
         {
@@ -140,13 +135,14 @@ public class BotGenerator : MonoBehaviour
 
         // Spawn Bot
         Enemy character = BotPool.Spawn<Enemy>(pos, Quaternion.identity);
-
+        if (character == null) Debug.Log("Char null");
         character.index = index;
         index++;
 
         character.OnInit();
 
-        character.point = Random.Range(player.point, player.point + 4);
+        int playerPoint = GamePlayManager.instance.player.point;
+        character.point = Random.Range(playerPoint, playerPoint + 4);
         character.OnPointChanges();
 
         character.ChangeName(nameDataSO.GetRandomName());

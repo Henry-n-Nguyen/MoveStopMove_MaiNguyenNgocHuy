@@ -33,7 +33,7 @@ public class UserDataManager : MonoBehaviour
 
     public void Load()
     {
-        player.LoadDataFromUserData();
+        GamePlayManager.instance.player.LoadDataFromUserData();
     }
 
     public void Save()

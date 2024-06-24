@@ -122,8 +122,6 @@ public class Enemy : AbstractCharacter
 
     private void Aggressive()
     {
-        float minDistance = Mathf.Infinity;
-
         List<AbstractCharacter> characterList = new List<AbstractCharacter>();
 
         characterList.AddRange(BotPool.GetActivatedBotList());
