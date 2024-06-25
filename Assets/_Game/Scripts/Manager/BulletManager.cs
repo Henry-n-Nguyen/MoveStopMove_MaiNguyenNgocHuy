@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class BulletManager : MonoBehaviour
 {
@@ -73,5 +74,14 @@ public class BulletManager : MonoBehaviour
     public AbstractBullet GetBulletPrefab(int id)
     {
         return bulletPrefabs[id];
+    }
+
+    public void Realease(AbstractCharacter character)
+    {
+        if (!activatedBullets.ContainsKey(character.index))
+        {
+            Destroy(activatedBullets[character.index]);
+            activatedBullets.Remove(character.index);
+        }
     }
 }

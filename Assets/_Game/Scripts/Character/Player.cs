@@ -30,7 +30,7 @@ public class Player : AbstractCharacter
 
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
 
-        Rotate(Direct.Forward);
+        Rotate(Direct.Back);
 
         isDetectedTarget = false;
     }
