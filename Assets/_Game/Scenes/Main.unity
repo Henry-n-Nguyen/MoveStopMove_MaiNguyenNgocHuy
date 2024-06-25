@@ -1466,13 +1466,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2033262541}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
-  m_LocalPosition: {x: 0, y: 1, z: 7}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.3, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1255318702}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!20 &2033262543
 Camera:
   m_ObjectHideFlags: 0
@@ -1575,7 +1575,6 @@ MonoBehaviour:
     m_Bits: 128
   equipmentDataSO: {fileID: 11400000, guid: 18bebddab48301e42b65f987e3627240, type: 2}
   nameDataSO: {fileID: 11400000, guid: 5be09fb8811157642a7986ba7ebe37c9, type: 2}
-  player: {fileID: 0}
   characterInQueueToSpawn: 0
   characterInBattleAmount: 0
 --- !u!1 &2111676906

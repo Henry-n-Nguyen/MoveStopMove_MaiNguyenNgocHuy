@@ -59,8 +59,6 @@ public class BotGenerator : MonoBehaviour
         inActivatedTransform.Clear();
         queueToSpawnBot.Clear();
 
-        index = 1;
-
         isSpawning = false;
 
         characterInBattleAmount = 1;
