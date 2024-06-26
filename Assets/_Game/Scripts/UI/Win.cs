@@ -19,6 +19,9 @@ public class Win : UICanvas
 
         int currentLevel = UserDataManager.instance.userData.currentLevel;
         int currentMaxLevel = LevelManager.instance.GetCurentMaxLevel();
+
+        UserDataManager.instance.userData.currentHighestRank = 1;
+        UserDataManager.instance.userData.currentHighestLevel = UserDataManager.instance.userData.currentLevel + 1;
         UserDataManager.instance.userData.currentLevel = currentLevel + 1 > currentMaxLevel ? currentMaxLevel : currentLevel + 1;
         UserDataManager.instance.Save();
 

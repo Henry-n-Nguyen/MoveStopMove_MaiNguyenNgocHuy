@@ -20,7 +20,16 @@ public class Lose : UICanvas
 
         earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
 
-        rankText.text = "#" + GamePlayManager.instance.aliveCharacterAmount.ToString();
+        int rank = GamePlayManager.instance.aliveCharacterAmount;
+        rankText.text = "#" + rank.ToString();
+
+        int highestRank = UserDataManager.instance.userData.currentHighestRank;
+        if (rank < highestRank)
+        {
+            UserDataManager.instance.userData.currentHighestLevel = UserDataManager.instance.userData.currentLevel + 1;
+            UserDataManager.instance.userData.currentHighestRank = rank;
+            UserDataManager.instance.Save();
+        }
 
         GamePlayManager.instance.player.OnInit();
 
