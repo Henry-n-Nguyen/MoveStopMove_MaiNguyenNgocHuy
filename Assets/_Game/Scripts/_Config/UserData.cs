@@ -16,6 +16,9 @@ public class UserData
 
     public int currentLevel = 0;
 
+    public int currentHighestLevel = 0;
+    public int currentHighestRank = 50;
+
     public bool isSpecialEquipped;
     public int equippedSpecialId = 0;
 
@@ -23,4 +26,5 @@ public class UserData
     public int equippedHatId;
     public int equippedPantId;
     public int equippedSkinId;
+
 }

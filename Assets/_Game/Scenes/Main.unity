@@ -1434,6 +1434,8 @@ MonoBehaviour:
     skinIdList: 
     specialIdList: 
     currentLevel: 0
+    currentHighestLevel: 0
+    currentHighestRank: 50
     isSpecialEquipped: 0
     equippedSpecialId: 0
     equippedWeaponId: 0

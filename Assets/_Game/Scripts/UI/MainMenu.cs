@@ -8,7 +8,15 @@ using TMPro;
 public class MainMenu : UICanvas
 {
     [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private Image levelIcon;
+
+    private UserData data;
+
+    private void Awake()
+    {
+        data = UserDataManager.instance.userData;
+    }
 
     private void OnEnable()
     {
@@ -19,9 +27,11 @@ public class MainMenu : UICanvas
     {
         StartCoroutine(Loading(3f));
 
-        coinText.text = UserDataManager.instance.userData.coin.ToString();
+        coinText.text = data.coin.ToString();
 
-        levelIcon.sprite = LevelManager.instance.GetLevelIcon(UserDataManager.instance.userData.currentLevel);
+        highScoreText.text = "Zone : " + data.currentHighestLevel.ToString() + "\nBest : #" + data.currentHighestRank.ToString();
+
+        levelIcon.sprite = LevelManager.instance.GetLevelIcon(data.currentLevel);
 
         LevelManager.instance.SpawnMap();
 
