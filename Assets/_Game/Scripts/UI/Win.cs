@@ -39,4 +39,11 @@ public class Win : UICanvas
 
         UIManager.instance.OpenUI<MainMenu>();
     }
+
+    public void TripleAward()
+    {
+        UIManager.instance.CloseUI<Win>(0.5f);
+
+        UIManager.instance.OpenUI<Award>();
+    }
 }
