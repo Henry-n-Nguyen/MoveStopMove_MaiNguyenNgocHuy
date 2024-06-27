@@ -14,11 +14,17 @@ public class UserData
     public List<int> skinIdList = new List<int>();
     public List<int> specialIdList = new List<int>();
 
+    //Setting
+    public bool isVibrationOn = true;
+    public bool isSoundOn = true;
+
+    //Config
     public int currentLevel = 0;
 
     public int currentHighestLevel = 0;
     public int currentHighestRank = 50;
 
+    //Equipment
     public bool isSpecialEquipped;
     public int equippedSpecialId = 0;
 
