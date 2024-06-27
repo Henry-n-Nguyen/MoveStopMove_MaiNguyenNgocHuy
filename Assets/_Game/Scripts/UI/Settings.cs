@@ -5,6 +5,18 @@ using UnityEngine;
 
 public class Settings : UICanvas
 {
+    [SerializeField] private GameObject vibrationOn;
+    [SerializeField] private GameObject vibrationOff;
+    [SerializeField] private GameObject soundOn;
+    [SerializeField] private GameObject soundOff;
+
+    private UserData data;
+
+    private void Awake()
+    {
+        data = UserDataManager.instance.userData;
+    }
+
     private void OnEnable()
     {
         OnInit();
@@ -15,6 +27,9 @@ public class Settings : UICanvas
         Time.timeScale = 0.0f;
 
         GamePlayManager.instance.ChangeState(GamePlayState.None);
+
+        VibrationOnOff();
+        SoundOnOff();
     }
 
     public void ResumeGame()
@@ -36,5 +51,45 @@ public class Settings : UICanvas
         UIManager.instance.CloseDirectly<Ingame>();
 
         UIManager.instance.OpenUI<MainMenu>();
+    }
+
+    public void ChangeVibrationState()
+    {
+        data.isVibrationOn = !data.isVibrationOn;
+        VibrationOnOff();
+    }
+
+    public void VibrationOnOff()
+    {
+        if (data.isVibrationOn)
+        {
+            vibrationOn.SetActive(true);
+            vibrationOff.SetActive(false);
+        }
+        else
+        {
+            vibrationOn.SetActive(false);
+            vibrationOff.SetActive(true);
+        }
+    }
+
+    public void ChangeSoundState()
+    {
+        data.isSoundOn = !data.isSoundOn;
+        SoundOnOff();
+    }
+
+    public void SoundOnOff()
+    {
+        if (data.isSoundOn)
+        {
+            soundOn.SetActive(true);
+            soundOff.SetActive(false);
+        }
+        else
+        {
+            soundOn.SetActive(false);
+            soundOff.SetActive(true);
+        }
     }
 }

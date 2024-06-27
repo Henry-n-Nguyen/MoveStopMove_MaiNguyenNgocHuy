@@ -11,6 +11,11 @@ public class MainMenu : UICanvas
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private Image levelIcon;
 
+    [SerializeField] private GameObject vibrationOn;
+    [SerializeField] private GameObject vibrationOff;
+    [SerializeField] private GameObject soundOn;
+    [SerializeField] private GameObject soundOff;
+
     private UserData data;
 
     private void Awake()
@@ -41,6 +46,9 @@ public class MainMenu : UICanvas
         BotGenerator.instance.OnInit();
         BotGenerator.instance.SpawnPlayer();
         BotGenerator.instance.AddSpawnQueue(GamePlayManager.instance.startCharacterAmount);
+
+        VibrationOnOff();
+        SoundOnOff();
     }
 
     public void PlayGame()
@@ -63,6 +71,46 @@ public class MainMenu : UICanvas
         UIManager.instance.CloseDirectly<MainMenu>();
 
         UIManager.instance.OpenUI<CostumeShop>();
+    }
+
+    public void ChangeVibrationState()
+    {
+        data.isVibrationOn = !data.isVibrationOn;
+        VibrationOnOff();
+    }
+
+    public void VibrationOnOff()
+    {
+        if (data.isVibrationOn)
+        {
+            vibrationOn.SetActive(true);
+            vibrationOff.SetActive(false);
+        }
+        else
+        {
+            vibrationOn.SetActive(false);
+            vibrationOff.SetActive(true);
+        }
+    }
+
+    public void ChangeSoundState()
+    {
+        data.isSoundOn = !data.isSoundOn;
+        SoundOnOff();
+    }
+
+    public void SoundOnOff()
+    {
+        if (data.isSoundOn)
+        {
+            soundOn.SetActive(true);
+            soundOff.SetActive(false);
+        }
+        else
+        {
+            soundOn.SetActive(false);
+            soundOff.SetActive(true);
+        }
     }
 
     private IEnumerator Loading(float time)

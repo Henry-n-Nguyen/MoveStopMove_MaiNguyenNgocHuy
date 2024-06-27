@@ -1434,6 +1434,8 @@ MonoBehaviour:
     pantIdList: 
     skinIdList: 
     specialIdList: 
+    isVibrationOn: 0
+    isSoundOn: 0
     currentLevel: 0
     currentHighestLevel: 0
     currentHighestRank: 50
