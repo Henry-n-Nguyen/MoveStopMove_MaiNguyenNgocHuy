@@ -44,4 +44,11 @@ public class Lose : UICanvas
 
         UIManager.instance.OpenUI<MainMenu>();
     }
+
+    public void TripleAward()
+    {
+        UIManager.instance.CloseUI<Lose>(0.5f);
+
+        UIManager.instance.OpenUI<Award>();
+    }
 }
