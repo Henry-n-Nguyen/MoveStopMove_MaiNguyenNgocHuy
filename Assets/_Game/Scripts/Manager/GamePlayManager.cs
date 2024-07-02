@@ -49,7 +49,7 @@ public class GamePlayManager : MonoBehaviour
     {
         OnInit();
 
-        StartGame();
+        ChangeState(GamePlayState.MainMenu);
     }
 
     public void OnInit()
@@ -74,18 +74,66 @@ public class GamePlayManager : MonoBehaviour
         BoosterGenerator.instance.OnInit();
     }
 
-    private void StartGame()
+    // States
+    private void MainMenuState()
     {
+        UIManager.instance.CloseAll();
+
         UIManager.instance.OpenUI<MainMenu>();
     }
 
-    public void WinGame()
+    private void WinState()
     {
         coinToEarn = player.point * COIN_CONVERT_RATE + COIN_BONUS;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
 
         triggerWin = StartCoroutine(TriggerWinStateAfterTime(2.5f));
+    }
+    
+    private void LoseState()
+    {
+        if (isDiedBefore)
+        {
+            triggerLose = StartCoroutine(TriggerLoseStateAfterTime(2.5f));
+        }
+        else
+        {
+            isDiedBefore = true;
+
+            triggerRevive = StartCoroutine(TriggerReviveStateAfterTime(2.5f));
+        }
+    }
+   
+    private void InGameState()
+    {
+        
+    }
+
+    private void WeaponShopState()
+    {
+        UIManager.instance.CloseAll();
+
+        UIManager.instance.OpenUI<WeaponShop>();
+    }
+
+    private void CostumeShopState()
+    {
+        UIManager.instance.CloseAll();
+
+        UIManager.instance.OpenUI<CostumeShop>();
+    }
+
+    private void AwardState()
+    {
+        UIManager.instance.CloseAll();
+
+        UIManager.instance.OpenUI<Award>();
+    }
+
+    private void SettingsState()
+    {
+        UIManager.instance.OpenUI<Settings>();
     }
 
     private IEnumerator TriggerWinStateAfterTime(float time)
@@ -99,24 +147,6 @@ public class GamePlayManager : MonoBehaviour
 
         UIManager.instance.CloseAll();
         UIManager.instance.OpenUI<Win>();
-    }
-
-    public void LoseGame()
-    {
-        coinToEarn = player.point * COIN_CONVERT_RATE;
-        data.coin += coinToEarn;
-        UserDataManager.instance.Save();
-
-        if (isDiedBefore)
-        {
-            triggerLose = StartCoroutine(TriggerLoseStateAfterTime(2.5f));
-        }
-        else
-        {
-            isDiedBefore = true;
-
-            triggerRevive = StartCoroutine(TriggerReviveStateAfterTime(2.5f));
-        }
     }
 
     private IEnumerator TriggerLoseStateAfterTime(float time)
@@ -137,6 +167,12 @@ public class GamePlayManager : MonoBehaviour
         UIManager.instance.OpenUI<Revive>();
     }
 
+    public void EarnCoin()
+    {
+        coinToEarn = player.point * COIN_CONVERT_RATE;
+        data.coin += coinToEarn;
+        UserDataManager.instance.Save();
+    }
 
     // Event Action
     public void CharacterDied()
@@ -151,6 +187,18 @@ public class GamePlayManager : MonoBehaviour
         if (delayCoroutine != null) StopCoroutine(delayCoroutine);
 
         currentGamePlayState = state;
+
+        switch (currentGamePlayState)
+        {
+            case GamePlayState.MainMenu: MainMenuState(); break;
+            case GamePlayState.Lose: LoseState(); break;
+            case GamePlayState.Win: WinState(); break;
+            case GamePlayState.Ingame: InGameState(); break;
+            case GamePlayState.CostumeShop: CostumeShopState(); break;
+            case GamePlayState.WeaponShop: WeaponShopState(); break;
+            case GamePlayState.Award: AwardState(); break;
+            case GamePlayState.Settings: SettingsState(); break;
+        }
 
         OnUIChanged?.Invoke();
     }

@@ -35,15 +35,11 @@ public class Win : UICanvas
 
     public void ReturnHome()
     {
-        UIManager.instance.CloseUI<Win>(0.5f);
-
-        UIManager.instance.OpenUI<MainMenu>();
+        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
     }
 
     public void TripleAward()
     {
-        UIManager.instance.CloseUI<Win>(0.5f);
-
-        UIManager.instance.OpenUI<Award>();
+        GamePlayManager.instance.ChangeState(GamePlayState.Award);
     }
 }

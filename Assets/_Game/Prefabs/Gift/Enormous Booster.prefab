@@ -155,6 +155,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boosterGameObject: {fileID: 8251768326321767036}
   anim: {fileID: 2064168689732258248}
+  config: {fileID: 11400000, guid: 1d0c348e81870584e808053e74f89046, type: 2}
 --- !u!65 &165950087849121376
 BoxCollider:
   m_ObjectHideFlags: 0

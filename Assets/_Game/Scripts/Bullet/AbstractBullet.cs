@@ -56,20 +56,19 @@ public abstract class AbstractBullet : MonoBehaviour
 
     private void CollideWithCharacter(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_CHARACTER))
-        {
-            AbstractCharacter character = Cache.GetCharacter(other);
-            if (character != owner)
-            {
-                character.ChangeState(new DeadState());
+        if (!other.CompareTag(Constant.TAG_CHARACTER)) return;
 
-                owner.point++;
-                owner.OnPointChanges();
-                owner.targetsInRange.Remove(character);
+        AbstractCharacter character = Cache.GetCharacter(other);
 
-                Despawn();
-            }
-        }
+        if (character == owner) return;
+
+        character.ChangeState(new DeadState());
+
+        owner.point++;
+        owner.OnPointChanges();
+        owner.targetsInRange.Remove(character);
+
+        Despawn();
     }
 
     private void CollideWithWall(Collider other)

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using HuySpace;
 
 public class Award : UICanvas
 {
@@ -26,9 +27,7 @@ public class Award : UICanvas
 
     public void ReturnHome()
     {
-        UIManager.instance.CloseUI<Award>(0.5f);
-
-        UIManager.instance.OpenUI<MainMenu>();
+        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
     }
 
     private IEnumerator Loading(float time)

@@ -55,32 +55,30 @@ public class BoosterGenerator : MonoBehaviour
         inActivatedTransform.Clear();
         inActivatedTransform = FindNearbySpawnPoints(player.characterTransform);
 
-        if (inActivatedTransform.Count > quantity)
+        if (inActivatedTransform.Count <= quantity) return;
+        
+        int randomNumber = 0;
+        for (int i = 0; i < quantity; i++)
         {
-            int randomNumber = 0;
+            // Pick random position that not in activated position list
+            randomNumber = Random.Range(0, inActivatedTransform.Count);
 
-            for (int i = 0; i < quantity; i++)
-            {
-                // Pick random position that not in activated position list
-                randomNumber = Random.Range(0, inActivatedTransform.Count);
+            Transform targetTransform = inActivatedTransform[randomNumber];
+            inActivatedTransform.Remove(targetTransform);
 
-                Transform targetTransform = inActivatedTransform[randomNumber];
-                inActivatedTransform.Remove(targetTransform);
+            activatedTransform.Add(targetTransform);
+            deActiveTransformCouroutine = StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 15f));
 
-                activatedTransform.Add(targetTransform);
-                deActiveTransformCouroutine = StartCoroutine(DeActiveTargetTransformAfterTime(targetTransform, 15f));
+            Vector3 randomPosition = targetTransform.position;
 
-                Vector3 randomPosition = targetTransform.position;
+            // Spawn Booster
+            randomNumber = Random.Range(0, prefabs.Count);
 
-                // Spawn Booster
-                randomNumber = Random.Range(0, prefabs.Count);
+            AbstractBooster booster = Instantiate(prefabs[randomNumber], randomPosition, Quaternion.identity, holder);
 
-                AbstractBooster booster = Instantiate(prefabs[randomNumber], randomPosition, Quaternion.identity, holder);
+            booster.Spawn();
 
-                booster.Spawn();
-
-                createdBooster = booster;
-            }
+            createdBooster = booster;
         }
     }
 

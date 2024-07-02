@@ -58,7 +58,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     // Bool variables
     protected bool isDead;
     protected bool isOnPause = true;
-    protected bool isInShop;
+    protected bool isInCostumeShop;
     [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
@@ -104,7 +104,7 @@ public abstract class AbstractCharacter : MonoBehaviour
     public void SubscribeEvent()
     {
         GamePlayManager.instance.OnUIChanged += IsOnPause;
-        GamePlayManager.instance.OnUIChanged += IsInShop;
+        GamePlayManager.instance.OnUIChanged += IsInCostumeShop;
     }
 
     public virtual void OnInit()
@@ -302,11 +302,11 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    public void IsInShop()
+    public void IsInCostumeShop()
     {
         GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
 
-        isInShop = gamePlayState == GamePlayState.Shop;
+        isInCostumeShop = gamePlayState == GamePlayState.CostumeShop;
     }
 
     public void IsReadyToAttack()

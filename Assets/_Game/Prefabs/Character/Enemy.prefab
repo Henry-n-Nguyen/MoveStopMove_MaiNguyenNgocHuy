@@ -215,7 +215,6 @@ MonoBehaviour:
   targetScript: {fileID: 7040531013573885074}
   radarObject: {fileID: 4938879143682981182}
   attackPoint: {fileID: 8756893275179325248}
-  agent: {fileID: 1882805022055240425}
   rb: {fileID: 4908282860012175601}
   anim: {fileID: 5855642041673086835}
   weaponHolder: {fileID: 3428095949320640615}
@@ -228,6 +227,7 @@ MonoBehaviour:
   characterLeftHand: {fileID: 3488220503459064415}
   characterNeck: {fileID: 7264352439190844369}
   particleDataSO: {fileID: 11400000, guid: 7885d4fe5c553364bba33acc227a921f, type: 2}
+  agent: {fileID: 1882805022055240425}
   characterTransform: {fileID: 3308923855994619669}
   index: 1
   characterName: '?'
@@ -244,6 +244,7 @@ MonoBehaviour:
   enemyConfigSOs:
   - {fileID: 11400000, guid: e64f626a2443b8e4e8bef0e6435a80db, type: 2}
   - {fileID: 11400000, guid: 8e72b7ec5d425714694eaa6b5c955ffe, type: 2}
+  currentConfigSO: {fileID: 0}
   targetedMark: {fileID: 5905830706655812610}
   desPoint: {x: 0, y: 0, z: 0}
   desPointSet: 0
@@ -2010,7 +2011,7 @@ GameObject:
   - component: {fileID: 7808378210806405713}
   m_Layer: 0
   m_Name: AttackRange
-  m_TagString: Radar
+  m_TagString: RadarEnemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

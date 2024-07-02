@@ -45,8 +45,14 @@ namespace HuySpace
     public enum GamePlayState
     {
         None,
-        Shop,
-        Ingame
+        CostumeShop,
+        WeaponShop,
+        Ingame,
+        Win,
+        Lose,
+        MainMenu,
+        Award,
+        Settings
     }
 
     public enum CostumeShopState

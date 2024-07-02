@@ -70,13 +70,13 @@ public class Enemy : AbstractCharacter
 
         desPointSet = false;
 
+        IsTargeted(false);
+
         isDetectedTarget = false;
 
         RandomTypeOfBot();
 
         agent.speed = moveSpeed * currentConfigSO.AgentSpeedConvertRate;
-
-        IsTargeted(false);
     }
 
     private void RandomTypeOfBot() {
