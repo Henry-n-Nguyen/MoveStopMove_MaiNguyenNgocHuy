@@ -56,8 +56,6 @@ public class CostumeShop : UICanvas
     {
         StartCoroutine(Loading(3f));
 
-        GamePlayManager.instance.ChangeState(GamePlayState.Shop);
-
         CameraManager.instance.TurnOnCamera(CameraState.CostumeShop);
 
         data = UserDataManager.instance.userData;
@@ -527,9 +525,7 @@ public class CostumeShop : UICanvas
         data.isSpecialEquipped = isEquippedSpecial;
         UserDataManager.instance.Save();
 
-        UIManager.instance.CloseDirectly<CostumeShop>();
-
-        UIManager.instance.OpenUI<MainMenu>();
+        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
     }
 
     private IEnumerator Loading(float time)

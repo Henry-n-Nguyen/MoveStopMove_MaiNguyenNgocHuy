@@ -32,15 +32,14 @@ public class LevelManager : MonoBehaviour
 
     public void SpawnMap()
     {
-        if (currentLevel != data.currentLevel)
-        {
-            if (currentMap != null) DespawnMap();
+        if (currentLevel == data.currentLevel) return;
 
-            GameObject createdMap = Instantiate(mapPrefabs[data.currentLevel], mapHolder);
-            currentMap = createdMap;
+        if (currentMap != null) DespawnMap();
 
-            currentLevel = data.currentLevel;
-        }
+        GameObject createdMap = Instantiate(mapPrefabs[data.currentLevel], mapHolder);
+        currentMap = createdMap;
+
+        currentLevel = data.currentLevel;
     }
 
     public void DespawnMap()

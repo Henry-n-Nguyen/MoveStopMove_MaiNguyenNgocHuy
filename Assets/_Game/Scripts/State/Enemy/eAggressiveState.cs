@@ -54,7 +54,6 @@ public class eAggressiveState : IState<AbstractCharacter>
 
             bot.desPointSet = false;
             patrolingTimer = 0;
-
         }
     }
 

@@ -105,7 +105,7 @@ public class Player : AbstractCharacter
     {
         base.StopMoving();
 
-        if (isInShop)
+        if (isInCostumeShop)
         {
             ChangeState(new DanceState());
         }
@@ -164,7 +164,7 @@ public class Player : AbstractCharacter
 
             isDead = true;
 
-            GamePlayManager.instance.LoseGame();
+            GamePlayManager.instance.ChangeState(GamePlayState.Lose);
         }
     }
 
@@ -211,7 +211,7 @@ public class Player : AbstractCharacter
     {
         base.Dancing();
 
-        if (!isInShop)
+        if (!isInCostumeShop)
         {
             ChangeState(new IdleState());
         }

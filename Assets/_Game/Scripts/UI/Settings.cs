@@ -47,10 +47,7 @@ public class Settings : UICanvas
     {
         Time.timeScale = 1.0f;
 
-        UIManager.instance.CloseDirectly<Settings>();
-        UIManager.instance.CloseDirectly<Ingame>();
-
-        UIManager.instance.OpenUI<MainMenu>();
+        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
     }
 
     public void ChangeVibrationState()

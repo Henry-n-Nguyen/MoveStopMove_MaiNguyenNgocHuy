@@ -58,7 +58,7 @@ public class Ingame : UICanvas
     public void UpdateCounter()
     {
         aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
-        if (GamePlayManager.instance.aliveCharacterAmount == 1) GamePlayManager.instance.WinGame();
+        if (GamePlayManager.instance.aliveCharacterAmount == 1) GamePlayManager.instance.ChangeState(GamePlayState.Win);
     }
 
     public void NonDisplayHelpToMovePart()
@@ -68,9 +68,7 @@ public class Ingame : UICanvas
 
     public void OpenSettings()
     {
-        UIManager.instance.CloseUI<DynamicJoyStick>(0);
-
-        UIManager.instance.OpenUI<Settings>();
+        GamePlayManager.instance.ChangeState(GamePlayState.Settings);
     }
 
     private IEnumerator Loading(float time)

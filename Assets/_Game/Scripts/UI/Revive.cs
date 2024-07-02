@@ -6,8 +6,7 @@ using UnityEngine;
 
 public class Revive : UICanvas
 {
-    private const float WAITING_TIME = 5.5f;
-    private const float DELAY_CONTINUE_GAME_TIME = 1f;
+    [SerializeField] private ReviveUIConfigSO config;
 
     // Coroutines
     private Coroutine delayCoroutine;
@@ -35,7 +34,7 @@ public class Revive : UICanvas
 
     private void OnInit()
     {
-        timer = WAITING_TIME;
+        timer = config.WaitingTime;
 
         GamePlayManager.instance.ChangeState(GamePlayState.None);
 
@@ -44,7 +43,7 @@ public class Revive : UICanvas
 
     public void WatchAd()
     {
-        GamePlayManager.instance.ChangeStateAfterTime(GamePlayState.Ingame, DELAY_CONTINUE_GAME_TIME);
+        GamePlayManager.instance.ChangeStateAfterTime(GamePlayState.Ingame, config.DelayTime);
 
         GamePlayManager.instance.player.Revive();
 
@@ -55,7 +54,6 @@ public class Revive : UICanvas
 
     public void NoThanks()
     {
-        UIManager.instance.CloseAll();
-        UIManager.instance.OpenUI<Lose>();
+        GamePlayManager.instance.ChangeState(GamePlayState.Lose);
     }
 }

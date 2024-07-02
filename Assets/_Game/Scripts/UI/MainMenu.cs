@@ -40,12 +40,13 @@ public class MainMenu : UICanvas
 
         LevelManager.instance.SpawnMap();
 
-        GamePlayManager.instance.OnInit();
-        CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
-
         BotGenerator.instance.OnInit();
         BotGenerator.instance.SpawnPlayer();
         BotGenerator.instance.AddSpawnQueue(GamePlayManager.instance.startCharacterAmount);
+
+        GamePlayManager.instance.EarnCoin();
+        GamePlayManager.instance.OnInit();
+        CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
 
         VibrationOnOff();
         SoundOnOff();
@@ -61,16 +62,12 @@ public class MainMenu : UICanvas
 
     public void EnterWeaponShop()
     {
-        UIManager.instance.CloseDirectly<MainMenu>();
-
-        UIManager.instance.OpenUI<WeaponShop>();
+        GamePlayManager.instance.ChangeState(GamePlayState.WeaponShop);
     }
 
     public void EnterCostumeShop()
     {
-        UIManager.instance.CloseDirectly<MainMenu>();
-
-        UIManager.instance.OpenUI<CostumeShop>();
+        GamePlayManager.instance.ChangeState(GamePlayState.CostumeShop);
     }
 
     public void ChangeVibrationState()

@@ -192,9 +192,7 @@ public class WeaponShop : UICanvas
     {
         NonDisplayWeapon(index);
 
-        UIManager.instance.CloseDirectly<WeaponShop>();
-
-        UIManager.instance.OpenUI<MainMenu>();
+        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
     }
 
     private IEnumerator Loading(float time)

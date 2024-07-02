@@ -15,17 +15,12 @@ public class Radar : MonoBehaviour
 
     private void CollideWithCharacter(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_CHARACTER))
-        {
-            AbstractCharacter character = Cache.GetCharacter(other);
-            if (character != owner)
-            {
-                if (!character.IsDead) 
-                { 
-                    owner.targetsInRange.Add(character);
-                }
-            }
-        }
+        if (!other.CompareTag(Constant.TAG_CHARACTER)) return;
+
+        AbstractCharacter character = Cache.GetCharacter(other);
+
+        if (character == owner) return;
+        if (!character.IsDead) owner.targetsInRange.Add(character);
     }
 
     private void OnTriggerExit(Collider other)
@@ -35,15 +30,11 @@ public class Radar : MonoBehaviour
 
     private void EndCollideWithCharacter(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_CHARACTER))
-        {
-            AbstractCharacter character = Cache.GetCharacter(other);
+        if (!other.CompareTag(Constant.TAG_CHARACTER)) return;
+        AbstractCharacter character = Cache.GetCharacter(other);
 
-            if (character.gameObject != owner.gameObject)
-            {
-                int indexOfTarget = owner.targetsInRange.IndexOf(character);
-                if (indexOfTarget != -1) owner.targetsInRange.RemoveAt(indexOfTarget); 
-            }
-        }
+        if (character.gameObject == owner) return;
+        int indexOfTarget = owner.targetsInRange.IndexOf(character);
+        if (indexOfTarget != -1) owner.targetsInRange.RemoveAt(indexOfTarget); 
     }
 }

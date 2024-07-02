@@ -27,17 +27,13 @@ public abstract class AbstractBooster : MonoBehaviour
 
     private void CollideWithCharacter(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_CHARACTER))
-        {
-            AbstractCharacter character = Cache.GetCharacter(other);
+        if (!other.CompareTag(Constant.TAG_CHARACTER)) return;
 
-            if (!character.isBoosted)
-            {
-                TriggerBoost(character);
-            }
+        AbstractCharacter character = Cache.GetCharacter(other);
 
-            Despawn();
-        }
+        if (!character.isBoosted) TriggerBoost(character);
+
+        Despawn();
     }
 
     protected virtual void TriggerBoost(AbstractCharacter character)
