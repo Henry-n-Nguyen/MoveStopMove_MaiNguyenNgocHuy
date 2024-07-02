@@ -108,11 +108,6 @@ public class GamePlayManager : MonoBehaviour
             triggerRevive = StartCoroutine(TriggerReviveStateAfterTime(2.5f));
         }
     }
-   
-    private void InGameState()
-    {
-        
-    }
 
     private void WeaponShopState()
     {
@@ -197,7 +192,6 @@ public class GamePlayManager : MonoBehaviour
             case GamePlayState.MainMenu: MainMenuState(); break;
             case GamePlayState.Lose: LoseState(); break;
             case GamePlayState.Win: WinState(); break;
-            case GamePlayState.Ingame: InGameState(); break;
             case GamePlayState.CostumeShop: CostumeShopState(); break;
             case GamePlayState.WeaponShop: WeaponShopState(); break;
             case GamePlayState.Award: AwardState(); break;
