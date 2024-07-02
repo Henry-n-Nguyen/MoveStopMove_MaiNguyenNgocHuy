@@ -84,6 +84,8 @@ public class GamePlayManager : MonoBehaviour
 
     private void WinState()
     {
+        UIManager.instance.CloseDirectly<DynamicJoyStick>();
+
         coinToEarn = player.point * COIN_CONVERT_RATE + COIN_BONUS;
         data.coin += coinToEarn;
         UserDataManager.instance.Save();
@@ -93,6 +95,8 @@ public class GamePlayManager : MonoBehaviour
     
     private void LoseState()
     {
+        UIManager.instance.CloseDirectly<DynamicJoyStick>();
+
         if (isDiedBefore)
         {
             triggerLose = StartCoroutine(TriggerLoseStateAfterTime(2.5f));

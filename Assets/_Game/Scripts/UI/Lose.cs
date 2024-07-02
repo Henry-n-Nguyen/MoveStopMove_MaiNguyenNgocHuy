@@ -33,8 +33,6 @@ public class Lose : UICanvas
 
         GamePlayManager.instance.player.OnInit();
 
-        GamePlayManager.instance.ChangeState(GamePlayState.None);
-
         CameraManager.instance.TurnOnCamera(CameraState.Lose);
     }
 
