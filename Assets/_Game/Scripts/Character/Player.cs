@@ -183,6 +183,8 @@ public class Player : AbstractCharacter
 
     private void IsInRangeOfAnyCharacter()
     {
+        Debug.Log("?");
+
         List<AbstractCharacter> characterList = new List<AbstractCharacter>();
         characterList.AddRange(BotPool.GetActivatedBotList());
 
@@ -192,14 +194,14 @@ public class Player : AbstractCharacter
             {
                 AbstractCharacter foundedTarget = characterList[i];
 
-                float currentDistanceSq = Vector3.SqrMagnitude(characterTransform.position - foundedTarget.characterTransform.position);
+                float currentDistance = Vector3.Distance(characterTransform.position, foundedTarget.characterTransform.position);
 
-                if (currentDistanceSq <= foundedTarget.attackRange)
+                if (currentDistance <= foundedTarget.attackRange)
                 {
-                    foundedTarget.targetsInRange.Add(this);
+                    foundedTarget.targetsInRange.Add(characterScript);
                 }
 
-                if (currentDistanceSq <= attackRange)
+                if (currentDistance <= attackRange)
                 {
                     targetsInRange.Add(foundedTarget);
                 }
