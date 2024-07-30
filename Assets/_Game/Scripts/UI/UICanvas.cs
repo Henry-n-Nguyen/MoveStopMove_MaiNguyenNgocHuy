@@ -23,6 +23,11 @@ public class UICanvas : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        Setup();
+    }
+
     // Call before active Canvas
     public virtual void Setup()
     {

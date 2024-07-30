@@ -3,65 +3,58 @@ using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
 
-public class CameraManager : MonoBehaviour
+public class CameraManager : Singleton<CameraManager>
 {
-    public static CameraManager instance;
+    [field :SerializeField] public CameraFollow InGameCam { get; private set; }
 
-    [Header("CustomShop Camera")]
-    [SerializeField] private GameObject costumeShopCamera;
-
-    [Header("Face-to-Face Camera")]
-    [SerializeField] private GameObject faceToFaceCamera;
-
-    [Header("Reviev Camera")]
-    [SerializeField] private GameObject reviveCamera;
-    [SerializeField] private Transform reviveCameraTransform;
-
-    private Vector3 reviveCamOffset;
-
-    private void Awake()
-    {
-        instance = this;
-    }
+    [SerializeField] private GameObject dynamicCam;
+    [SerializeField] private Transform dynamicCamTF;
 
     private void Start()
     {
-        Setup();
         OnInit();
     }
 
-    private void Setup()
+    private void SetupCamera(Vector3 pos, Quaternion rot)
     {
-        reviveCamOffset = Vector3.up * 1 + Vector3.forward * 7;
+        dynamicCam.SetActive(true);
+        dynamicCamTF.position = pos;
+        dynamicCamTF.rotation = rot;
     }
 
-    public void OnInit()
+    private void OnInit()
     {
-        costumeShopCamera.SetActive(false);
-        faceToFaceCamera.SetActive(false);
-        reviveCamera.SetActive(false);
+        dynamicCam.SetActive(false);
     }
 
-    public void TurnOnCamera(CameraState state)
+    public void ChangeCameraState(CameraState state)
     {
+        Vector3 pos = Vector3.zero;
+        Quaternion rot = Quaternion.identity;
+
         switch (state)
         {
-            case CameraState.MainCamera: OnInit(); break;
-            case CameraState.CostumeShop:
+            case CameraState.Ingame:
                 OnInit();
-                costumeShopCamera.SetActive(true);
+                break;
+            case CameraState.CostumeShop:
+                pos = Vector3.up * 1f + Vector3.back * 8f;
+                rot = Quaternion.Euler(Vector3.right * 22);
+                SetupCamera(pos, rot);
                 break;
             case CameraState.MainMenu:
-            case CameraState.Win:
-            case CameraState.Lose:
-                OnInit();
-                faceToFaceCamera.SetActive(true);
+                pos = Vector3.up * 1f + Vector3.back * 7f;
+                rot = Quaternion.Euler(Vector3.right * 10);
+                SetupCamera(pos, rot);
                 break;
+            case CameraState.Win: 
+            case CameraState.Lose:
             case CameraState.Revive:
-                OnInit();
-                reviveCameraTransform.position = GamePlayManager.instance.player.characterTransform.position + reviveCamOffset;
-                reviveCamera.SetActive(true);
+                pos = Vector3.up * 2f + Vector3.back * 8f;
+                rot = Quaternion.Euler(Vector3.right * 20);
+                SetupCamera(pos, rot);
                 break;
         }
     }
+
 }

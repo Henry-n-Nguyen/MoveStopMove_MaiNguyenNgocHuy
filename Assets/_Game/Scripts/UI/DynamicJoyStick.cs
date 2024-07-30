@@ -4,8 +4,9 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using HuySpace;
+using System;
 
-public class DynamicJoyStick : UICanvas
+public class DynamicJoyStick : MonoBehaviour
 {
     public static DynamicJoyStick instance;
 
@@ -13,10 +14,14 @@ public class DynamicJoyStick : UICanvas
     [SerializeField] private Transform joyStickTransform;
     [SerializeField] private Image joyStick;
 
-    private bool isTouchedBefore = false;
+    // Event Actions
+    public event Action OnTouchScreenAction;
+    public event Action OnReleaseScreenAction;
 
-    private bool isPressed;
-    public bool IsPressed => isPressed;
+    private Coroutine wakeUserUpAction;
+
+    // Public
+    public bool IsPressed { get; private set; } = false;
 
     private void Awake()
     {
@@ -28,40 +33,51 @@ public class DynamicJoyStick : UICanvas
         OnInit();
     }
 
-    private void OnInit()
-    {
-        isPressed = false;
-
-        isTouchedBefore = false;
-    }
-
     // Update is called once per frame
     void Update()
     {
         GatherMouseInput();
     }
 
+    private void OnInit()
+    {
+        OnRelease();
+    }
+
+    private void OnRelease()
+    {
+        OnReleaseScreenAction?.Invoke();
+    }
+    private void OnTouch()
+    {
+        OnTouchScreenAction?.Invoke();
+    }
+
     private void GatherMouseInput()
     {
-        if (!isPressed)
+        if (!IsPressed)
         {
             joyStickTransform.position = Input.mousePosition;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (!isTouchedBefore)
-            {
-                isTouchedBefore = true;
+            OnTouch();
 
-                GamePlayManager.instance.OnTouch();
-            }
-
-            isPressed = true;
+            IsPressed = true;
+            if (wakeUserUpAction != null) StopCoroutine(wakeUserUpAction);
         }
         else if (Input.GetMouseButtonUp(0))
         {
-            OnInit();
+            IsPressed = false;
+            wakeUserUpAction = StartCoroutine(WakeUserUp(2f));
         }
+    }
+
+    private IEnumerator WakeUserUp(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        OnInit();
     }
 }

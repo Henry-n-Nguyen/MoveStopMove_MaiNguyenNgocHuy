@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class AbstractBooster : MonoBehaviour
+public abstract class AbstractBooster : GameUnit
 {
     const string TRIGGER_SPAWN = "spawn";
 
@@ -33,7 +33,7 @@ public abstract class AbstractBooster : MonoBehaviour
 
         if (!character.isBoosted) TriggerBoost(character);
 
-        Despawn();
+        SimplePool.Despawn(this);
     }
 
     protected virtual void TriggerBoost(AbstractCharacter character)
@@ -41,19 +41,9 @@ public abstract class AbstractBooster : MonoBehaviour
 
     }
 
-    public void Spawn()
-    {
-        boosterGameObject.SetActive(true);
-    }
-
-    public void Despawn()
-    {
-        Destroy(boosterGameObject);
-    }
-
     private IEnumerator SelfDestroyAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
-        Despawn();
+        SimplePool.Despawn(this);
     }
 }

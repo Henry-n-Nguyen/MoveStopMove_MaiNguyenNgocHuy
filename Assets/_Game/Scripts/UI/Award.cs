@@ -17,25 +17,14 @@ public class Award : UICanvas
 
     private void OnInit()
     {
-        StartCoroutine(Loading(1f));
-
-        int coinToEarn = GamePlayManager.instance.coinToEarn;
-
-        earnCoinText.text = "+ " + (Mathf.RoundToInt(coinToEarn * MULTIPLIER)).ToString();
-        UserDataManager.instance.userData.coin += Mathf.RoundToInt(coinToEarn * (MULTIPLIER - 1));
+        // FIX : define COIN_TO_EARN
+        //int coinToEarn = GamePlayManager.Ins.coinToEarn;
+        //earnCoinText.text = "+ " + (Mathf.RoundToInt(coinToEarn * MULTIPLIER)).ToString();
+        //UserDataManager.Ins.userData.coin += Mathf.RoundToInt(coinToEarn * (MULTIPLIER - 1));
     }
 
     public void ReturnHome()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
-    }
-
-    private IEnumerator Loading(float time)
-    {
-        UIManager.instance.OpenUI<Loading>();
-
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseDirectly<Loading>();
+        GamePlayManager.Ins.ChangeState(GameState.MainMenu);
     }
 }

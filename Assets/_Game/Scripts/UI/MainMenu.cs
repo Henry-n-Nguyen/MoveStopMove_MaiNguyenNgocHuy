@@ -7,10 +7,19 @@ using TMPro;
 
 public class MainMenu : UICanvas
 {
+    private const string ANIM_INTRO = "intro";
+    private const string ANIM_OUTRO = "outro";
+
+    [Header("Anim")]
+    [SerializeField] private Animator anim;
+
+    [Space(0.3f)]
+    [Header("References")]
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI highScoreText;
     [SerializeField] private Image levelIcon;
 
+    [Space(0.3f)]
     [SerializeField] private GameObject vibrationOn;
     [SerializeField] private GameObject vibrationOff;
     [SerializeField] private GameObject soundOn;
@@ -20,102 +29,79 @@ public class MainMenu : UICanvas
 
     private void Awake()
     {
-        data = UserDataManager.instance.userData;
+        data = UserDataManager.Ins.userData;
     }
 
-    private void OnEnable()
+    public override void Setup()
     {
-        OnInit();
-    }
-
-    private void OnInit()
-    {
-        StartCoroutine(Loading(3f));
+        base.Setup();
 
         coinText.text = data.coin.ToString();
 
         highScoreText.text = "Zone : " + data.currentHighestLevel.ToString() + "\nBest : #" + data.currentHighestRank.ToString();
 
-        levelIcon.sprite = LevelManager.instance.GetLevelIcon(data.currentLevel);
+        levelIcon.sprite = LevelManager.Ins.GetLevelIcon(data.currentLevel);
 
-        LevelManager.instance.SpawnMap();
-
-        BotGenerator.instance.OnInit();
-        BotGenerator.instance.SpawnPlayer();
-        BotGenerator.instance.AddSpawnQueue(GamePlayManager.instance.startCharacterAmount);
-
-        GamePlayManager.instance.EarnCoin();
-        GamePlayManager.instance.OnInit();
-        CameraManager.instance.TurnOnCamera(CameraState.MainMenu);
-
-        VibrationOnOff();
-        SoundOnOff();
+        IsVibrationOn(data.isVibrationOn);
+        IsSoundOn(data.isSoundOn);
     }
 
-    public void PlayGame()
+    public override void Open()
     {
-        UIManager.instance.CloseDirectly<MainMenu>();
+        base.Open();
 
-        UIManager.instance.OpenUI<DynamicJoyStick>();
-        UIManager.instance.OpenUI<Ingame>();
+        ChangeAnim(ANIM_INTRO);
     }
 
-    public void EnterWeaponShop()
+    public void IsVibrationOn(bool status)
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.WeaponShop);
-    }
+        data.isVibrationOn = status;
 
-    public void EnterCostumeShop()
-    {
-        GamePlayManager.instance.ChangeState(GamePlayState.CostumeShop);
+        vibrationOn.SetActive(status);
+        vibrationOff.SetActive(!status);
     }
 
     public void ChangeVibrationState()
     {
-        data.isVibrationOn = !data.isVibrationOn;
-        VibrationOnOff();
+        IsVibrationOn(!data.isVibrationOn);
     }
 
-    public void VibrationOnOff()
+    public void IsSoundOn(bool status)
     {
-        if (data.isVibrationOn)
-        {
-            vibrationOn.SetActive(true);
-            vibrationOff.SetActive(false);
-        }
-        else
-        {
-            vibrationOn.SetActive(false);
-            vibrationOff.SetActive(true);
-        }
+        data.isSoundOn = status;
+
+        soundOn.SetActive(status);
+        soundOff.SetActive(!status);
     }
 
     public void ChangeSoundState()
     {
-        data.isSoundOn = !data.isSoundOn;
-        SoundOnOff();
+        IsSoundOn(!data.isSoundOn);
     }
 
-    public void SoundOnOff()
+    public void PlayGame()
     {
-        if (data.isSoundOn)
-        {
-            soundOn.SetActive(true);
-            soundOff.SetActive(false);
-        }
-        else
-        {
-            soundOn.SetActive(false);
-            soundOff.SetActive(true);
-        }
+        LevelManager.Ins.OnPlay();
     }
 
-    private IEnumerator Loading(float time)
+    public void EnterWeaponShop()
     {
-        UIManager.instance.OpenUI<Loading>();
+        LevelManager.Ins.OnWeaponShop();
+    }
 
-        yield return new WaitForSeconds(time);
+    public void EnterCostumeShop()
+    {
+        LevelManager.Ins.OnCostumeShop();
+    }
 
-        UIManager.instance.CloseDirectly<Loading>();
+    public override void Close(float time)
+    {
+        ChangeAnim(ANIM_OUTRO);
+    }
+
+    private void ChangeAnim(string animName)
+    {
+        anim.ResetTrigger(animName);
+        anim.SetTrigger(animName);
     }
 }

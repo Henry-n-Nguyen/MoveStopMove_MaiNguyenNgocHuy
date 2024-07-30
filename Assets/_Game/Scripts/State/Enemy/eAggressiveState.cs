@@ -2,46 +2,52 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HuySpace;
-using static UnityEngine.GraphicsBuffer;
 using System.Security.Cryptography;
 
-public class eAggressiveState : IState<AbstractCharacter>
+public class EAggressiveState : IState<AbstractCharacter>
 {
-    float patrolingTimer = 0;
-
     public void OnEnter(AbstractCharacter t)
     {
-        patrolingTimer = 0;
+        
     }
 
     public void OnExecute(AbstractCharacter t)
     {
         t.Moving();
 
-        Enemy bot = t.GetComponent<Enemy>();
+        Enemy bot = (Enemy) t;
+
+        if (bot.GetRadarObject().IsAnyTargetInRange)
+        {
+            bot.desPointSet = false;
+            bot.patrolingTimer = 0;
+
+            bot.ChangeState(AbstractCharacter.ATTACK_STATE);
+        }
 
         if (!bot.desPointSet)
         {
-            bot.ChangeState(new IdleState());
+            bot.ChangeState(AbstractCharacter.IDLE_STATE);
         }
         else
         {
-            patrolingTimer += Time.deltaTime;
+            bot.patrolingTimer += Time.deltaTime;
 
-            if (patrolingTimer > bot.currentConfigSO.PatrolTime)
+            if (bot.patrolingTimer > bot.currentConfigSO.PatrolTime)
             {
                 bot.desPointSet = false;
+                bot.patrolingTimer = 0;
             }
             else
             {
                 if (bot.target == null || bot.target.enabled == false)
                 {
                     bot.SearchDesPoint();
-                    bot.agent.SetDestination(bot.desPoint);
+                    bot.GetAgent().SetDestination(bot.desPoint);
                 }
                 else
                 {
-                    bot.agent.SetDestination(bot.desPoint);
+                    bot.GetAgent().SetDestination(bot.desPoint);
                 }
             }
         }
@@ -50,10 +56,10 @@ public class eAggressiveState : IState<AbstractCharacter>
 
         if (distanceToDesPoint.magnitude < 1f)
         {
-            bot.ChangeState(new IdleState());
-
             bot.desPointSet = false;
-            patrolingTimer = 0;
+            bot.patrolingTimer = 0;
+
+            bot.ChangeState(AbstractCharacter.IDLE_STATE);
         }
     }
 

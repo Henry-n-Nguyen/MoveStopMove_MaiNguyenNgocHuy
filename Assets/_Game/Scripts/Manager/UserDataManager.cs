@@ -2,20 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UserDataManager : MonoBehaviour
+public class UserDataManager : Singleton<UserDataManager>
 {
-    public static UserDataManager instance;
-
     private const string KEY_USER_DATA = "UserData";
 
     public UserData userData;
 
-    public Player player;
-
     private void Awake()
     {
-        instance = this;
-
         if (!string.IsNullOrEmpty(PlayerPrefs.GetString(KEY_USER_DATA, "")))
         {
             userData = JsonUtility.FromJson<UserData>(PlayerPrefs.GetString(KEY_USER_DATA, ""));
@@ -28,15 +22,16 @@ public class UserDataManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
-        Save();
+        SaveData();
     }
 
-    public void Load()
+    // Load / Save
+    public void LoadData()
     {
-        GamePlayManager.instance.player.LoadDataFromUserData();
+        CharacterManager.Ins.player.LoadDataFromUserData();
     }
 
-    public void Save()
+    public void SaveData()
     {
         PlayerPrefs.SetString(KEY_USER_DATA, JsonUtility.ToJson(userData));
     }

@@ -1,4 +1,5 @@
 using HuySpace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -7,14 +8,11 @@ using UnityEngine.UI;
 
 public class WeaponShop : UICanvas
 {
-    // Default prices
-    private const int PRICE_LVL_GROW = 500;
+    [Header("EquipmentDataSO")]
+    [SerializeField] private EquipmentSODatas equipmentSODatas;
 
-    // Trigger
-    private const string TRIGGER_FLYTEXT = "fly";
-
-    [Header("Pre")]
-    [SerializeField] private Item weaponPrefab;
+    [Header("Prefab")]
+    [SerializeField] private WeaponItemShop weaponPrefab;
 
     [Header("References")]
     [SerializeField] private TextMeshProUGUI coinText;
@@ -25,64 +23,64 @@ public class WeaponShop : UICanvas
     [SerializeField] private GameObject buyButton;
     [SerializeField] private GameObject equipButton;
     [SerializeField] private GameObject equippedButton;
+    [SerializeField] private GameObject lockedButton;
 
     [Header("Notification")]
     [SerializeField] private GameObject notificationPrefab;
     [SerializeField] private GameObject notificationHolder;
 
-    [Header("EquipmentDataSO")]
-    [SerializeField] private EquipmentDataSO equipmentDataSO;
 
     // In Editor
-    private List<Sprite> weaponImages = new List<Sprite>();
-
-    private List<Item> activeWeaponImages = new List<Item>();
-
+    // Current shop item Clicked
+    private EquipmentType currentTypeOfShop = EquipmentType.Weapon;
+    private WeaponItemShop currentItemOnShow = null;
     private UserData data;
 
     private int index;
-    private int price;
 
-    private void OnEnable()
+    private List<WeaponItemShop> items = new List<WeaponItemShop>();
+
+    // Function
+    private void Awake()
     {
-        OnSetUp();
-        OnInit();
+        data = UserDataManager.Ins.userData;
+
+        InitItemShop(currentTypeOfShop);
     }
 
-    private void OnSetUp()
+    public override void Setup()
     {
-        data = UserDataManager.instance.userData;
-    }
+        base.Setup();
 
-    private void OnInit()
-    {
-        StartCoroutine(Loading(3f));
-
-        index = 0;
-
-        OnChanges();
-
-        weaponImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Weapon);
-
-        DisplayWeapon(index);
-    }
-
-    private void OnChanges()
-    {
-        UserData data = UserDataManager.instance.userData;
+        DisplayWeapon(0);
+        CheckButtonState();
 
         coinText.text = data.coin.ToString();
+    }
 
-        if (data.weaponIdList.IndexOf(index) == -1)
+    private void CheckButtonState()
+    {
+        EquipmentType type = currentItemOnShow.Type;
+        EquipmentId id = currentItemOnShow.Id;
+        int price = currentItemOnShow.Price;
+
+        if (!data.equipmentBought.Contains(id))
         {
-            ChangeButton(ButtonType.BuyButton);
-
-            price = ((index + 1) * PRICE_LVL_GROW);
-            priceText.text = price.ToString();
+            if (!data.equipmentBought.Contains(items[index - 1].Id))
+            {
+                currentItemOnShow.OnLock();
+                ChangeButton(ButtonType.LockedButton);
+            }
+            else
+            {
+                currentItemOnShow.OnUnlock();
+                ChangeButton(ButtonType.BuyButton);
+                priceText.text = price.ToString();
+            }
         }
         else
         {
-            if (index == data.equippedWeaponId)
+            if (id == data.equippedEquipment[(int)EquipmentType.Weapon])
             {
                 ChangeButton(ButtonType.EquippedButton);
             }
@@ -95,82 +93,89 @@ public class WeaponShop : UICanvas
 
     private void ChangeButton(ButtonType type)
     {
+        buyButton.SetActive(false);
+        equipButton.SetActive(false);
+        equippedButton.SetActive(false);
+        lockedButton.SetActive(false);
+
         switch (type)
         {
             case ButtonType.BuyButton:
                 buyButton.SetActive(true);
-                equipButton.SetActive(false);
-                equippedButton.SetActive(false);
-
                 break;
             case ButtonType.EquipButton:
-                buyButton.SetActive(false);
                 equipButton.SetActive(true);
-                equippedButton.SetActive(false);
-
                 break;
             case ButtonType.EquippedButton:
-                buyButton.SetActive(false);
-                equipButton.SetActive(false);
                 equippedButton.SetActive(true);
-
                 break;
+            case ButtonType.LockedButton:
+                lockedButton.SetActive(true);
+                break;
+        }
+    }
+
+    private void InitItemShop(EquipmentType type)
+    {
+        List<EquipmentData> equipmentDataList = equipmentSODatas.GetSOData(type).GetList();
+
+        foreach (EquipmentData equipment in equipmentDataList)
+        {
+            WeaponItemShop createdItem = Instantiate(weaponPrefab, content);
+            createdItem.Init(equipment.sprite, type, equipment.id, equipment.price);
+            items.Add(createdItem);
+            createdItem.Despawn();
         }
     }
 
     private void DisplayWeapon(int index)
     {
-        if (index >=  activeWeaponImages.Count)
-        {
-            Item createdItem = Instantiate(weaponPrefab, content);
+        this.index = index;
 
-            createdItem.icon.sprite = weaponImages[index];
-
-            activeWeaponImages.Add(createdItem);
-        }
-
-        activeWeaponImages[index].Spawn();
+        currentItemOnShow = (WeaponItemShop) items[index];
+        currentItemOnShow.Spawn();
     }
-
-    private void NonDisplayWeapon(int index)
+    
+    private void NonDisplayWeapon()
     {
-        activeWeaponImages[index].Despawn();
+        currentItemOnShow.Despawn();
     }
 
     public void PrevWeapon()
     {
         if (index > 0)
         {
-            NonDisplayWeapon(index);
-            index--;
-            DisplayWeapon(index);
-            OnChanges();
+            NonDisplayWeapon();
+            DisplayWeapon(index - 1);
+            CheckButtonState();
         }
     }
 
     public void NextWeapon()
     {
-        if (index < weaponImages.Count - 1)
+        if (index < items.Count - 1)
         {
-            NonDisplayWeapon(index);
-            index++;
-            DisplayWeapon(index);
-            OnChanges();
+            NonDisplayWeapon();
+            DisplayWeapon(index + 1);
+            CheckButtonState();
         }
     }
 
     public void Buy()
     {
-        UserData data = UserDataManager.instance.userData;
+        EquipmentType type = currentItemOnShow.Type;
+        EquipmentId id = currentItemOnShow.Id;
+        int price = currentItemOnShow.Price;
 
         if (data.coin >= price)
         {
             data.coin -= price;
-            data.weaponIdList.Add(index);
-            data.equippedWeaponId = index;
-            UserDataManager.instance.Save();
+            coinText.text = data.coin.ToString();
 
-            OnChanges();
+            data.equipmentBought.Add(id);
+            data.equippedEquipment[(int)type] = id;
+            UserDataManager.Ins.SaveData();
+            CheckButtonState();
         }
         else
         {
@@ -180,27 +185,18 @@ public class WeaponShop : UICanvas
 
     public void Equip()
     {
-        UserData data = UserDataManager.instance.userData;
+        EquipmentId id = currentItemOnShow.Id;
 
-        data.equippedWeaponId = index;
-        UserDataManager.instance.Save();
+        data.equippedEquipment[(int)EquipmentType.Weapon] = id;
+        UserDataManager.Ins.SaveData();
 
-        OnChanges();
+        CheckButtonState();
     }
     
     public void ReturnHome()
     {
-        NonDisplayWeapon(index);
+        NonDisplayWeapon();
 
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
-    }
-
-    private IEnumerator Loading(float time)
-    {
-        UIManager.instance.OpenUI<Loading>();
-
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseDirectly<Loading>();
+        LevelManager.Ins.OnMainMenu();
     }
 }

@@ -6,22 +6,32 @@ using static UnityEngine.ParticleSystem;
 
 public class PoolController : MonoBehaviour
 {
-    [Header("Pre-Setup")]
-    [SerializeField] private Transform holder;
-
-    [SerializeField] private Enemy prefab;
-
-    [Header("Particle")]
-    public ParticleAmount[] Particle;
+    [Header("Pool")]
+    public List<PoolAmount> PoolWithRoot;
 
     void Awake()
     {
-        int quantity = GamePlayManager.instance.characterAmount;
-        BotPool.Preload(prefab, quantity, holder);
+        int quantity = LevelManager.Ins.startCharacterAmount;
 
-        for (int i = 0; i < Particle.Length; i++)
+        for (int i = 0; i < PoolWithRoot.Count; i++)
         {
-            ParticlePool.Preload(Particle[i].prefab, Particle[i].type, Particle[i].amount, Particle[i].root);
+            SimplePool.Preload(PoolWithRoot[i].prefab, PoolWithRoot[i].amount, PoolWithRoot[i].root);
         }
+    }
+}
+
+[System.Serializable]
+public class PoolAmount
+{
+    [Header("-- Pool Amount --")]
+    public Transform root;
+    public GameUnit prefab;
+    public int amount;
+
+    public PoolAmount(Transform root, GameUnit prefab, int amount)
+    {
+        this.root = root;
+        this.prefab = prefab;
+        this.amount = amount;
     }
 }

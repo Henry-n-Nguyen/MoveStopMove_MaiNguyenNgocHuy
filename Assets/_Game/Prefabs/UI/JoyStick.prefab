@@ -172,7 +172,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1714748972352257912
 RectTransform:
   m_ObjectHideFlags: 0
@@ -207,5 +207,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   joyStickHolder: {fileID: 1714748971250087518}
   joyStickTransform: {fileID: 1714748972352257912}
-  splittedjoyStick: {fileID: 0}
   joyStick: {fileID: 1714748971581862914}

@@ -5,216 +5,62 @@ using HuySpace;
 using System;
 using UnityEditor;
 
-public class GamePlayManager : MonoBehaviour
+public class GamePlayManager : Singleton<GamePlayManager>
 {
-    public static GamePlayManager instance;
-
-    private const int COIN_CONVERT_RATE = 20;
-    private const int COIN_BONUS = 100;
-
-    public int characterAmount;
-    public int startCharacterAmount = 7;
-
-    [HideInInspector] public GamePlayState currentGamePlayState;
-
-    [HideInInspector] public Player player;
-
-    [HideInInspector] public int aliveCharacterAmount;
-
-    // Coin
-    [HideInInspector] public int coinToEarn;
-
-    // private
-    private UserData data;
-    private bool isDiedBefore = false;
-
-    // Event
-    public event Action OnAliveCharacterAmountChanged;
-    public event Action OnUIChanged;
-    public event Action OnPlayerTouchScreen;
-
-    // Coroutines
-    private Coroutine triggerWin;
-    private Coroutine triggerLose;
-    private Coroutine triggerRevive;
+    private static GameState gameState;
 
     private Coroutine delayCoroutine;
 
-    private void Awake()
+    public event Action OnUIChangedAction;
+
+    public void ChangeState(GameState state)
     {
-        instance = this;
+        gameState = state;
+
+        OnUIChangedAction?.Invoke();
     }
 
-    private void Start()
+    public void ChangeStateAfterTime(GameState state, float time)
     {
-        OnInit();
-
-        ChangeState(GamePlayState.MainMenu);
+        delayCoroutine = StartCoroutine(DelayChangeState(state, time));
     }
 
-    public void OnInit()
-    {
-        if (triggerWin != null) StopCoroutine(triggerWin);
-        if (triggerLose != null) StopCoroutine(triggerLose);
-        if (triggerLose != null) StopCoroutine(triggerRevive);
-
-        data = UserDataManager.instance.userData;
-
-        isDiedBefore = false;
-
-        ChangeState(GamePlayState.None);
-
-        aliveCharacterAmount = characterAmount;
-
-        coinToEarn = 0;
-
-        BotGenerator.instance.characterInQueueToSpawn = startCharacterAmount;
-        BotGenerator.instance.characterInBattleAmount = 1;
-
-        BoosterGenerator.instance.OnInit();
-    }
-
-    // States
-    private void MainMenuState()
-    {
-        UIManager.instance.CloseAll();
-
-        UIManager.instance.OpenUI<MainMenu>();
-    }
-
-    private void WinState()
-    {
-        UIManager.instance.CloseDirectly<DynamicJoyStick>();
-
-        coinToEarn = player.point * COIN_CONVERT_RATE + COIN_BONUS;
-        data.coin += coinToEarn;
-        UserDataManager.instance.Save();
-
-        triggerWin = StartCoroutine(TriggerWinStateAfterTime(2.5f));
-    }
-    
-    private void LoseState()
-    {
-        UIManager.instance.CloseDirectly<DynamicJoyStick>();
-
-        if (isDiedBefore)
-        {
-            triggerLose = StartCoroutine(TriggerLoseStateAfterTime(2.5f));
-        }
-        else
-        {
-            isDiedBefore = true;
-
-            triggerRevive = StartCoroutine(TriggerReviveStateAfterTime(2.5f));
-        }
-    }
-
-    private void WeaponShopState()
-    {
-        UIManager.instance.CloseAll();
-
-        UIManager.instance.OpenUI<WeaponShop>();
-    }
-
-    private void CostumeShopState()
-    {
-        UIManager.instance.CloseAll();
-
-        UIManager.instance.OpenUI<CostumeShop>();
-    }
-
-    private void AwardState()
-    {
-        UIManager.instance.CloseAll();
-
-        UIManager.instance.OpenUI<Award>();
-    }
-
-    private void SettingsState()
-    {
-        UIManager.instance.OpenUI<Settings>();
-    }
-
-    private IEnumerator TriggerWinStateAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        ChangeState(GamePlayState.None);
-
-        player.OnInit();
-        player.Win();
-
-        UIManager.instance.CloseAll();
-        UIManager.instance.OpenUI<Win>();
-    }
-
-    private IEnumerator TriggerLoseStateAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        player.OnInit();
-
-        UIManager.instance.CloseAll();
-        UIManager.instance.OpenUI<Lose>();
-    }
-
-    private IEnumerator TriggerReviveStateAfterTime(float time)
-    {
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseDirectly<DynamicJoyStick>();
-        UIManager.instance.OpenUI<Revive>();
-    }
-
-    public void EarnCoin()
-    {
-        coinToEarn = player.point * COIN_CONVERT_RATE;
-        data.coin += coinToEarn;
-        UserDataManager.instance.Save();
-    }
-
-    // Event Action
-    public void CharacterDied()
-    {
-        aliveCharacterAmount--;
-
-        OnAliveCharacterAmountChanged?.Invoke();
-    }
-
-    public void ChangeState(GamePlayState state)
-    {
-        if (delayCoroutine != null) StopCoroutine(delayCoroutine);
-
-        currentGamePlayState = state;
-
-        switch (currentGamePlayState)
-        {
-            case GamePlayState.MainMenu: MainMenuState(); break;
-            case GamePlayState.Lose: LoseState(); break;
-            case GamePlayState.Win: WinState(); break;
-            case GamePlayState.CostumeShop: CostumeShopState(); break;
-            case GamePlayState.WeaponShop: WeaponShopState(); break;
-            case GamePlayState.Award: AwardState(); break;
-            case GamePlayState.Settings: SettingsState(); break;
-        }
-
-        OnUIChanged?.Invoke();
-    }
-
-    public void ChangeStateAfterTime(GamePlayState state, float time)
-    {
-        delayCoroutine = StartCoroutine(DelayChangeStateTime(state, time));
-    }
-
-    private IEnumerator DelayChangeStateTime(GamePlayState state, float time)
+    private IEnumerator DelayChangeState(GameState state, float time)
     {
         yield return new WaitForSeconds(time);
 
         ChangeState(state);
     }
 
-    public void OnTouch()
+    public void StopDelayChangeState()
     {
-        OnPlayerTouchScreen?.Invoke();
+        if (delayCoroutine != null) StopCoroutine(delayCoroutine);
+    }
+
+    public static bool IsState(GameState state) => gameState == state;
+
+    private void Awake()
+    {
+        //tranh viec nguoi choi cham da diem vao man hinh
+        Input.multiTouchEnabled = false;
+
+        //target frame rate ve 60 fps
+        Application.targetFrameRate = 60;
+
+        //tranh viec tat man hinh
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
+
+        //xu tai tho
+        int maxScreenHeight = 1280;
+        float ratio = (float)Screen.currentResolution.width / (float)Screen.currentResolution.height;
+        if (Screen.currentResolution.height > maxScreenHeight)
+        {
+            Screen.SetResolution(Mathf.RoundToInt(ratio * (float)maxScreenHeight), maxScreenHeight, true);
+        }
+    }
+
+    private void Start()
+    {
+        //UIManager.Ins.OpenUI<MainMenu>();
     }
 }

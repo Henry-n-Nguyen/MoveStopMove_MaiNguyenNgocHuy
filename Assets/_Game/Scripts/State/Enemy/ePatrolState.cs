@@ -6,47 +6,54 @@ using System.Security.Cryptography;
 using UnityEngine.AI;
 using static UnityEngine.GraphicsBuffer;
 
-public class ePatrolState : IState<AbstractCharacter>
+public class EPatrolState : IState<AbstractCharacter>
 {
-    float patrolingTimer = 0;
 
     public void OnEnter(AbstractCharacter t)
     {
-        patrolingTimer = 0;
+
     }
 
     public void OnExecute(AbstractCharacter t)
     {
         t.Moving();
 
-        Enemy bot = t.GetComponent<Enemy>();
+        Enemy bot = (Enemy) t;
+
+        if (bot.GetRadarObject().IsAnyTargetInRange)
+        {
+            bot.desPointSet = false;
+            bot.patrolingTimer = 0;
+
+            bot.ChangeState(AbstractCharacter.ATTACK_STATE);
+        }
 
         if (!bot.desPointSet)
         {
-            bot.ChangeState(new IdleState());
+            bot.ChangeState(AbstractCharacter.IDLE_STATE);
         }
         else
         {
-            patrolingTimer += Time.deltaTime;
+            bot.patrolingTimer += Time.deltaTime;
 
-            if (patrolingTimer > bot.currentConfigSO.PatrolTime)
+            if (bot.patrolingTimer > bot.currentConfigSO.PatrolTime)
             {
                 bot.desPointSet = false;
-                patrolingTimer = 0;
+                bot.patrolingTimer = 0;
             }
 
-            bot.agent.SetDestination(bot.desPoint);
+            bot.GetAgent().SetDestination(bot.desPoint);
         }
+
 
         Vector3 distanceToDesPoint = bot.characterTransform.position - bot.desPoint;
 
         if (distanceToDesPoint.magnitude < 1f)
         {
-            bot.ChangeState(new IdleState());
-
             bot.desPointSet = false;
-            patrolingTimer = 0;
+            bot.patrolingTimer = 0;
 
+            bot.ChangeState(AbstractCharacter.IDLE_STATE);
         }
     }
 

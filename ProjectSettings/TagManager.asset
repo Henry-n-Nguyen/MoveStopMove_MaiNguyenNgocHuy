@@ -6,7 +6,7 @@ TagManager:
   tags:
   - Character
   - Radar
-  - Vehicle
+  - Wall
   - RadarEnemy
   layers:
   - Default

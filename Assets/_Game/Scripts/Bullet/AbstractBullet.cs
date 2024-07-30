@@ -2,38 +2,24 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
-public abstract class AbstractBullet : MonoBehaviour
+public abstract class AbstractBullet : GameUnit
 {
     [SerializeField] protected GameObject bulletGameObject;
     [SerializeField] protected Transform bulletTransform;
     [SerializeField] protected Transform meshTransform;
 
-    public event Action OnBulletSpawn;
-
-    public int id;
-
     public AbstractCharacter owner;
 
     protected float speed = 12f;
     protected float attackRange = 7.5f;
-    protected float scaleRatio = 1f;
 
     private bool isSpecialLaunch = false;
-
-    private void Start()
-    {
-        SubcribeEvent();
-    }
 
     private void OnEnable()
     {
         OnInit();
-    }
-
-    private void SubcribeEvent()
-    {
-        OnBulletSpawn += owner.IsReadyToAttack;
     }
 
     private void Update()
@@ -44,7 +30,7 @@ public abstract class AbstractBullet : MonoBehaviour
         }
         else
         {
-            Launch();
+            Throw();
         }
     }
 
@@ -62,36 +48,36 @@ public abstract class AbstractBullet : MonoBehaviour
 
         if (character == owner) return;
 
-        character.ChangeState(new DeadState());
+        SimplePool.Spawn<VFX>(PoolType.Particle_HitVFX, character.characterTransform.position, Quaternion.identity);
 
-        owner.point++;
-        owner.OnPointChanges();
-        owner.targetsInRange.Remove(character);
+        character.ChangeState(AbstractCharacter.DEAD_STATE);
 
-        Despawn();
+        owner.OnPointChange(owner.point + 1);
+
+        owner.GetRadarObject().RemoveTarget(character);
+
+        //OnDespawn();
     }
 
     private void CollideWithWall(Collider other)
     {
-        if (other.CompareTag(Constant.TAG_VEHICLE))
-        {
-            Despawn();
-        }
+        if (!other.CompareTag(Constant.TAG_WALL)) return;
+        OnDespawn();
     }
 
     protected virtual void OnInit()
     {
-        isSpecialLaunch = owner.isHugeBulletBoosted;
+        bulletTransform.localPosition = Vector3.zero;
 
-        attackRange = owner.attackRange;
-        scaleRatio = owner.scaleRatio;
-
-        bulletTransform.localScale = Vector3.one * scaleRatio;
-
-        
+        if (owner != null)
+        {
+            isSpecialLaunch = owner.isHugeBulletBoosted;
+            attackRange = owner.attackRange;
+            bulletTransform.localScale = Vector3.one * owner.scaleRatio;
+        }
     }
 
-    protected virtual void Launch()
+    protected virtual void Throw()
     {
 
     }
@@ -101,23 +87,13 @@ public abstract class AbstractBullet : MonoBehaviour
         float distance = Time.deltaTime * speed * 2f;
 
         bulletTransform.position += bulletTransform.forward * distance;
-        attackRange -= (distance / 2); // Double bullet exist time
-        scaleRatio += distance; // Increase Scale over time
-        bulletTransform.localScale = Vector3.one * scaleRatio;
+        attackRange -= (distance / 2); // Double bullet exist time // Increase Scale over time
+        bulletTransform.localScale += Vector3.one * distance;
 
-        if (attackRange <= 0) Despawn();
+        if (attackRange <= 0) OnDespawn();
     }
 
-    public void Spawn()
-    {
-        bulletTransform.position = owner.GetAttackPoint().position;
-        bulletTransform.rotation = owner.characterTransform.rotation;
-        bulletGameObject.SetActive(true);
-
-        OnBulletSpawned();
-    }
-
-    public void Despawn()
+    public void OnDespawn()
     {
         if (isSpecialLaunch)
         {
@@ -127,14 +103,13 @@ public abstract class AbstractBullet : MonoBehaviour
             }
         }
 
-        bulletGameObject.SetActive(false);
+        SimplePool.Despawn(this);
         bulletTransform.localPosition = Vector3.zero;
-
-        OnBulletSpawned();
     }
 
-    private void OnBulletSpawned()
+    public void SetOwner(AbstractCharacter character)
     {
-        OnBulletSpawn?.Invoke();
+        this.owner = character;
+        bulletTransform.forward = character.characterTransform.forward;
     }
 }

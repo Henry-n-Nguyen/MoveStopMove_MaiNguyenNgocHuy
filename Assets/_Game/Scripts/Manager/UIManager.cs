@@ -2,10 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UIManager : MonoBehaviour
+public class UIManager : Singleton<UIManager>
 {
-    public static UIManager instance;
-
     Dictionary<System.Type, UICanvas> activatedCanvases = new Dictionary<System.Type, UICanvas>();
     Dictionary<System.Type, UICanvas> canvasPrefabs = new Dictionary<System.Type, UICanvas>();
 
@@ -15,8 +13,6 @@ public class UIManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
-
         // Load UI canvas
         for (int i = 0; i < canvases.Length; i++)
         {
@@ -27,12 +23,12 @@ public class UIManager : MonoBehaviour
     // Open Canvas
     public T OpenUI<T>() where T : UICanvas
     {
-        T canvas = GetUI<T>();
+        T currentCanvas = GetUI<T>();
 
-        canvas.Setup();
-        canvas.Open();
+        currentCanvas.Open();
+        currentCanvas.Setup();
 
-        return canvas as T;
+        return currentCanvas as T;
     }
     
     // Close Canvas after time

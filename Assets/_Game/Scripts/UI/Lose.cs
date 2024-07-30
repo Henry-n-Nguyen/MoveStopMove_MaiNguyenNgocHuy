@@ -9,40 +9,39 @@ public class Lose : UICanvas
     [SerializeField] private TextMeshProUGUI earnCoinText;
     [SerializeField] private TextMeshProUGUI rankText;
 
-    private void OnEnable()
+    private UserData data;
+
+    private void Awake()
     {
-        OnInit();
+        data = UserDataManager.Ins.userData;
     }
 
-    private void OnInit()
+    public override void Setup()
     {
-        BotPool.Collect();
+        base.Setup();
 
-        earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
+        earnCoinText.text = "+ " + (CharacterManager.Ins.player.point).ToString();
 
-        int rank = GamePlayManager.instance.aliveCharacterAmount;
+        CharacterManager.Ins.OnInit();
+
+        int rank = CharacterManager.Ins.CharacterAlive;
         rankText.text = "#" + rank.ToString();
 
-        int highestRank = UserDataManager.instance.userData.currentHighestRank;
-        if (rank < highestRank)
+        if (rank < data.currentHighestRank)
         {
-            UserDataManager.instance.userData.currentHighestLevel = UserDataManager.instance.userData.currentLevel + 1;
-            UserDataManager.instance.userData.currentHighestRank = rank;
-            UserDataManager.instance.Save();
+            data.currentHighestLevel = UserDataManager.Ins.userData.currentLevel + 1;
+            data.currentHighestRank = rank;
+            UserDataManager.Ins.SaveData();
         }
-
-        GamePlayManager.instance.player.OnInit();
-
-        CameraManager.instance.TurnOnCamera(CameraState.Lose);
     }
 
     public void ReturnHome()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
+        LevelManager.Ins.OnMainMenu();
     }
 
     public void TripleAward()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.Award);
+        LevelManager.Ins.OnAward();
     }
 }

@@ -1,0 +1,195 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c54e31bde9d953c4889bbdd4d738e597, type: 3}
+  m_Name: Equiment Datas
+  m_EditorClassIdentifier: 
+  listEquipmentSOData:
+  - type: 0
+    listEquipmentData:
+    - prefab: {fileID: -7050140323369034958, guid: 63ca163a54ced6846a64760ae5fdaebb, type: 3}
+      id: 1
+      price: 400
+      sprite: {fileID: 21300000, guid: 753147e8a57b8014caeeaacf33b3a838, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: -4096902617519579095, guid: bb4dbbb3391be954686b2e38ea5389ea, type: 3}
+      id: 2
+      price: 1000
+      sprite: {fileID: 21300000, guid: 806b16ece3e792645884d6d5ac003995, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 6382281429257991018, guid: 994217472154ba04486d00ac22b01747, type: 3}
+      id: 3
+      price: 1800
+      sprite: {fileID: 21300000, guid: c670fb76ee5f5ee469e3a1159325f080, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: -7373681951298357402, guid: e990388504218214f9246edcf55d6ccb, type: 3}
+      id: 4
+      price: 2800
+      sprite: {fileID: 21300000, guid: c0e1678cef983144694b18c414dedea8, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: -410550093900852816, guid: 305d899d7c658004495d85bab79cc906, type: 3}
+      id: 5
+      price: 4000
+      sprite: {fileID: 21300000, guid: c40a45737fcee774e9f6796ba87b59c8, type: 3}
+      material: {fileID: 0}
+  - type: 1
+    listEquipmentData:
+    - prefab: {fileID: -2922490841914570617, guid: 3f6cd09fbc7db6240ae21f5ca43c3943, type: 3}
+      id: 20
+      price: 400
+      sprite: {fileID: 21300000, guid: 66f42548c2bbb1d4c9af2ba3ade969c5, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: -5365949985865233153, guid: 12a5b521e81637244b32983d2821dcaa, type: 3}
+      id: 21
+      price: 400
+      sprite: {fileID: 21300000, guid: 238f411634bf2d149b8a444ae76d9eb4, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 4891595939793741716, guid: 90cfa40ad31148b46ba26afbabe15a02, type: 3}
+      id: 22
+      price: 400
+      sprite: {fileID: 21300000, guid: b33a2c5c2aaa0e7449e06a4978038d73, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 2305766900695133697, guid: a9797d6fb840a824fab9f0a19e02e7d0, type: 3}
+      id: 23
+      price: 400
+      sprite: {fileID: 21300000, guid: 9bf22e3e06924414ba6a22aadc5c91bd, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 4048104654734374089, guid: ef8d21bed712eec43bb7d00c36324f0e, type: 3}
+      id: 23
+      price: 400
+      sprite: {fileID: 21300000, guid: 91ac14d038ed2d341ad4e203a80aee3b, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 4886647167912274219, guid: 8489a33ad01fa4e4a81136c08c53c518, type: 3}
+      id: 24
+      price: 400
+      sprite: {fileID: 21300000, guid: 88d05c7f7594277499f0f8baf5667d20, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 4263467359059603306, guid: aad3d1f06e1268349b0cc651a9a1ef0b, type: 3}
+      id: 25
+      price: 400
+      sprite: {fileID: 21300000, guid: a1e83d3734f6ec247818a62593a95588, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 6974350788709518143, guid: a58f4de106640a2498959a86f60adbb6, type: 3}
+      id: 26
+      price: 400
+      sprite: {fileID: 21300000, guid: 838cd1c0e32977441bcb1ba2f00e34ee, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 2520524742400821900, guid: 8adb94ff0c25d6849899965c150bd612, type: 3}
+      id: 27
+      price: 400
+      sprite: {fileID: 21300000, guid: 649af1a6cd74a08478b3cc109195877b, type: 3}
+      material: {fileID: 0}
+  - type: 2
+    listEquipmentData:
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 40
+      price: 800
+      sprite: {fileID: 21300000, guid: 36eddbf41bf65f6489646482ba4da495, type: 3}
+      material: {fileID: 2100000, guid: 40410f450ac7a3345aea016f5617fd9b, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 41
+      price: 800
+      sprite: {fileID: 21300000, guid: 9bf0973f6a735ea408505088c07e8735, type: 3}
+      material: {fileID: 2100000, guid: 9dc22509ce13049438067c104ee12236, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 42
+      price: 800
+      sprite: {fileID: 21300000, guid: 4059f7f3e45e71043a58f532468f1678, type: 3}
+      material: {fileID: 2100000, guid: 67fc49051c3238844a5cb21b7de67d8e, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 43
+      price: 800
+      sprite: {fileID: 21300000, guid: b32639192aec55348b48b05b00d39dbe, type: 3}
+      material: {fileID: 2100000, guid: 1794e0fb634cce84181d4f9d741374b9, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 44
+      price: 800
+      sprite: {fileID: 21300000, guid: 3a81f990827234b4685889b16d91b2aa, type: 3}
+      material: {fileID: 2100000, guid: 4197fc9f3dc511947b9ecae75a048952, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 45
+      price: 800
+      sprite: {fileID: 21300000, guid: 2f61fa97b02b4154ba609a471ed948d1, type: 3}
+      material: {fileID: 2100000, guid: 984e23a37a5c2004a8d39ef626ff9d24, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 46
+      price: 800
+      sprite: {fileID: 21300000, guid: 07323af92a384444a8c9a16aed76589d, type: 3}
+      material: {fileID: 2100000, guid: ab0251aed6102e14d80dfdf4faca2f59, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 47
+      price: 800
+      sprite: {fileID: 21300000, guid: 9c226147d9682db49a4cd1ab6d480e92, type: 3}
+      material: {fileID: 2100000, guid: 98db29d5ce86ea94e916f044601be902, type: 2}
+    - prefab: {fileID: 1135688274726494723, guid: 955c8f3173794174898871f0f2e9d807, type: 3}
+      id: 48
+      price: 800
+      sprite: {fileID: 21300000, guid: 6539d4506889674458f091e146532cee, type: 3}
+      material: {fileID: 2100000, guid: cdd612a6109aea34b9a2f10a4ddfd768, type: 2}
+  - type: 3
+    listEquipmentData:
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 60
+      price: 600
+      sprite: {fileID: 21300000, guid: 139e5f8f81b1f3e49af46286df489b87, type: 3}
+      material: {fileID: 2100000, guid: f38d22d8455d0f24bb6885cd851ecd34, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 61
+      price: 600
+      sprite: {fileID: 21300000, guid: 384cde5ab1cad3e45af52ec946c338af, type: 3}
+      material: {fileID: 2100000, guid: 289deea4a046cde41ab6f4595ebd1028, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 62
+      price: 600
+      sprite: {fileID: 21300000, guid: 64cc546f7bde21c4989a4e173502fc8d, type: 3}
+      material: {fileID: 2100000, guid: 814dc869b40e4494987741f175f6b23b, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 63
+      price: 600
+      sprite: {fileID: 21300000, guid: 7bd710918a5a09e4480a3be5ed71d41f, type: 3}
+      material: {fileID: 2100000, guid: 56bd49cb1537a5347acf86ef8ac6e5b4, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 64
+      price: 600
+      sprite: {fileID: 21300000, guid: 631ba6be6a303784c8277d9811f8a1f6, type: 3}
+      material: {fileID: 2100000, guid: 54ef5fc81f9f7814393a22ce7982dc73, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 65
+      price: 600
+      sprite: {fileID: 21300000, guid: dcb18259441f4e245832e47a51958ee7, type: 3}
+      material: {fileID: 2100000, guid: 6336578d74f8cb748a1a496c4075deab, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 66
+      price: 600
+      sprite: {fileID: 21300000, guid: f3d0c2a5ceba0c44f965799dc958ad95, type: 3}
+      material: {fileID: 2100000, guid: 0979fe3f04ca8984cb6b469ce998779b, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 67
+      price: 600
+      sprite: {fileID: 21300000, guid: 3a7f8b63fb649ec4fa2f64c0cc75398a, type: 3}
+      material: {fileID: 2100000, guid: 3b0049be6b8706f4cad8d9ea7f4c5dec, type: 2}
+    - prefab: {fileID: -2166788505783403775, guid: f4c2aa3286e4d844080b66d63cda85b7, type: 3}
+      id: 68
+      price: 600
+      sprite: {fileID: 21300000, guid: 133a7d845d1450543ad3d030179f17a5, type: 3}
+      material: {fileID: 2100000, guid: e19d84b6b63f5574fa18849d141a4b4a, type: 2}
+  - type: 4
+    listEquipmentData:
+    - prefab: {fileID: 8154493278816887273, guid: 2b846b48a3366af4ca6fc2ada7ba49c1, type: 3}
+      id: 80
+      price: 1000
+      sprite: {fileID: 21300000, guid: 25e2e3dc2e24ba549bbbae5479865bbf, type: 3}
+      material: {fileID: 0}
+    - prefab: {fileID: 2612696593568875929, guid: e536c4663b800cb4fa4ecea83426765e, type: 3}
+      id: 81
+      price: 1000
+      sprite: {fileID: 21300000, guid: 689d52942dc71174fadb78bf5de269d0, type: 3}
+      material: {fileID: 0}

@@ -14,79 +14,50 @@ public class Settings : UICanvas
 
     private void Awake()
     {
-        data = UserDataManager.instance.userData;
+        data = UserDataManager.Ins.userData;
     }
 
-    private void OnEnable()
+    public override void Setup()
     {
-        OnInit();
+        base.Setup();
+
+        IsVibrationOn(data.isVibrationOn);
+        IsSoundOn(data.isSoundOn);
     }
 
-    private void OnInit()
+    public void IsVibrationOn(bool status)
     {
-        Time.timeScale = 0.0f;
+        data.isVibrationOn = status;
 
-        GamePlayManager.instance.ChangeState(GamePlayState.None);
-
-        VibrationOnOff();
-        SoundOnOff();
-    }
-
-    public void ResumeGame()
-    {
-        Time.timeScale = 1.0f;
-
-        GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
-
-        UIManager.instance.CloseDirectly<Settings>();
-
-        UIManager.instance.OpenUI<DynamicJoyStick>();
-    }
-
-    public void ReturnHome()
-    {
-        Time.timeScale = 1.0f;
-
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
+        vibrationOn.SetActive(status);
+        vibrationOff.SetActive(!status);
     }
 
     public void ChangeVibrationState()
     {
-        data.isVibrationOn = !data.isVibrationOn;
-        VibrationOnOff();
+        IsVibrationOn(!data.isVibrationOn);
     }
 
-    public void VibrationOnOff()
+    public void IsSoundOn(bool status)
     {
-        if (data.isVibrationOn)
-        {
-            vibrationOn.SetActive(true);
-            vibrationOff.SetActive(false);
-        }
-        else
-        {
-            vibrationOn.SetActive(false);
-            vibrationOff.SetActive(true);
-        }
+        data.isSoundOn = status;
+
+        soundOn.SetActive(status);
+        soundOff.SetActive(!status);
     }
 
     public void ChangeSoundState()
     {
-        data.isSoundOn = !data.isSoundOn;
-        SoundOnOff();
+        IsSoundOn(!data.isSoundOn);
     }
 
-    public void SoundOnOff()
+    public void ResumeGame()
     {
-        if (data.isSoundOn)
-        {
-            soundOn.SetActive(true);
-            soundOff.SetActive(false);
-        }
-        else
-        {
-            soundOn.SetActive(false);
-            soundOff.SetActive(true);
-        }
+        LevelManager.Ins.OnPlay();
+    }
+
+    public void ReturnHome()
+    {
+        LevelManager.Ins.OnMainMenu();
     }
 }

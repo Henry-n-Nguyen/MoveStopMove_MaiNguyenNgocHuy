@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
-public class Pant : MonoBehaviour
+public class Pant : Equipment
 {
-    public Material material;
 
-    public int id;
 }

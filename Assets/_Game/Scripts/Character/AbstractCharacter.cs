@@ -1,72 +1,82 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Drawing;
-using UnityEngine.AI;
 using HuySpace;
-using System;
-using UnityEngine.UIElements;
+using UnityEngine.AI;
+using System.Collections;
 
-public abstract class AbstractCharacter : MonoBehaviour
+public abstract class AbstractCharacter : GameUnit
 {
-    [Header("Config")]
+    // State
+    public static IdleState IDLE_STATE = new IdleState();
+    public static AttackState ATTACK_STATE = new AttackState();
+    public static PatrolState PATROL_STATE = new PatrolState();
+    public static DeadState DEAD_STATE = new DeadState();
+    public static DeadState DANCE_STATE = new DeadState();
+
+    // Inspector
+    [Header("ConfigSO")]
     [SerializeField] protected CharacterConfigSO configSO;
 
-    // Editor
+    [Header("EquipmentSODatas")]
+    [SerializeField] protected EquipmentSODatas equipmentSODatas;
+
+    [Header("NameSOData")]
+    [SerializeField] protected NameSOData nameSOData;
+
     [Header("SetUp-References")]
     [SerializeField] protected AbstractCharacter characterScript;
-    [SerializeField] protected Target targetScript;
-
-    [SerializeField] protected SphereCollider radarObject;
+    [SerializeField] protected Target targetIndicatorScript;
+    [Space(0.3f)]
+    [SerializeField] protected Radar radarObject;
     [SerializeField] protected Transform attackPoint;
-
+    [Space(0.3f)]
     [SerializeField] protected Rigidbody rb;
     [SerializeField] protected Animator anim;
-
+    [SerializeField] protected NavMeshAgent agent;
+    [SerializeField] protected BoxCollider boxCollider;
 
     [Header("Equipment-References")]
-    [SerializeField] protected Transform weaponHolder;
+    [SerializeField] protected Transform weaponSlot;
     [SerializeField] protected Weapon weapon;
-    [SerializeField] protected Transform hatHolder;
+    [Space(0.3f)]
+    [SerializeField] protected Transform accessorySlot;
+    [SerializeField] protected Accessory accessory;
+    [Space(0.3f)]
+    [SerializeField] protected Transform hatSlot;
     [SerializeField] protected Hat hat;
-    [SerializeField] protected SkinnedMeshRenderer skinMeshRenderer;
-    [SerializeField] protected SkinnedMeshRenderer pantMeshRenderer;
-
-    [Header("Special-Equipment-References")]
-    [SerializeField] protected Transform characterHip;
-    [SerializeField] protected Transform characterLeftHand;
-    [SerializeField] protected Transform characterNeck;
-
-    [Header("VFX/ParticleDataSO")]
-    [SerializeField] protected ParticleDataSO particleDataSO;
+    [Space(0.3f)]
+    [SerializeField] protected SkinnedMeshRenderer pantSlot;
+    [Space(0.3f)]
+    [SerializeField] protected SkinnedMeshRenderer skinSlot;
 
     // Statitics
-    [Header("Public")]
-    [HideInInspector] public NavMeshAgent agent;
-
+    [Header("Self-References")]
     public Transform characterTransform;
 
+    [Header("Info")]
     public int index;
     public string characterName = "?";
     public int point = 0;
     public int currentScaleLevel = 0;
 
-    public float moveSpeed = 5f;
-    public float attackRange = 7.5f;
-    public float scaleRatio = 1f;
+    [Space(0.3f)]
+    public float moveSpeed;
+    public float attackRange;
+    public float scaleRatio;
 
     // Bool variables
     protected bool isDead;
     protected bool isOnPause = true;
-    protected bool isInCostumeShop;
+
+    protected bool weaponIsTemporary = false;
+    [SerializeField] protected Weapon tempWeapon;
+
     [SerializeField] protected bool isReadyToAttack;
 
     // Public variables
-    [HideInInspector] public bool IsDead => isDead;
+    public bool IsDead => isDead;
 
     // List target
-    public List<AbstractCharacter> targetsInRange = new List<AbstractCharacter>();
-
     private List<GameObject> specialAccessorys = new List<GameObject>();
 
     // Private variables
@@ -84,12 +94,13 @@ public abstract class AbstractCharacter : MonoBehaviour
     protected float tempSpeed;
     protected float tempAttackRange;
 
-    private ParticleSystem boostedAura;
+    private VFX boostedAura;
+
+    private Coroutine attackCooldownCoroutine;
 
     // Function
     private void Start()
     {
-        OnInit();
         SubscribeEvent();
     }
 
@@ -101,10 +112,9 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    public void SubscribeEvent()
+    private void SubscribeEvent()
     {
-        GamePlayManager.instance.OnUIChanged += IsOnPause;
-        GamePlayManager.instance.OnUIChanged += IsInCostumeShop;
+        GamePlayManager.Ins.OnUIChangedAction += IsOnPause;
     }
 
     public virtual void OnInit()
@@ -114,37 +124,34 @@ public abstract class AbstractCharacter : MonoBehaviour
             ClearBoost();
         }
 
-        point = 0;
         currentScaleLevel = 0;
 
-        isReadyToAttack = true;
+        boxCollider.enabled = true;
 
         isDead = false;
 
-        targetsInRange.Clear();
+        radarObject.ClearTargetList();
 
-        scaleRatio = configSO.RawScale;
-        moveSpeed = configSO.RawMoveSpeed;
-        attackRange = configSO.RawAttackRange;
+        OnScaleRatioChange(configSO.RawScale);
 
-        OnScaleRatioChanges();
+        OnPointChange(0);
 
-        OnPointChanges();
-
-        radarObject.radius = attackRange;
-
-        ChangeState(new IdleState());
+        ChangeState(IDLE_STATE);
     }
 
-    public void OnScaleRatioChanges()
+    public void OnScaleRatioChange(float scaleRatio)
     {
+        this.scaleRatio = scaleRatio;
+
         characterTransform.localScale = Vector3.one * scaleRatio;
         moveSpeed = configSO.RawMoveSpeed * scaleRatio;
         attackRange = configSO.RawAttackRange * scaleRatio;
     }
 
-    public void OnPointChanges()
+    public void OnPointChange(int point)
     {
+        this.point = point;
+
         if (currentScaleLevel < configSO.GetMaxScaleLevel()) {
             if (point == configSO.GetLevelMilestone(currentScaleLevel))
             {
@@ -156,17 +163,11 @@ public abstract class AbstractCharacter : MonoBehaviour
 
     public void ChangeState(IState<AbstractCharacter> state)
     {
-        if (currentState != null)
-        {
-            currentState.OnExit(this);
-        }
+        currentState?.OnExit(this);
 
         currentState = state;
 
-        if (currentState != null)
-        {
-            currentState.OnEnter(this);
-        }
+        currentState?.OnEnter(this);
     }
 
     protected void ChangeAnim(string animName)
@@ -182,145 +183,74 @@ public abstract class AbstractCharacter : MonoBehaviour
     public void ChangeName(string value)
     {
         characterName = value;
-
-        targetScript.TargetName = characterName;
+        targetIndicatorScript.TargetName = characterName;
     }
 
     // Overloadded Equip function for each type of Equipment need
-    public void Equip(EquipmentType equipmentType, Weapon prefab)
+    public void Equip(Weapon prefab)
     {
-        switch (equipmentType)
-        {
-            case EquipmentType.Weapon:
-                if (weapon != null) Destroy(weapon.gameObject);
-                Weapon equippedWeapon = Instantiate(prefab, weaponHolder);
-                weapon = equippedWeapon;
-                break;
-        }
+        if (prefab == null) return;
+
+        if (weapon != null) Destroy(weapon.gameObject);
+        
+        weapon = Instantiate(prefab, weaponSlot);   
     } // For weapon equip
 
-    public void Equip(EquipmentType equipmentType, Hat prefab) {
-        switch (equipmentType)
-        {
-            case EquipmentType.Hat:
-                if (hat != null) Destroy(hat.gameObject);
-                Hat equippedHat = Instantiate(prefab, hatHolder);
-                hat = equippedHat;
-                break;
-        }
+    public void Equip(Hat prefab) 
+    {
+        if (prefab == null) return; 
+        if (hat != null) Destroy(hat.gameObject);
+        hat = Instantiate(prefab, hatSlot);
     } // For hat equip
 
-    public void Equip(EquipmentType equipmentType, Skin skin)
+    public void Equip(Accessory prefab)
     {
-        switch (equipmentType)
-        {
-            case EquipmentType.Skin:
-                skinMeshRenderer.material = skin.material;
-                break;
-        }
+        if (prefab == null) return;
+        if (accessory != null) Destroy(accessory.gameObject);
+        accessory = Instantiate(prefab, accessorySlot);
+    } // For accessory equip
 
-        targetScript.TargetColor = skinMeshRenderer.materials[0].color;
-    } // For skin
-
-    public void Equip(EquipmentType equipmentType, Pant pant)
+    public void Equip(Pant prefab)
     {
-        switch (equipmentType)
-        {
-            case EquipmentType.Pant:
-                pantMeshRenderer.material = pant.material;
-                break;
-        }
-    } // For pant
+        if (prefab == null) return;
+        pantSlot.material = prefab.materialColor;
+    } // For pant equip
 
-    public void Equip(EquipmentType equipmentType, Special special)
+    public void Equip(Skin prefab)
     {
-        switch (equipmentType)
-        {
-            case EquipmentType.Special:
+        if (prefab == null) return;
+        skinSlot.material = prefab.materialColor;
 
-                if (special.specialHat != null)
-                {
-                    Equip(EquipmentType.Hat, special.specialHat);
-                }
-
-                if (special.specialPant != null)
-                {
-                    Equip(EquipmentType.Pant, special.specialPant);
-                }
-
-                if (special.specialSkin != null)
-                {
-                    Equip(EquipmentType.Skin, special.specialSkin);
-                }
-
-                if (special.wing != null)
-                {
-                    GameObject characterWing = Instantiate(special.wing, characterNeck);
-                    specialAccessorys.Add(characterWing);
-                }
-
-                if (special.tail != null)
-                {
-                    GameObject characterTail = Instantiate(special.tail, characterHip);
-                    specialAccessorys.Add(characterTail);
-                }
-
-                if (special.leftHandAccessory != null)
-                {
-                    GameObject characterLeftAccessory = Instantiate(special.leftHandAccessory, characterLeftHand);
-                    specialAccessorys.Add(characterLeftAccessory);
-                }
-
-                break;
-        }
-    } // For special
-
-    public virtual void DeEquipSpecial()
-    {
-        while (specialAccessorys.Count > 0)
-        {
-            Destroy(specialAccessorys[0].gameObject);
-            specialAccessorys.RemoveAt(0);
-        }
-    }
+        targetIndicatorScript.TargetColor = skinSlot.material.color;
+    } // For skin equip
 
     // Public function
     public void IsOnPause()
     {
-        GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
-
-        if (gamePlayState != GamePlayState.Ingame)
-        {
-            isOnPause = true;
-            targetScript.enabled = false;
-            ChangeState(new IdleState());
-        }
-        else
+        if (GamePlayManager.IsState(GameState.Ingame))
         {
             isOnPause = false;
-            targetScript.enabled = true;
-        }
-    }
-
-    public void IsInCostumeShop()
-    {
-        GamePlayState gamePlayState = GamePlayManager.instance.currentGamePlayState;
-
-        isInCostumeShop = gamePlayState == GamePlayState.CostumeShop;
-    }
-
-    public void IsReadyToAttack()
-    {
-        if (BulletManager.instance.IsBulletActivated(this.index))
-        {
-            this.weapon.Despawn();
-            isReadyToAttack = false;
+            targetIndicatorScript.enabled = true;
         }
         else
         {
-            this.weapon.Spawn();
-            isReadyToAttack = true;
+            isOnPause = true;
+            targetIndicatorScript.enabled = false;
+            ChangeState(IDLE_STATE);
         }
+    }
+
+    public bool IsReadyToAttack()
+    {
+        return weapon.IsActive;
+    }
+
+    public void PickUpWeapon(Weapon prefab)
+    {
+        if (attackCooldownCoroutine != null) StopCoroutine(attackCooldownCoroutine);
+        weaponIsTemporary = true;
+        if (tempWeapon == null) tempWeapon = Instantiate(weapon, weaponSlot);
+        Equip(prefab);
     }
 
     // State functions
@@ -331,7 +261,7 @@ public abstract class AbstractCharacter : MonoBehaviour
             return;
         }
 
-        ChangeAnim(Constant.TRIGGER_RUN);
+        ChangeAnim(Constant.ANIM_RUN);
     }
 
     public virtual void StopMoving()
@@ -341,7 +271,7 @@ public abstract class AbstractCharacter : MonoBehaviour
             return;
         }
 
-        ChangeAnim(Constant.TRIGGER_IDLE);
+        ChangeAnim(Constant.ANIM_IDLE);
     }
     
     public virtual void ReadyToAttack()
@@ -351,31 +281,49 @@ public abstract class AbstractCharacter : MonoBehaviour
             return;
         }
 
-        if (isReadyToAttack)
+        if (IsReadyToAttack())
         {
-            ChangeAnim(Constant.TRIGGER_ATTACK);
+            TurnToward(radarObject.FindClosestCharacter());
+            ChangeAnim(Constant.ANIM_ATTACK);
         }
     }
 
     public virtual void Attack()
     {
-        BulletManager.instance.Spawn(characterScript);
+        // Spawn Bullet
+        weapon.Despawn();
+        AxeBullet createdbullet = SimplePool.Spawn<AxeBullet>((PoolType)weapon.id, attackPoint.position, Quaternion.identity);
+        createdbullet.SetOwner(this);
+
+        // Axe respawn each 2.5s
+        attackCooldownCoroutine = StartCoroutine(AttackCoolDown(2.5f));
 
         if (isBoosted)
         {
             ClearBoost();
+        }
+    }
+
+    private IEnumerator AttackCoolDown(float time)
+    {
+        yield return new WaitForSeconds(time);
+
+        if (!weaponIsTemporary) weapon.Spawn();
+        else
+        {
+            weaponIsTemporary = false;
+            Equip(tempWeapon);
+            Destroy(tempWeapon.gameObject);
+            weapon.Spawn();
         }
     }
 
     public virtual void Dead()
     {
-        ParticleSystem VFX = ParticlePool.Play(ParticleType.HitVFX, characterTransform.position, Quaternion.identity);
-        ParticleSystem.ColorOverLifetimeModule VFXcolor = VFX.colorOverLifetime;
-        VFXcolor.color = skinMeshRenderer.materials[0].color;
+        boxCollider.enabled = false;
+        isDead = true;
 
-        BulletManager.instance.Despawn(characterScript);
-
-        ChangeAnim(Constant.TRIGGER_DEAD);
+        ChangeAnim(Constant.ANIM_DEATH);
 
         if (isBoosted)
         {
@@ -383,64 +331,22 @@ public abstract class AbstractCharacter : MonoBehaviour
         }
     }
 
-    public virtual void Dancing()
+    public virtual void Dance()
     {
-        if (isDead)
-        {
-            return;
-        }
-
-        ChangeAnim(Constant.TRIGGER_DANCE_SHOP);
+        ChangeAnim(Constant.ANIM_DANCE_SHOP);
     }
 
     public virtual void Win()
     {
-        if (isDead)
-        {
-            return;
-        }
-
-        ChangeAnim(Constant.TRIGGER_WIN);
+        ChangeAnim(Constant.ANIM_WIN);
     }
 
     // Support functions
-    protected AbstractCharacter FindClosestCharacter()
+    protected void TurnToward(AbstractCharacter character)
     {
-        AbstractCharacter closestEnemy = null;
-
-        float minDistance = Mathf.Infinity;
-
-        for (int i = 0; i < targetsInRange.Count; i++)
+        if (character != null)
         {
-            AbstractCharacter target = targetsInRange[i];
-
-            if (target.IsDead)
-            {
-                targetsInRange.RemoveAt(i);
-                continue;
-            }
-
-            Vector3 targetPosition = target.characterTransform.position;
-
-            float distanceSq = Vector3.SqrMagnitude(characterTransform.position - targetPosition);
-
-            if (distanceSq < minDistance)
-            {
-                minDistance = distanceSq;
-                closestEnemy = target;
-            }
-        }
-
-        return closestEnemy;
-    }
-
-    protected void TurnTowardClosestCharacter()
-    {
-        AbstractCharacter closestEnemy = FindClosestCharacter();
-
-        if (closestEnemy != null)
-        {
-            Vector3 targetDir = (closestEnemy.characterTransform.position - characterTransform.position).normalized;
+            Vector3 targetDir = (character.characterTransform.position - characterTransform.position).normalized;
             if (targetDir != Vector3.zero) characterTransform.forward = targetDir;
         }
     }
@@ -454,24 +360,22 @@ public abstract class AbstractCharacter : MonoBehaviour
 
             if (boostedAura == null)
             {
-                ParticleSystem aura = ParticlePool.Attach(ParticleType.BoostedVFX, characterTransform);
-                boostedAura = aura;
+                boostedAura = SimplePool.Spawn<VFX>(PoolType.Particle_BoostedVFX, characterTransform);
             }
             else
             {
-                boostedAura.Play();
+                boostedAura.Spawn();
             }
         }
         else
         {
-            boostedAura.Stop();
+            boostedAura.Despawn();
         }
     }
 
     protected void ClearBoost()
     {
-        scaleRatio = tempScaleRatio;
-        OnScaleRatioChanges();
+        OnScaleRatioChange(tempScaleRatio);
 
         isBoosted = false;
         isHugeBulletBoosted = false;
@@ -480,18 +384,18 @@ public abstract class AbstractCharacter : MonoBehaviour
     }
 
     // Getter
-    public int GetWeaponId()
-    {
-        return weapon.id;
-    }
-
-    public Transform GetAttackPoint()
-    {
-        return attackPoint;
-    }
-
     public float GetRawAttackRange()
     {
         return configSO.RawAttackRange;
+    }
+
+    public Radar GetRadarObject()
+    {
+        return radarObject;
+    }
+
+    public NavMeshAgent GetAgent()
+    {
+        return agent;
     }
 }
