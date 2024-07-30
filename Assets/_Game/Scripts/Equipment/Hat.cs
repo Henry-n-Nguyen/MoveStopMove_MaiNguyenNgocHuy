@@ -1,10 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
-public class Hat : MonoBehaviour
+public class Hat : Equipment
 {
-    [SerializeField] private GameObject hatGameObject;
 
-    public int id;
 }

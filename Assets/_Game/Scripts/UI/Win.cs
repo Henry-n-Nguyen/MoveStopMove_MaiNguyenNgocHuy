@@ -8,38 +8,37 @@ public class Win : UICanvas
 {
     [SerializeField] private TextMeshProUGUI earnCoinText;
 
-    private void OnEnable()
+    private UserData data;
+
+    private void Awake()
     {
-        OnInit();
+        data = UserDataManager.Ins.userData;
     }
 
-    private void OnInit()
+    public override void Setup()
     {
-        BotPool.Collect();
+        base.Setup();
 
-        int currentLevel = UserDataManager.instance.userData.currentLevel;
-        int currentMaxLevel = LevelManager.instance.GetCurentMaxLevel();
+        earnCoinText.text = "+ " + (CharacterManager.Ins.player.point).ToString();
 
-        UserDataManager.instance.userData.currentHighestRank = 1;
-        UserDataManager.instance.userData.currentHighestLevel = UserDataManager.instance.userData.currentLevel + 1;
-        UserDataManager.instance.userData.currentLevel = currentLevel + 1 > currentMaxLevel ? currentMaxLevel : currentLevel + 1;
-        UserDataManager.instance.Save();
+        CharacterManager.Ins.player.OnInit();
 
-        earnCoinText.text = "+ " + (GamePlayManager.instance.coinToEarn).ToString();
+        int currentLevel = UserDataManager.Ins.userData.currentLevel;
+        int highestLevel = LevelManager.Ins.HigestLevel;
 
-        GamePlayManager.instance.player.OnInit();
-        GamePlayManager.instance.player.Win();
-
-        CameraManager.instance.TurnOnCamera(CameraState.Win);
+        UserDataManager.Ins.userData.currentHighestRank = 1;
+        UserDataManager.Ins.userData.currentHighestLevel = UserDataManager.Ins.userData.currentLevel + 1;
+        UserDataManager.Ins.userData.currentLevel = currentLevel + 1 > highestLevel ? highestLevel : currentLevel + 1;
+        UserDataManager.Ins.SaveData();
     }
 
     public void ReturnHome()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
+        LevelManager.Ins.OnMainMenu();
     }
 
     public void TripleAward()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.Award);
+        LevelManager.Ins.OnAward();
     }
 }

@@ -5,476 +5,263 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using HuySpace;
+using System.Diagnostics;
 
 public class CostumeShop : UICanvas
 {
+    [Header("equipmentSODatas")]
+    [SerializeField] private EquipmentSODatas equipmentSODatas;
+
+    [Space(0.3f)]
     [Header("References")]
     [SerializeField] private TextMeshProUGUI coinText;
     [SerializeField] private TextMeshProUGUI priceText;
     [SerializeField] private RectTransform content;
-    [SerializeField] private Item costumePrefab;
+    [SerializeField] private CostumeItemShop costumePrefab;
 
+    [Space(0.3f)]
     [Header("Button_Category")]
-    [SerializeField] private RectTransform skinButtonSelected;
-    [SerializeField] private RectTransform skinButtonNonSelect;
     [SerializeField] private RectTransform hatButtonSelected;
     [SerializeField] private RectTransform hatButtonNonSelect;
+
+    [SerializeField] private RectTransform accessoryButtonSelected;
+    [SerializeField] private RectTransform accessoryButtonNonSelect;
+
     [SerializeField] private RectTransform pantButtonSelected;
     [SerializeField] private RectTransform pantButtonNonSelect;
-    [SerializeField] private RectTransform specialButtonSelected;
-    [SerializeField] private RectTransform specialButtonNonSelect;
 
+    [SerializeField] private RectTransform skinButtonSelected;
+    [SerializeField] private RectTransform skinButtonNonSelect;
+
+    [Space(0.3f)]
     [Header("Button_Buy/Equip/Equipped")]
     [SerializeField] private GameObject buyButton;
     [SerializeField] private GameObject equipButton;
     [SerializeField] private GameObject equippedButton;
 
+    [Space(0.3f)]
     [Header("Notification")]
     [SerializeField] private GameObject notificationPrefab;
     [SerializeField] private GameObject notificationHolder;
 
-    [Header("EquipmentDataSO")]
-    [SerializeField] private EquipmentDataSO equipmentDataSO;
-
     // In Editor
-    [HideInInspector] public CostumeShopState currentShopState;
-
+    private EquipmentType currentItemShopType;
     private UserData data;
+    private List<EquipmentId> equipmentDataList;
 
-    private bool isEquippedSpecial;
+    // Current shop item Clicked
+    private CostumeItemShop currentItemOnClicked = null;
 
-    [HideInInspector] public int id;
-    [HideInInspector] public int price;
-    [HideInInspector] public Item itemOnClicked = null;
-
-    private void OnEnable()
+    private void Awake()
     {
-        OnInit();
+        data = UserDataManager.Ins.userData;
     }
 
-    private void OnInit()
+    public override void Setup()
     {
-        StartCoroutine(Loading(3f));
-
-        CameraManager.instance.TurnOnCamera(CameraState.CostumeShop);
-
-        data = UserDataManager.instance.userData;
+        base.Setup();
 
         coinText.text = data.coin.ToString();
 
-        isEquippedSpecial = data.isSpecialEquipped;
-        GamePlayManager.instance.player.DeEquipSpecial();
-        data.isSpecialEquipped = false;
-        UserDataManager.instance.Load();
+        CharacterManager.Ins.player.LoadDataFromUserData();
 
         TriggerSkinShop();
-
-        OnCategoryIsSelected();
     }
 
-    public void OnClick()
+    public void OnItemClick(CostumeItemShop item)
     {
-        coinText.text = data.coin.ToString();
+        if (currentItemOnClicked != null) currentItemOnClicked.OnRelease();
 
-        switch (currentShopState)
+        currentItemOnClicked = item;
+        currentItemOnClicked.OnClick();
+
+        switch (item.Type)
         {
-            case CostumeShopState.SkinShop:
-                if (data.skinIdList.IndexOf(id) == -1)
-                {
-                    ChangeButton(ButtonType.BuyButton);
-
-                    priceText.text = price.ToString();
-                }
-                else
-                {
-                    if (id == data.equippedSkinId && !isEquippedSpecial)
-                    {
-                        ChangeButton(ButtonType.EquippedButton);
-                    }
-                    else
-                    {
-                        ChangeButton(ButtonType.EquipButton);
-                    }
-                }
-
+            case EquipmentType.Hat:
+                CharacterManager.Ins.player.Equip(GetEquipmentPrefab<Hat>(item.Type, item.Id));
                 break;
-            case CostumeShopState.HatShop:
-                if (data.hatIdList.IndexOf(id) == -1)
-                {
-                    ChangeButton(ButtonType.BuyButton);
-
-                    priceText.text = price.ToString();
-                }
-                else
-                {
-                    if (id == data.equippedHatId && !isEquippedSpecial)
-                    {
-                        ChangeButton(ButtonType.EquippedButton);
-                    }
-                    else
-                    {
-                        ChangeButton(ButtonType.EquipButton);
-                    }
-                }
-
+            case EquipmentType.Accessory:
+                CharacterManager.Ins.player.Equip(GetEquipmentPrefab<Accessory>(item.Type, item.Id));
                 break;
-            case CostumeShopState.PantShop:
-                if (data.pantIdList.IndexOf(id) == -1)
-                {
-                    ChangeButton(ButtonType.BuyButton);
-
-                    priceText.text = price.ToString();
-                }
-                else
-                {
-                    if (id == data.equippedPantId && !isEquippedSpecial)
-                    {
-                        ChangeButton(ButtonType.EquippedButton);
-                    }
-                    else
-                    {
-                        ChangeButton(ButtonType.EquipButton);
-                    }
-                }
-
+            case EquipmentType.Pant:
+                CharacterManager.Ins.player.Equip(GetEquipmentPrefab<Pant>(item.Type, item.Id));
                 break;
-            case CostumeShopState.SpecialShop:
-                if (data.specialIdList.IndexOf(id) == -1)
-                {
-                    ChangeButton(ButtonType.BuyButton);
-
-                    priceText.text = price.ToString();
-                }
-                else
-                {
-                    if (id == data.equippedSpecialId && isEquippedSpecial)
-                    {
-                        ChangeButton(ButtonType.EquippedButton);
-                    }
-                    else
-                    {
-                        ChangeButton(ButtonType.EquipButton);
-                    }
-                }
-
+            case EquipmentType.Skin:
+                CharacterManager.Ins.player.Equip(GetEquipmentPrefab<Skin>(item.Type, item.Id));
                 break;
+        }
+
+        CheckButtonState();
+    }
+
+    private T GetEquipmentPrefab<T>(EquipmentType type, EquipmentId id) where T : Equipment
+    {
+        T item = equipmentSODatas.GetSOData(type).GetData(id).GetPrefab<T>();
+        return item;
+    }
+
+    private void CheckButtonState()
+    {
+        EquipmentType type = currentItemOnClicked.Type;
+        EquipmentId id = currentItemOnClicked.Id;
+        int price = currentItemOnClicked.Price;
+
+        if (!data.equipmentBought.Contains(id))
+        {
+            ChangeButton(ButtonType.BuyButton);
+
+            priceText.text = price.ToString();
+        }
+        else
+        {
+            if (id == data.equippedEquipment[(int)type])
+            {
+                ChangeButton(ButtonType.EquippedButton);
+            }
+            else
+            {
+                ChangeButton(ButtonType.EquipButton);
+            }
         }
     }
 
     private void ChangeButton(ButtonType type)
     {
+        buyButton.SetActive(false);
+        equipButton.SetActive(false);
+        equippedButton.SetActive(false);
+
         switch (type)
         {
             case ButtonType.BuyButton:
                 buyButton.SetActive(true);
-                equipButton.SetActive(false);
-                equippedButton.SetActive(false);
-
                 break;
             case ButtonType.EquipButton:
-                buyButton.SetActive(false);
                 equipButton.SetActive(true);
-                equippedButton.SetActive(false);
-
                 break;
             case ButtonType.EquippedButton:
-                buyButton.SetActive(false);
-                equipButton.SetActive(false);
                 equippedButton.SetActive(true);
-
                 break;
         }
     }
 
-    private void OnCategoryIsSelected()
+    private void OnCategorySelected(EquipmentType type)
     {
-        switch (currentShopState)
+        DeactiveItemShop(currentItemShopType);
+
+        currentItemShopType = type;
+
+        if (Cache.GetItemList(currentItemShopType).Count > 0)
         {
-            case CostumeShopState.SkinShop:
-                skinButtonSelected.gameObject.SetActive(true);
-                skinButtonNonSelect.gameObject.SetActive(false);
+            ActiveItemShop(currentItemShopType);
+        }
+        else
+        {
+            InitItemShop(currentItemShopType);
+        }
+    }
 
-                if (Cache.GetItemList(EquipmentType.Skin).Count > 0)
-                {
-                    ActiveState(currentShopState);
-                }
-                else {
-                    List<Sprite> skinImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Skin);
-                    for (int i = 0; i < skinImages.Count; i++)
-                    {
-                        Item createdItem = Instantiate(costumePrefab, content);
+    private void InitItemShop(EquipmentType type)
+    {
+        List<EquipmentData> list = equipmentSODatas.GetSOData(type).GetList();
 
-                        createdItem.icon.sprite = skinImages[i];
+        foreach (EquipmentData equipmentData in list)
+        {
+            CostumeItemShop createdItem = Instantiate(costumePrefab, content);
+            createdItem.Init(equipmentData.sprite, type, equipmentData.id, equipmentData.price, this);
+            Cache.GetItemList(type).Add(createdItem);
+        }
+    }
 
-                        createdItem.costumeShopScript = this;
+    private void ActiveItemShop(EquipmentType type)
+    {
+        ActiveCategoryButton(type);
 
-                        createdItem.id = i;
+        foreach (CostumeItemShop item in Cache.GetItemList(type))
+        {
+            item.Spawn();
+        }
+    }
+    private void ActiveCategoryButton(EquipmentType type)
+    {
+        hatButtonSelected.gameObject.SetActive(false);
+        hatButtonNonSelect.gameObject.SetActive(true);
 
-                        createdItem.equipmentType = EquipmentType.Skin;
+        accessoryButtonSelected.gameObject.SetActive(false);
+        accessoryButtonNonSelect.gameObject.SetActive(true);
 
-                        Cache.GetItemList(EquipmentType.Skin).Add(createdItem);
-                    }
-                }
+        pantButtonSelected.gameObject.SetActive(false);
+        pantButtonNonSelect.gameObject.SetActive(true);
 
-                break;
-            case CostumeShopState.HatShop:
+        skinButtonSelected.gameObject.SetActive(false);
+        skinButtonNonSelect.gameObject.SetActive(true);
+
+        switch (type)
+        {
+            case EquipmentType.Hat:
                 hatButtonSelected.gameObject.SetActive(true);
                 hatButtonNonSelect.gameObject.SetActive(false);
-
-                if (Cache.GetItemList(EquipmentType.Hat).Count > 0)
-                {
-                    ActiveState(currentShopState);
-                }
-                else
-                {
-                    List<Sprite> hatImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Hat);
-
-                    for (int i = 0; i < hatImages.Count; i++)
-                    {
-                        Item createdItem = Instantiate(costumePrefab, content);
-
-                        createdItem.icon.sprite = hatImages[i];
-
-                        createdItem.costumeShopScript = this;
-
-                        createdItem.id = i;
-
-                        createdItem.equipmentType = EquipmentType.Hat;
-
-                        Cache.GetItemList(EquipmentType.Hat).Add(createdItem);
-                    }
-                }
-
                 break;
-            case CostumeShopState.PantShop:
+            case EquipmentType.Accessory:
+                accessoryButtonSelected.gameObject.SetActive(true);
+                accessoryButtonNonSelect.gameObject.SetActive(false);
+                break;
+            case EquipmentType.Pant:
                 pantButtonSelected.gameObject.SetActive(true);
                 pantButtonNonSelect.gameObject.SetActive(false);
-
-                if (Cache.GetItemList(EquipmentType.Pant).Count > 0)
-                {
-                    ActiveState(currentShopState);
-                }
-                else
-                {
-                    List<Sprite> pantImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Pant);
-
-                    for (int i = 0; i < pantImages.Count; i++)
-                    {
-                        Item createdItem = Instantiate(costumePrefab, content);
-
-                        createdItem.icon.sprite = pantImages[i];
-
-                        createdItem.costumeShopScript = this;
-
-                        createdItem.id = i;
-
-                        createdItem.equipmentType = EquipmentType.Pant;
-
-                        Cache.GetItemList(EquipmentType.Pant).Add(createdItem);
-                    }
-                }
-
                 break;
-            case CostumeShopState.SpecialShop:
-                specialButtonSelected.gameObject.SetActive(true);
-                specialButtonNonSelect.gameObject.SetActive(false);
-
-                if (Cache.GetItemList(EquipmentType.Special).Count > 0)
-                {
-                    ActiveState(currentShopState);
-                }
-                else
-                {
-                    List<Sprite> specialImages = equipmentDataSO.GetEquipmentSpriteListByType(EquipmentType.Special);
-
-                    for (int i = 0; i < specialImages.Count; i++)
-                    {
-                        Item createdItem = Instantiate(costumePrefab, content);
-
-                        createdItem.icon.sprite = specialImages[i];
-
-                        createdItem.costumeShopScript = this;
-
-                        createdItem.id = i;
-
-                        createdItem.equipmentType = EquipmentType.Special;
-
-                        Cache.GetItemList(EquipmentType.Special).Add(createdItem);
-                    }
-                }
-
+            case EquipmentType.Skin:
+                skinButtonSelected.gameObject.SetActive(true);
+                skinButtonNonSelect.gameObject.SetActive(false);
                 break;
         }
     }
 
-    private void ActiveState(CostumeShopState state)
+    private void DeactiveItemShop(EquipmentType type)
     {
-        switch (state)
+        foreach (CostumeItemShop item in Cache.GetItemList(type))
         {
-            case CostumeShopState.SkinShop:
-                foreach (Item item in Cache.GetItemList(EquipmentType.Skin))
-                {
-                    item.Spawn();
-                }
-
-                break;
-            case CostumeShopState.HatShop:
-                foreach (Item item in Cache.GetItemList(EquipmentType.Hat))
-                {
-                    item.Spawn();
-                }
-
-                break;
-            case CostumeShopState.PantShop:
-                foreach (Item item in Cache.GetItemList(EquipmentType.Pant))
-                {
-                    item.Spawn();
-                }
-
-                break;
-            case CostumeShopState.SpecialShop:
-                foreach (Item item in Cache.GetItemList(EquipmentType.Special))
-                {
-                    item.Spawn();
-                }
-
-                break;
+            item.Despawn();
         }
     }
 
-    private void DeactiveState(CostumeShopState state)
-    {
-        switch (state)
-        {
-            case CostumeShopState.SkinShop:
-                skinButtonSelected.gameObject.SetActive(false);
-                skinButtonNonSelect.gameObject.SetActive(true);
-
-                foreach (Item item in Cache.GetItemList(EquipmentType.Skin))
-                {
-                    item.Despawn();
-                }
-
-                break;
-            case CostumeShopState.HatShop:
-                hatButtonSelected.gameObject.SetActive(false);
-                hatButtonNonSelect.gameObject.SetActive(true);
-
-                foreach (Item item in Cache.GetItemList(EquipmentType.Hat))
-                {
-                    item.Despawn();
-                }
-
-                break;
-            case CostumeShopState.PantShop:
-                pantButtonSelected.gameObject.SetActive(false);
-                pantButtonNonSelect.gameObject.SetActive(true);
-
-                foreach (Item item in Cache.GetItemList(EquipmentType.Pant))
-                {
-                    item.Despawn();
-                }
-
-                break;
-            case CostumeShopState.SpecialShop:
-                specialButtonSelected.gameObject.SetActive(false);
-                specialButtonNonSelect.gameObject.SetActive(true);
-
-                foreach (Item item in Cache.GetItemList(EquipmentType.Special))
-                {
-                    item.Despawn();
-                }
-
-                GamePlayManager.instance.player.DeEquipSpecial();
-                data.isSpecialEquipped = false;
-                UserDataManager.instance.Load();
-
-                break;
-        }
-    }
-
+    // Change Category
     public void TriggerSkinShop()
     {
-        DeactiveState(currentShopState);
-
-        currentShopState = CostumeShopState.SkinShop;
-
-        OnCategoryIsSelected();
+        OnCategorySelected(EquipmentType.Skin);
     }
 
     public void TriggerHatShop()
     {
-        DeactiveState(currentShopState);
-
-        currentShopState = CostumeShopState.HatShop;
-
-        OnCategoryIsSelected();
+        OnCategorySelected(EquipmentType.Hat);
     }
 
     public void TriggerPantShop()
     {
-        DeactiveState(currentShopState);
-
-        currentShopState = CostumeShopState.PantShop;
-
-        OnCategoryIsSelected();
+        OnCategorySelected(EquipmentType.Pant);
     }
 
-    public void TriggerSpecialShop()
+    public void TriggerAccessoryShop()
     {
-        DeactiveState(currentShopState);
-
-        currentShopState = CostumeShopState.SpecialShop;
-
-        OnCategoryIsSelected();
+        OnCategorySelected(EquipmentType.Accessory);
     }
 
+    // Button Function
     public void Buy()
     {
+        EquipmentType type = currentItemOnClicked.Type;
+        EquipmentId id = currentItemOnClicked.Id;
+        int price = currentItemOnClicked.Price; 
+
         if (data.coin >= price)
         {
-            switch (currentShopState)
-            {
-                case CostumeShopState.SkinShop:
-                    isEquippedSpecial = false;
+            data.coin -= price;
+            coinText.text = data.coin.ToString();
 
-                    data.coin -= price;
-                    data.skinIdList.Add(id);
-                    data.equippedSkinId = id;
-                    UserDataManager.instance.Save();
-
-                    break;
-                case CostumeShopState.HatShop:
-                    isEquippedSpecial = false;
-
-                    data.coin -= price;
-                    data.hatIdList.Add(id);
-                    data.equippedHatId = id;
-                    UserDataManager.instance.Save();
-
-                    break;
-                case CostumeShopState.PantShop:
-                    isEquippedSpecial = false;
-
-                    data.coin -= price;
-                    data.pantIdList.Add(id);
-                    data.equippedPantId = id;
-                    UserDataManager.instance.Save();
-
-                    break;
-                case CostumeShopState.SpecialShop:
-                    isEquippedSpecial = true;
-
-                    data.coin -= price;
-                    data.specialIdList.Add(id);
-                    data.equippedSpecialId = id;
-                    UserDataManager.instance.Save();
-
-                    break;
-            }
-            
-
-            OnClick();
+            data.equipmentBought.Add(id);
+            data.equippedEquipment[(int)type] = id;
+            UserDataManager.Ins.SaveData();
+            CheckButtonState();
         }
         else
         {
@@ -484,56 +271,17 @@ public class CostumeShop : UICanvas
 
     public void Equip()
     {
-        switch (currentShopState)
-        {
-            case CostumeShopState.SkinShop:
-                isEquippedSpecial = false;
+        EquipmentType type = currentItemOnClicked.Type;
+        EquipmentId id = currentItemOnClicked.Id;
 
-                data.equippedSkinId = id;
-                UserDataManager.instance.Save();
+        data.equippedEquipment[(int)type] = id;
+        UserDataManager.Ins.SaveData();
 
-                break;
-            case CostumeShopState.HatShop:
-                isEquippedSpecial = false;
-
-                data.equippedHatId = id;
-                UserDataManager.instance.Save();
-
-                break;
-            case CostumeShopState.PantShop:
-                isEquippedSpecial = false;
-
-                data.equippedPantId = id;
-                UserDataManager.instance.Save();
-
-                break;
-            case CostumeShopState.SpecialShop:
-                isEquippedSpecial = true;
-
-                data.equippedSpecialId = id;
-                UserDataManager.instance.Save();
-
-                break;
-        }
-
-        OnClick();
+        CheckButtonState();
     }
     
     public void ReturnHome()
     {
-        if (!isEquippedSpecial) GamePlayManager.instance.player.DeEquipSpecial();
-        data.isSpecialEquipped = isEquippedSpecial;
-        UserDataManager.instance.Save();
-
-        GamePlayManager.instance.ChangeState(GamePlayState.MainMenu);
-    }
-
-    private IEnumerator Loading(float time)
-    {
-        UIManager.instance.OpenUI<Loading>();
-
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseDirectly<Loading>();
+        LevelManager.Ins.OnMainMenu();
     }
 }

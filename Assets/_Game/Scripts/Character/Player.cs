@@ -5,18 +5,16 @@ using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
-using static UnityEngine.GraphicsBuffer;
 
 public class Player : AbstractCharacter
 {
+    [Space(0.3f)]
+    [Header("Player Input")]
     [SerializeField] private PlayerInput playerInput;
-
     [SerializeField] private InputAction moveAction;
 
-    [Header("EquipmentDataSO")]
-    [SerializeField] private EquipmentDataSO equipmentDataSO;
-
     private bool isDetectedTarget;
+    private bool isDiedBefore = false;
 
     public override void OnInit()
     {
@@ -26,45 +24,35 @@ public class Player : AbstractCharacter
 
         ChangeName("You");
 
+        isDiedBefore = false;
+
         characterTransform.position = Vector3.zero;
 
         moveAction = playerInput.actions.FindAction(Constant.INPUT_ACTION_MOVING);
 
-        Rotate(Direct.Back);
+        characterTransform.forward = Vector3.back;
 
         isDetectedTarget = false;
     }
 
     public void LoadDataFromUserData()
     {
-        UserData data = UserDataManager.instance.userData;
+        UserData data = UserDataManager.Ins.userData;
 
-        if (data.isSpecialEquipped)
-        {
-            int equippedWeaponId = data.equippedWeaponId;
-            Equip(EquipmentType.Weapon, equipmentDataSO.GetWeaponById(equippedWeaponId));
-            int equippedSpecialId = data.equippedSpecialId;
-            Equip(EquipmentType.Special, equipmentDataSO.GetSpecialById(equippedSpecialId));
-        }
-        else
-        {
-            int equippedWeaponId = data.equippedWeaponId;
-            Equip(EquipmentType.Weapon, equipmentDataSO.GetWeaponById(equippedWeaponId));
+        EquipmentId equippedWeaponId = data.equippedEquipment[(int)EquipmentType.Weapon];
+        Equip(equipmentSODatas.GetSOData(EquipmentType.Weapon).GetData(equippedWeaponId).GetPrefab<Weapon>());
 
-            int equippedHatId = data.equippedHatId;
-            Equip(EquipmentType.Hat, equipmentDataSO.GetHatById(equippedHatId));
+        EquipmentId equippedHatId = data.equippedEquipment[(int)EquipmentType.Hat];
+        Equip(equipmentSODatas.GetSOData(EquipmentType.Hat).GetData(equippedHatId).GetPrefab<Hat>());
 
-            int equippedPantId = data.equippedPantId;
-            Equip(EquipmentType.Pant, equipmentDataSO.GetPantById(equippedPantId));
+        EquipmentId equippedSkinId = data.equippedEquipment[(int)EquipmentType.Skin];
+        Equip(equipmentSODatas.GetSOData(EquipmentType.Skin).GetData(equippedSkinId).GetPrefab<Skin>());
 
-            int equippedSkinId = data.equippedSkinId;
-            Equip(EquipmentType.Skin, equipmentDataSO.GetSkinById(equippedSkinId));
-        }
-    }
+        EquipmentId equippedPantId = data.equippedEquipment[(int)EquipmentType.Pant];
+        Equip(equipmentSODatas.GetSOData(EquipmentType.Pant).GetData(equippedPantId).GetPrefab<Pant>());
 
-    public override void DeEquipSpecial()
-    {
-        base.DeEquipSpecial();
+        EquipmentId equippedAccessoryId = data.equippedEquipment[(int)EquipmentType.Accessory];
+        Equip(equipmentSODatas.GetSOData(EquipmentType.Accessory).GetData(equippedAccessoryId).GetPrefab<Accessory>());
     }
 
     public override void Moving()
@@ -72,31 +60,28 @@ public class Player : AbstractCharacter
         base.Moving();
 
         Vector2 inputVector = moveAction.ReadValue<Vector2>();
+        Vector3 moveDirection = Vector3.right * inputVector.x + Vector3.forward * inputVector.y;
 
-        Direct direction = CheckDirection(inputVector);
+        if (moveDirection != Vector3.zero) characterTransform.forward = moveDirection;
 
-        Rotate(direction);
-
-        characterTransform.position += (Vector3.right * inputVector.x + Vector3.forward * inputVector.y) * Time.deltaTime * moveSpeed;
+        characterTransform.position += moveDirection.normalized * Time.deltaTime * moveSpeed;
 
         if (Vector2.Distance(inputVector, Vector2.zero) < 0.01f)
         {
-            if (isReadyToAttack)
+            if (IsReadyToAttack())
             {
-                if (targetsInRange.Count > 0)
+                if (radarObject.IsAnyTargetInRange)
                 {
-                    TurnTowardClosestCharacter();
-
-                    ChangeState(new AttackState());
+                    ChangeState(ATTACK_STATE);
                 }
                 else
                 {
-                    ChangeState(new IdleState());
+                    ChangeState(IDLE_STATE);
                 }
             }
             else
             {
-                ChangeState(new IdleState());
+                ChangeState(IDLE_STATE);
             }
         }
     }
@@ -105,20 +90,13 @@ public class Player : AbstractCharacter
     {
         base.StopMoving();
 
-        if (isInCostumeShop)
+        if (radarObject.IsAnyTargetInRange)
         {
-            ChangeState(new DanceState());
-        }
-
-        if (targetsInRange.Count > 0)
-        {
-            TurnTowardClosestCharacter();
-
-            if (isReadyToAttack && !isDetectedTarget)
+            if (IsReadyToAttack() && !isDetectedTarget)
             {
                 isDetectedTarget = true;
 
-                ChangeState(new AttackState());
+                ChangeState(ATTACK_STATE);
             }
         }
 
@@ -126,7 +104,7 @@ public class Player : AbstractCharacter
 
         if (Vector2.Distance(inputVector, Vector2.zero) > 0.01f)
         {
-            ChangeState(new PatrolState());
+            ChangeState(PATROL_STATE);
 
             isDetectedTarget = false;
         }
@@ -145,7 +123,7 @@ public class Player : AbstractCharacter
 
         if (Vector2.Distance(inputVector, Vector2.zero) > 0.1f)
         {
-            ChangeState(new PatrolState());
+            ChangeState(PATROL_STATE);
 
             isDetectedTarget = false;
         }
@@ -162,61 +140,30 @@ public class Player : AbstractCharacter
         {
             base.Dead();
 
-            isDead = true;
+            GamePlayManager.Ins.ChangeState(GameState.Lose);
 
-            GamePlayManager.instance.ChangeState(GamePlayState.Lose);
+            StartCoroutine(DelayToRevive(2f));
         }
     }
 
-    public void Revive()
+    private IEnumerator DelayToRevive(float time)
     {
-        isDead = false;
+        yield return new WaitForSeconds(time);
 
-        isReadyToAttack = true;
-
-        targetsInRange.Clear();
-
-        IsInRangeOfAnyCharacter();
-
-        ChangeState(new IdleState());
-    }
-
-    private void IsInRangeOfAnyCharacter()
-    {
-        Debug.Log("?");
-
-        List<AbstractCharacter> characterList = new List<AbstractCharacter>();
-        characterList.AddRange(BotPool.GetActivatedBotList());
-
-        if (characterList.Count > 0)
+        if (!isDiedBefore)
         {
-            for (int i = 0; i < characterList.Count; i++)
-            {
-                AbstractCharacter foundedTarget = characterList[i];
-
-                float currentDistance = Vector3.Distance(characterTransform.position, foundedTarget.characterTransform.position);
-
-                if (currentDistance <= foundedTarget.attackRange)
-                {
-                    foundedTarget.targetsInRange.Add(characterScript);
-                }
-
-                if (currentDistance <= attackRange)
-                {
-                    targetsInRange.Add(foundedTarget);
-                }
-            }
+            isDiedBefore = true;
+            LevelManager.Ins.OnRevive();
+        }
+        else
+        {
+            LevelManager.Ins.OnLose();
         }
     }
 
-    public override void Dancing()
+    public override void Dance()
     {
-        base.Dancing();
-
-        if (!isInCostumeShop)
-        {
-            ChangeState(new IdleState());
-        }
+        base.Dance();
     }
 
     public override void Win()
@@ -224,67 +171,11 @@ public class Player : AbstractCharacter
         base.Win();
     }
 
-    private void Rotate(Direct dir)
+    public void Revive()
     {
-        switch (dir)
-        {
-            case Direct.Forward:
-                characterTransform.rotation = Quaternion.Euler(Vector3.zero);
-                break;
-            case Direct.ForwardRight:
-                characterTransform.rotation = Quaternion.Euler(Vector3.up * 45f);
-                break;
-            case Direct.Right:
-                characterTransform.rotation = Quaternion.Euler(Vector3.up * 90f);
-                break;
-            case Direct.BackRight:
-                characterTransform.rotation = Quaternion.Euler(Vector3.up * 135f);
-                break;
-            case Direct.Back:
-                characterTransform.rotation = Quaternion.Euler(Vector3.up * 180f);
-                break;
-            case Direct.ForwardLeft:
-                characterTransform.rotation = Quaternion.Euler(Vector3.down * 45f);
-                break;
-            case Direct.Left:
-                characterTransform.rotation = Quaternion.Euler(Vector3.down * 90f);
-                break;
-            case Direct.BackLeft:
-                characterTransform.rotation = Quaternion.Euler(Vector3.down * 135f);
-                break;
-        }
-    }
+        isDead = false;
+        boxCollider.enabled = true;
 
-    private Direct CheckDirection(Vector2 direction)
-    {
-        switch ((int)Mathf.Round(direction.x))
-        {
-            case 1:
-                switch ((int)Mathf.Round(direction.y))
-                {
-                    case 1: return Direct.ForwardRight;
-                    case 0: return Direct.Right;
-                    case -1: return Direct.BackRight;
-                }
-                return Direct.None;
-            case 0:
-                switch ((int)Mathf.Round(direction.y))
-                {
-                    case 1: return Direct.Forward;
-                    case 0: return Direct.None;
-                    case -1: return Direct.Back;
-                }
-                return Direct.None;
-            case -1:
-                switch ((int)Mathf.Round(direction.y))
-                {
-                    case 1: return Direct.ForwardLeft;
-                    case 0: return Direct.Left;
-                    case -1: return Direct.BackLeft;
-                }
-                return Direct.None;
-        }
-
-        return Direct.None;
+        ChangeState(IDLE_STATE);
     }
 }

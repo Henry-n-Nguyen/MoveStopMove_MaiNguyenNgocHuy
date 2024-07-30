@@ -2,17 +2,22 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
 [Serializable]
 public class UserData
 {
-    public int coin;
+    // Public
+    public List<EquipmentId> equipmentBought = new List<EquipmentId>();
 
-    public List<int> weaponIdList = new List<int>();
-    public List<int> hatIdList = new List<int>();
-    public List<int> pantIdList = new List<int>();
-    public List<int> skinIdList = new List<int>();
-    public List<int> specialIdList = new List<int>();
+    //public List<WeaponId> WeaponList = new List<WeaponId>();
+    //public List<HatId> HatList = new List<HatId>();
+    //public List<SkinId> SkinList = new List<SkinId>();
+    //public List<PantId> PantList = new List<PantId>();
+    //public List<AccessoryId> AccessoryList = new List<AccessoryId>();
+
+    // Coin
+    public int coin;
 
     //Setting
     public bool isVibrationOn = true;
@@ -25,12 +30,5 @@ public class UserData
     public int currentHighestRank = 50;
 
     //Equipment
-    public bool isSpecialEquipped;
-    public int equippedSpecialId = 0;
-
-    public int equippedWeaponId;
-    public int equippedHatId;
-    public int equippedPantId;
-    public int equippedSkinId;
-
+    public List<EquipmentId> equippedEquipment = new List<EquipmentId>();
 }

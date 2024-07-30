@@ -30,13 +30,13 @@ public class Cache
         return spawnPoints[collider];
     }
 
-    private static Dictionary<EquipmentType, List<Item>> itemLists = new Dictionary<EquipmentType, List<Item>>();
+    private static Dictionary<EquipmentType, List<ItemShop>> itemLists = new Dictionary<EquipmentType, List<ItemShop>>();
 
-    public static List<Item> GetItemList(EquipmentType equipmentType)
+    public static List<ItemShop> GetItemList(EquipmentType equipmentType)
     {
         if (!itemLists.ContainsKey(equipmentType))
         {
-            List<Item> list = new List<Item>();
+            List<ItemShop> list = new List<ItemShop>();
             itemLists.Add(equipmentType, list);
         }
 

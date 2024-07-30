@@ -1,4 +1,5 @@
 using HuySpace;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -6,79 +7,89 @@ using UnityEngine;
 
 public class Ingame : UICanvas
 {
+    [Header("Text references")]
     [SerializeField] private TextMeshProUGUI aliveCharacterText;
     [SerializeField] private GameObject helpToMovePart;
+
+    [Space(0.3f)]
+    [Header("Joystick")]
+    [SerializeField] private DynamicJoyStick joyStick;
 
     // Coroutines
     private Coroutine spawnBoosterCoroutine;
 
-    private int temporaryAliveCharacter;
-
     private void Start()
     {
-        SubscribeEvent();
+        SubcribeEventAction();
     }
 
-    private void OnEnable()
+    private void SubcribeEventAction()
     {
-        OnInit();
+        joyStick.OnTouchScreenAction += NonDisplayHelpToMove;
+        joyStick.OnReleaseScreenAction += DisplayHelpToMove;
+        CharacterManager.Ins.OnBotDieAction += UpdateCounter;
     }
 
-    private void SubscribeEvent()
+    public override void Setup()
     {
-        GamePlayManager.instance.OnAliveCharacterAmountChanged += UpdateCounter;
-        GamePlayManager.instance.OnPlayerTouchScreen += NonDisplayHelpToMovePart;
-    }
-
-    private void OnInit()
-    {
-        StartCoroutine(Loading(4f));
+        base.Setup();
 
         helpToMovePart.SetActive(true);
 
-        aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
+        aliveCharacterText.text = "Alive : " + CharacterManager.Ins.CharacterAlive.ToString();
 
-        CameraManager.instance.TurnOnCamera(CameraState.MainCamera);
+        spawnBoosterCoroutine = StartCoroutine(SpawnBoosterAfterTime(10f));
 
-        spawnBoosterCoroutine = StartCoroutine(SpawnBoosterAfterTime(15f));
+        joyStick.gameObject.SetActive(true);
     }
 
-    private void OnDisable()
+    public override void CloseDirectly()
     {
-        StopCoroutine(spawnBoosterCoroutine);
+        if (spawnBoosterCoroutine != null) StopCoroutine(spawnBoosterCoroutine);
+
+        base.CloseDirectly();
     }
 
     private IEnumerator SpawnBoosterAfterTime(float time)
     {
         yield return new WaitForSeconds(time);
 
-        BoosterGenerator.instance.SpawnBooster(1);
+        Vector3 pos = LevelManager.Ins.GetRandomPos();
+        SpawnRandomBooster(pos);
+        spawnBoosterCoroutine = StartCoroutine(SpawnBoosterAfterTime(10f));
+    }
+
+    private void SpawnRandomBooster(Vector3 pos)
+    {
+        BoostType[] boosterTypes = (BoostType[])Enum.GetValues(typeof(BoostType));
+        int randomIndex = UnityEngine.Random.Range(1, boosterTypes.Length);
+        BoostType randomBoosterType = (BoostType)boosterTypes.GetValue(randomIndex);
+
+        SimplePool.Spawn<AbstractBooster>((PoolType)randomBoosterType, pos, Quaternion.identity);
     }
 
     public void UpdateCounter()
     {
-        aliveCharacterText.text = "Alive : " + GamePlayManager.instance.aliveCharacterAmount.ToString();
-        if (GamePlayManager.instance.aliveCharacterAmount == 1) GamePlayManager.instance.ChangeState(GamePlayState.Win);
+        aliveCharacterText.text = "Alive : " + CharacterManager.Ins.CharacterAlive.ToString();
+        if (CharacterManager.Ins.CharacterAlive == 1) LevelManager.Ins.OnWin();
     }
 
-    public void NonDisplayHelpToMovePart()
+    public void DisplayHelpToMove()
+    {
+        if (CharacterManager.Ins.player.IsDead) return;
+
+        helpToMovePart.SetActive(true);
+    }
+
+    public void NonDisplayHelpToMove()
     {
         helpToMovePart.SetActive(false);
     }
 
     public void OpenSettings()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.Settings);
-    }
-
-    private IEnumerator Loading(float time)
-    {
-        UIManager.instance.OpenUI<Loading>();
-
-        yield return new WaitForSeconds(time);
-
-        UIManager.instance.CloseUI<Loading>(0);
-
-        GamePlayManager.instance.ChangeState(GamePlayState.Ingame);
+        if (spawnBoosterCoroutine != null) StopCoroutine(spawnBoosterCoroutine);
+        joyStick.gameObject.SetActive(false);
+        LevelManager.Ins.OnSettings();
     }
 }

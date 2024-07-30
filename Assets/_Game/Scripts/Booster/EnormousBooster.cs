@@ -21,7 +21,6 @@ public class EnormousBooster : AbstractBooster
 
         character.CheckBoost();
 
-        character.scaleRatio = config.Stat;
-        character.OnScaleRatioChanges();
+        character.OnScaleRatioChange(config.Stat);
     }
 }

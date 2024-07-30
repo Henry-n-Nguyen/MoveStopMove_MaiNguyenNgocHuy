@@ -15,11 +15,6 @@ public class Revive : UICanvas
 
     private float timer;
 
-    private void OnEnable()
-    {
-        OnInit();
-    }
-
     private void Update()
     {
         timer -= Time.deltaTime;
@@ -32,28 +27,21 @@ public class Revive : UICanvas
         }
     }
 
-    private void OnInit()
+    public override void Setup()
     {
+        base.Setup();
+
         timer = config.WaitingTime;
-
-        GamePlayManager.instance.ChangeState(GamePlayState.None);
-
-        CameraManager.instance.TurnOnCamera(CameraState.Revive);
     }
 
     public void WatchAd()
     {
-        GamePlayManager.instance.ChangeStateAfterTime(GamePlayState.Ingame, config.DelayTime);
-
-        GamePlayManager.instance.player.Revive();
-
-        UIManager.instance.CloseUI<Revive>(0);
-
-        UIManager.instance.OpenUI<DynamicJoyStick>();
+        LevelManager.Ins.OnPlay();
+        CharacterManager.Ins.player.Revive();
     }
 
     public void NoThanks()
     {
-        GamePlayManager.instance.ChangeState(GamePlayState.Lose);
+        LevelManager.Ins.OnLose();
     }
 }

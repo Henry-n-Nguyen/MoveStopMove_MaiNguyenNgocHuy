@@ -1,19 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using HuySpace;
 
-public class Weapon : MonoBehaviour
+public class Weapon : Equipment
 {
-    public GameObject weaponGameObject;
-    public int id;
 
-    public void Spawn()
-    {
-        weaponGameObject.SetActive(true);
-    }
-
-    public void Despawn()
-    {
-        weaponGameObject.SetActive(false);
-    }
 }

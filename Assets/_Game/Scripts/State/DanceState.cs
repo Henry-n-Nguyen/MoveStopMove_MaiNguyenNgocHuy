@@ -11,7 +11,7 @@ public class DanceState : IState<AbstractCharacter>
 
     public void OnExecute(AbstractCharacter t)
     {
-        t.Dancing();
+        t.Dance();
     }
 
     public void OnExit(AbstractCharacter t)
