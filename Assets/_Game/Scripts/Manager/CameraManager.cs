@@ -10,7 +10,7 @@ public class CameraManager : Singleton<CameraManager>
     [SerializeField] private GameObject dynamicCam;
     [SerializeField] private Transform dynamicCamTF;
 
-    private void Start()
+    private void Awake()
     {
         OnInit();
     }
@@ -18,8 +18,7 @@ public class CameraManager : Singleton<CameraManager>
     private void SetupCamera(Vector3 pos, Quaternion rot)
     {
         dynamicCam.SetActive(true);
-        dynamicCamTF.position = pos;
-        dynamicCamTF.rotation = rot;
+        dynamicCamTF.SetPositionAndRotation(pos, rot);
     }
 
     private void OnInit()

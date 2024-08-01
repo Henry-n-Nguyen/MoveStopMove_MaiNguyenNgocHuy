@@ -36,8 +36,8 @@ public class Revive : UICanvas
 
     public void WatchAd()
     {
-        LevelManager.Ins.OnPlay();
         CharacterManager.Ins.player.Revive();
+        LevelManager.Ins.OnPlay();
     }
 
     public void NoThanks()

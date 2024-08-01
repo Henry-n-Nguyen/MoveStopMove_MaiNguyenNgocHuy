@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 1
   <AgentSpeedConvertRate>k__BackingField: 0.67
-  <IdleTime>k__BackingField: 0.5
-  <PatrolTime>k__BackingField: 5
+  <IdleTime>k__BackingField: 1
+  <PatrolTime>k__BackingField: 2.5

@@ -6,6 +6,7 @@ using HuySpace;
 using UnityEngine.TextCore.Text;
 using System;
 using Random = UnityEngine.Random;
+using UnityEngine.UIElements;
 
 public class Enemy : AbstractCharacter
 {
@@ -20,9 +21,8 @@ public class Enemy : AbstractCharacter
     [SerializeField] private GameObject targetedMark;
 
     [Header("Patroling")]
-    [HideInInspector] public Vector3 desPoint;
-    [HideInInspector] public bool desPointSet;
-    [HideInInspector] public float desPointRange;
+    [SerializeField] private Vector3 desPoint;
+    [SerializeField] private float desPointRange;
 
     [Header("BotType")]
     [SerializeField] private BotType typeOfBot;
@@ -72,9 +72,11 @@ public class Enemy : AbstractCharacter
         base.OnInit();
 
         if (despawnCoroutine != null) StopCoroutine(despawnCoroutine);
-        desPointSet = false;
         IsTargeted(false);
         isDetectedTarget = false;
+
+        patrolingTimer = 0;
+        idlingTimer = 0;
 
         // Randomize
         Player player = CharacterManager.Ins.player;
@@ -91,6 +93,9 @@ public class Enemy : AbstractCharacter
 
         // Reset speed
         agent.speed = moveSpeed * 0.67f;
+
+        // Change state
+        ChangeState(IDLE_STATE);
     }
 
     // Random
@@ -113,58 +118,52 @@ public class Enemy : AbstractCharacter
     {
         base.Moving();
 
-        if (radarObject.IsAnyTargetInRange)
+        if (radarObject.IsAnyTargetInRange && IsReadyToAttack())
         {
-            if (IsReadyToAttack() && !isDetectedTarget)
+            AbstractCharacter character = radarObject.FindClosestCharacter();
+
+            if (character != null && !character.IsDead)
             {
-                agent.SetDestination(characterTransform.position);
-
-                desPointSet = false;
-
                 ChangeState(ATTACK_STATE);
             }
         }
+
+        // Check input condition
+        if (isOnPause)
+        {
+            idlingTimer = 0;
+            ChangeState(IDLE_STATE);
+        }
+
+        // Check timer
+        patrolingTimer += Time.deltaTime;
+
+        if (patrolingTimer > currentConfigSO.PatrolTime)
+        {
+            idlingTimer = 0;
+            ChangeState(IDLE_STATE);
+        }
+
+        // Move
+        agent.SetDestination(desPoint);
+
+        // Check Joystick state
+        Vector3 distanceToDesPoint = characterTransform.position - desPoint;
+
+        if (distanceToDesPoint.magnitude < 1f)
+        {
+            idlingTimer = 0;
+            ChangeState(IDLE_STATE);
+        }
     }
 
-    public void SearchDesPoint()
+    public void AggressiveChase()
     {
-        switch (typeOfBot)
-        {
-            case BotType.AggressiveBot:
-                Aggressive();
-                break;
-
-            case BotType.PatrolBot:
-                Patrol();
-                break;
-        }
-
-        desPointSet = true;
+        target = CharacterManager.Ins.GetRandomBot();
+        desPoint = target.characterTransform.position;
     }
 
-    private void Aggressive()
-    {
-        List<AbstractCharacter> characterList = new List<AbstractCharacter>();
-
-        // FIX : them list cac bot da duoc sinh ra
-        //characterList.AddRange(SimplePool.GetActivatedBotList());
-        characterList.Remove(characterScript);
-        characterList.Add(CharacterManager.Ins.player);
-
-        if (characterList.Count > 0)
-        {
-            AbstractCharacter foundedTarget = characterList[Random.Range(0,characterList.Count)];
-
-            desPoint = foundedTarget.characterTransform.position;
-            target = foundedTarget;
-        }
-        else
-        {
-            Patrol();
-        }
-    }
-
-    private void Patrol()
+    public void PatrolAround()
     {
         // create random point in a walkRadius
         Vector3 randomDirection = Random.insideUnitSphere * desPointRange;
@@ -183,48 +182,63 @@ public class Enemy : AbstractCharacter
 
         agent.SetDestination(characterTransform.position);
 
+        // Check input condition
         if (isOnPause)
         {
-            desPointSet = false;
             return;
         }
 
-        if (radarObject.IsAnyTargetInRange)
+        // Check Enemy Around
+        //if (radarObject.IsAnyTargetInRange && IsReadyToAttack())
+        //{
+        //    AbstractCharacter character = radarObject.FindClosestCharacter();
+
+        //    if (character != null && !character.IsDead)
+        //    {
+        //        ChangeState(ATTACK_STATE);
+        //    }
+        //}
+
+        // Check timer
+        idlingTimer += Time.deltaTime;
+
+        if (idlingTimer > currentConfigSO.IdleTime)
         {
-            if (IsReadyToAttack() && !isDetectedTarget)
+            patrolingTimer = 0;
+
+            switch (typeOfBot)
             {
-                idlingTimer = 0;
-                desPointSet = false;
-
-                ChangeState(ATTACK_STATE);
-            }
-        }
-
-        if (!desPointSet)
-        {
-            idlingTimer += Time.deltaTime;
-
-            if (idlingTimer > currentConfigSO.IdleTime)
-            {
-                SearchDesPoint();
-
-                isDetectedTarget = false;
-                idlingTimer = 0;
-
-                switch (typeOfBot)
-                {
-                    case BotType.PatrolBot: ChangeState(E_PATROL_STATE); break;
-                    case BotType.AggressiveBot: ChangeState(E_AGGRESSIVE_STATE); break;
-                }
+                case BotType.PatrolBot: ChangeState(E_PATROL_STATE); break;
+                case BotType.AggressiveBot: ChangeState(E_AGGRESSIVE_STATE); break;
             }
         }
     }
 
     public override void ReadyToAttack()
     {
+        if (isDead)
+        {
+            return;
+        }
+
+        if (radarObject.nearestTarget == null)
+        {
+            idlingTimer = 0;
+            isDetectedTarget = false;
+
+            ChangeState(IDLE_STATE);
+        }
+
         if (!isDetectedTarget)
         {
-            base.ReadyToAttack();
+            agent.SetDestination(characterTransform.position);
+
+            if (radarObject.nearestTarget != null)
+            {
+                TurnTowardToTarget(radarObject.nearestTarget);
+                ChangeAnim(Constant.ANIM_ATTACK);
+            }
+
             isDetectedTarget = true;
         }
     }
@@ -234,6 +248,7 @@ public class Enemy : AbstractCharacter
         base.Attack();
 
         isDetectedTarget = false;
+        patrolingTimer = 0;
 
         ChangeState(PATROL_STATE);
     }
@@ -257,6 +272,7 @@ public class Enemy : AbstractCharacter
         yield return new WaitForSeconds(time);
 
         CharacterManager.Ins.SpawnBotWithQty(1);
+
         SimplePool.Despawn(this);
     }
 }

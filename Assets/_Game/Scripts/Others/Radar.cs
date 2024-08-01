@@ -13,6 +13,8 @@ public class Radar : MonoBehaviour
 
     public bool IsAnyTargetInRange => targetsInRange.Count > 0;
 
+    [field: SerializeField] public AbstractCharacter nearestTarget { get; private set; } = null;
+
     private void Start()
     {
         OnInit();
@@ -35,6 +37,7 @@ public class Radar : MonoBehaviour
         AbstractCharacter character = Cache.GetCharacter(other);
 
         if (character == owner) return;
+
         if (!character.IsDead) targetsInRange.Add(character);
     }
 
@@ -46,18 +49,22 @@ public class Radar : MonoBehaviour
     private void EndCollideWithCharacter(Collider other)
     {
         if (!other.CompareTag(Constant.TAG_CHARACTER)) return;
+
         AbstractCharacter character = Cache.GetCharacter(other);
 
-        if (character.gameObject == owner) return;
+        if (character == owner) return;
 
         targetsInRange.Remove(character);
+
+        if (character == nearestTarget)
+        {
+            nearestTarget = null;
+        }
     }
 
     // Public function
     public AbstractCharacter FindClosestCharacter()
     {
-        AbstractCharacter closestCharacter = null;
-
         Vector3 targetPos = Vector3.zero;
         Vector3 ownerPos = owner.characterTransform.position;
 
@@ -79,11 +86,11 @@ public class Radar : MonoBehaviour
             if (distanceSq < minDistance)
             {
                 minDistance = distanceSq;
-                closestCharacter = target;
+                nearestTarget = target;
             }
         }
 
-        return closestCharacter;
+        return nearestTarget;
     }
 
     public void ClearTargetList()
@@ -99,6 +106,13 @@ public class Radar : MonoBehaviour
     public void RemoveTarget(AbstractCharacter target)
     {
         targetsInRange.Remove(target); 
+    }
+
+    public bool IsTargetInRange(AbstractCharacter target)
+    {
+        if (!IsAnyTargetInRange) return false;
+
+        return targetsInRange.Contains(target);
     }
 
     public void OnOwnerRevive()

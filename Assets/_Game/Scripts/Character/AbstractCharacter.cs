@@ -266,10 +266,9 @@ public abstract class AbstractCharacter : GameUnit
 
     public virtual void StopMoving()
     {
-        if (isDead)
-        {
+        if (isDead) {
             return;
-        }
+            }
 
         ChangeAnim(Constant.ANIM_IDLE);
     }
@@ -283,7 +282,8 @@ public abstract class AbstractCharacter : GameUnit
 
         if (IsReadyToAttack())
         {
-            TurnToward(radarObject.FindClosestCharacter());
+            AbstractCharacter character = radarObject.FindClosestCharacter();
+            TurnTowardToTarget(character);
             ChangeAnim(Constant.ANIM_ATTACK);
         }
     }
@@ -320,8 +320,8 @@ public abstract class AbstractCharacter : GameUnit
 
     public virtual void Dead()
     {
-        boxCollider.enabled = false;
         isDead = true;
+        boxCollider.enabled = false;
 
         ChangeAnim(Constant.ANIM_DEATH);
 
@@ -342,13 +342,12 @@ public abstract class AbstractCharacter : GameUnit
     }
 
     // Support functions
-    protected void TurnToward(AbstractCharacter character)
+    protected void TurnTowardToTarget(AbstractCharacter target)
     {
-        if (character != null)
-        {
-            Vector3 targetDir = (character.characterTransform.position - characterTransform.position).normalized;
-            if (targetDir != Vector3.zero) characterTransform.forward = targetDir;
-        }
+        if (target == null || target.IsDead) return;
+
+        Vector3 targetPos = target.characterTransform.position;
+        characterTransform.LookAt(targetPos + (characterTransform.position.y - targetPos.y) * Vector3.up);
     }
 
     // Boost functions

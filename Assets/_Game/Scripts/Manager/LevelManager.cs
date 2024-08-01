@@ -22,6 +22,8 @@ public class LevelManager : Singleton<LevelManager>
     [field :SerializeField] public int currentMapCharacterAmount { get; private set; }
     [field: SerializeField] public int currentLevel { get; private set; } = 0;
 
+    [field: SerializeField] public int coinToEarn { get; private set; } = 0;
+
     public int HigestLevel => mapPrefabs.Count;
 
     private bool isFirstStart = true;
@@ -40,7 +42,6 @@ public class LevelManager : Singleton<LevelManager>
 
         SpawnMap(data.currentLevel);
         CharacterManager.Ins.SpawnPlayer(Vector3.zero);
-        CharacterManager.Ins.SetAmountOfCharacterAlive(currentMapCharacterAmount);
         CharacterManager.Ins.SpawnBotWithQty(startCharacterAmount);
 
         UIManager.Ins.OpenUI<WeaponShop>();
@@ -51,11 +52,16 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnMainMenu()
     {
+        data.coin += coinToEarn;
+        UserDataManager.Ins.SaveData();
+        coinToEarn = 0;
+
         SimplePool.CollectAll();
         CharacterManager.Ins.OnInit();
         CharacterManager.Ins.SpawnBotWithQty(startCharacterAmount);
 
         CameraManager.Ins.ChangeCameraState(CameraState.MainMenu);
+
         UIManager.Ins.CloseAll();
         UIManager.Ins.OpenUI<MainMenu>();
 
@@ -69,7 +75,7 @@ public class LevelManager : Singleton<LevelManager>
         UIManager.Ins.CloseAll();
         UIManager.Ins.OpenUI<Ingame>();
 
-        GamePlayManager.Ins.ChangeState(GameState.Ingame);
+        GamePlayManager.Ins.ChangeStateAfterTime(GameState.Ingame, 1f);
     }
 
     public void OnSettings()
@@ -90,6 +96,8 @@ public class LevelManager : Singleton<LevelManager>
     {
         CameraManager.Ins.ChangeCameraState(CameraState.Lose);
 
+        coinToEarn = CharacterManager.Ins.player.point * 10;
+
         UIManager.Ins.CloseAll();
         UIManager.Ins.OpenUI<Lose>();
     }
@@ -97,6 +105,8 @@ public class LevelManager : Singleton<LevelManager>
     public void OnWin()
     {
         CameraManager.Ins.ChangeCameraState(CameraState.Win);
+
+        coinToEarn = CharacterManager.Ins.player.point * 10 + 120;
 
         UIManager.Ins.CloseAll();
         UIManager.Ins.OpenUI<Win>();
@@ -124,6 +134,8 @@ public class LevelManager : Singleton<LevelManager>
 
     public void OnAward()
     {
+        coinToEarn *= 3;
+
         UIManager.Ins.OpenUI<Award>();
     }
 
@@ -139,6 +151,8 @@ public class LevelManager : Singleton<LevelManager>
         currentMap = Instantiate(mapPrefabs[level], mapHolder);
         currentMapCharacterAmount = currentMap.capacity;
         startCharacterAmount = currentMap.startCharacterAmount;
+
+        CharacterManager.Ins.SetAmountOfCharacterAlive(currentMapCharacterAmount);
     }
     public void DespawnMap()
     {

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
 
 public class CharacterManager : Singleton<CharacterManager>
 {
@@ -51,7 +50,7 @@ public class CharacterManager : Singleton<CharacterManager>
         {
             randomPos = LevelManager.Ins.GetRandomPos();
 
-            while (Vector3.Distance(randomPos, player.characterTransform.position) <= player.attackRange)
+            while (Vector3.Distance(randomPos, player.characterTransform.position) <= player.attackRange + 1f)
             {
                 randomPos = LevelManager.Ins.GetRandomPos();
             }
@@ -74,6 +73,11 @@ public class CharacterManager : Singleton<CharacterManager>
         {
             SimplePool.Despawn(bot);
         }
+    }
+
+    public Enemy GetRandomBot()
+    {
+        return botList[UnityEngine.Random.Range(0, botList.Count)];
     }
 
     public void SetAmountOfCharacterAlive(int qty)

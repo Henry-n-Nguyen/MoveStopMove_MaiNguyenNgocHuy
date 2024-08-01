@@ -19,7 +19,7 @@ public class Win : UICanvas
     {
         base.Setup();
 
-        earnCoinText.text = "+ " + (CharacterManager.Ins.player.point).ToString();
+        earnCoinText.text = "+ " + (LevelManager.Ins.coinToEarn).ToString();
 
         CharacterManager.Ins.player.OnInit();
 
