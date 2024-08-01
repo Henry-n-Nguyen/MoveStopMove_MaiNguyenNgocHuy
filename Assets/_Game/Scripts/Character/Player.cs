@@ -59,6 +59,11 @@ public class Player : AbstractCharacter
     {
         base.Moving();
 
+        if (isDead)
+        {
+            return;
+        }
+
         Vector2 inputVector = moveAction.ReadValue<Vector2>();
         Vector3 moveDirection = Vector3.right * inputVector.x + Vector3.forward * inputVector.y;
 
@@ -90,14 +95,9 @@ public class Player : AbstractCharacter
     {
         base.StopMoving();
 
-        if (radarObject.IsAnyTargetInRange)
+        if (radarObject.IsAnyTargetInRange && IsReadyToAttack())
         {
-            if (IsReadyToAttack() && !isDetectedTarget)
-            {
-                isDetectedTarget = true;
-
-                ChangeState(ATTACK_STATE);
-            }
+            ChangeState(ATTACK_STATE);
         }
 
         Vector2 inputVector = moveAction.ReadValue<Vector2>();

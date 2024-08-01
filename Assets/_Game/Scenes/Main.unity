@@ -539,6 +539,7 @@ MonoBehaviour:
   <startCharacterAmount>k__BackingField: 0
   <currentMapCharacterAmount>k__BackingField: 0
   <currentLevel>k__BackingField: 0
+  <coinToEarn>k__BackingField: 0
 --- !u!1 &916992720
 GameObject:
   m_ObjectHideFlags: 0
@@ -1405,22 +1406,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   userData:
-    WeaponList: 
-    HatList: 
-    SkinList: 
-    PantList: 
-    AccessoryList: 
+    equipmentBought: 
     coin: 0
     isVibrationOn: 0
     isSoundOn: 0
     currentLevel: 0
     currentHighestLevel: 0
     currentHighestRank: 50
-    equippedWeaponId: 0
-    equippedHatId: 0
-    equippedSkinId: 0
-    equippedPantId: 0
-    equippedAccessoryId: 0
+    equippedEquipment: 
 --- !u!1 &2111676906
 GameObject:
   m_ObjectHideFlags: 0
